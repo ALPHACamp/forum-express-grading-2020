@@ -61,8 +61,17 @@ const adminController = {
       await restaurant.update({
         name, tel, address, opening_hours, description
       })
-      
+
       req.flash('success_messages', 'restaurant was successfully to update')
+      return res.redirect('/admin/restaurants')
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  deleteRestaurant: async (req, res) => {
+    try {
+      const restaurant = Restaurant.findByPk(req.params.id) 
+      restaurant.destroy()
       return res.redirect('/admin/restaurants')
     } catch (err) {
       console.error(err)
