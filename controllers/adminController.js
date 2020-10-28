@@ -39,6 +39,34 @@ const adminController = {
     } catch (err) {
       console.error(err)
     }
+  },
+  editRestaurant: async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
+      return res.render('admin/create', { restaurant })
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  putRestaurant: async (req, res) => {
+    try {
+      const { name, tel, address, opening_hours, description } = req.body
+
+      if (!req.body.name) {
+        req.flash('error_messages', "name didn't exist")
+        return res.redirect('back')
+      }
+
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      await restaurant.update({
+        name, tel, address, opening_hours, description
+      })
+      
+      req.flash('success_messages', 'restaurant was successfully to update')
+      return res.redirect('/admin/restaurants')
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 
