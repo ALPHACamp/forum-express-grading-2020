@@ -27,6 +27,7 @@
     "mysql2": "^2.2.5",
     "save-dev": "0.0.1-security",
     "sequelize": "^6.3.5",
+    "sequelize-cli": "^6.2.0",
     "sinon": "^9.2.0",
     "supertest": "^5.0.0"
   }
