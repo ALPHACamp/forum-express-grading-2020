@@ -4,7 +4,7 @@ const Restaurant = db.Restaurant
 const adminController = {
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = Restaurant.findAll({ raw: true })
+      const restaurants = await Restaurant.findAll({ raw: true })
       return res.render('admin/restaurants', { restaurants })
     } catch (err) {
       console.error(err)
@@ -28,6 +28,14 @@ const adminController = {
       })
       req.flash('success_messages', 'restaurant was successfully created')
       return res.redirect('/admin/restaurants')
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  getRestaurant: async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
+      return res.render('admin/restaurant', { restaurant })
     } catch (err) {
       console.error(err)
     }
