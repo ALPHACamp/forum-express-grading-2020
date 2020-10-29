@@ -12,7 +12,9 @@ const helpers = require('./_helpers')
 
 app.engine('hbs', handlebars({
   defaultLayout: 'main',
-  extname: '.hbs'
+  extname: '.hbs',
+  helpers: require('./config/handlebars-helpers')
+
 }))
 app.set('view engine', 'hbs')
 
