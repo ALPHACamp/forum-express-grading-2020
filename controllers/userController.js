@@ -1,12 +1,15 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = '3c3d0cbfc6f3f23'
 
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
   },
-
   signUp: (req, res) => {
     if (req.body.passwordCheck !== req.body.password) {
       req.flash('error_messages', '兩次密碼輸入不同！')
@@ -42,7 +45,70 @@ const userController = {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
-  }
+  },
+  getUser: async (req, res) => {
+    const id = req.params.id
+    const commentedRest = await Comment.findAll({
+      raw: true,
+      nest: true,
+      include: [{
+        model: User,
+        where: { id }
+      }, Restaurant]
+    })
+    const totalRestInfo = commentedRest.map(item => {
+      return {
+        id: item.Restaurant.id,
+        image: item.Restaurant.image
+      }
+    })
+    const set = new Set()
+    const restInfo = totalRestInfo.filter(item => {
+      return !set.has(item.id) ? set.add(item.id) : false
+    })
+    const totalComment = restInfo.length
+    const user = await User.findByPk(id)
+    return res.render('userProfile', {
+      id,
+      thisUser: user.toJSON(),
+      totalComment,
+      restInfo
+    })  
+  },
+  editUser: (req, res) => {
+    res.render('editProfile', {
+      user: req.user
+    })
+  },
+  putUser: (req, res) => {
+    const { file } = req
+    console.log()
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(req.params.id)
+          .then((user) => {
+            user.update({
+              name: req.body.name,
+              image: img.data.link
+            }).then((user) => {
+              req.flash('success_msg', '成功更新用戶資料')
+              res.redirect(`/users/${user.id}`)
+            })
+          })
+      })
+    } else {
+      return User.findByPk(req.params.id)
+        .then((user) => {
+          user.update({
+            name: req.body.name
+          }).then((user) => {
+            req.flash('success_msg', '成功更新用戶資料')
+            return res.redirect(`/users/${user.id}`)
+          })
+        })
+    }
+  },
 }
 
 module.exports = userController

@@ -92,9 +92,11 @@ describe('# A19: 建立 User Profile', function() {
     it(" PUT /users/:id ", (done) => {
       request(app)
         .put('/users/1')
-        .send({name: 'User1User1'})
+        .type("form")
+        .send({ name: 'User1User1' })
         .end(function(err, res) {
           db.User.findByPk(1).then(user => {
+    
             user.name.should.equal('User1User1');
             return done();
           })
