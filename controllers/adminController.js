@@ -5,11 +5,16 @@ const User = db.User
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = 'your_client_id'
+const Category = db.Category
 
 const adminController = {
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findAll({ raw: true })
+      const restaurants = await Restaurant.findAll({ 
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
       return res.render('admin/restaurants', { restaurants })
     } catch (err) {
       console.error(err)
@@ -57,8 +62,8 @@ const adminController = {
   },
   getRestaurant: async (req, res) => {
     try {
-      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
-      return res.render('admin/restaurant', { restaurant })
+      const restaurant = await Restaurant.findByPk(req.params.id, { include: [Category] })
+      return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
     } catch (err) {
       console.error(err)
     }
