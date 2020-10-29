@@ -1,6 +1,7 @@
 const { fakeServer } = require('sinon')
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = 'your_client_id'
@@ -120,6 +121,29 @@ const adminController = {
       const restaurant = Restaurant.findByPk(req.params.id) 
       restaurant.destroy()
       return res.redirect('/admin/restaurants')
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  getUser: async (req, res) => {
+    try {
+      const users = await User.findAll({ raw: true })
+      return res.render('admin/users', { users })
+    } catch (err) {
+      console.error(err)
+    }
+  },
+  putUser: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.params.id)
+      // if (req.user.id === user.id) {
+      //   req.flash('error_msg', '傻了嗎想把自己刪除？')
+      //   return res.redirect('/admin/users')
+      // }
+      let isAdmin = !user.isAdmin
+      await user.update({ isAdmin })
+      req.flash('success_msg', '成功更新使用者！')
+      return res.redirect('/admin/users')
     } catch (err) {
       console.error(err)
     }
