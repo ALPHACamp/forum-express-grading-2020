@@ -15,11 +15,23 @@ let restController = {
     })
   },
   getRestaurant: (req, res) => {
+    let whereQuery = {}
+    let categoryId = ''
+    if (req.query.categoryId) {
+      categoryId = Number(req.query.categoryId)
+      whereQuery['CategoryId'] = categoryId
+    }
     return Restaurant.findByPk(req.params.id, {
       include: Category
     }).then(restaurant => {
-      return res.render('restaurant', {
-        restaurant: restaurant.toJSON()
+      Category.findAll({
+        raw: true,
+        nest: true
+      }).then(categories => { 
+        return res.render('restaurants', {
+          restaurants: data,
+          categories: categories
+        })
       })
     })
   }
