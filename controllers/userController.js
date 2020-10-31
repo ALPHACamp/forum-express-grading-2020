@@ -54,6 +54,10 @@ const userController = {
   },
   getUser: async (req, res) => {
     const id = req.params.id
+
+    // 取得使用者的評論、收藏、追蹤資料
+    const user = await User.findByPk(id)
+
     const commentedRest = await Comment.findAll({
       raw: true,
       nest: true,
@@ -62,23 +66,70 @@ const userController = {
         where: { id }
       }, Restaurant]
     })
+
+    let userFavor = await User.findByPk(id, {
+      include: [
+        { model: Restaurant, as: 'FavoritedRestaurants' }
+      ]
+    })
+
+    const followInfo = await User.findByPk(id, {
+      include: [
+        { model: User, as: 'Followings' },
+        { model: User, as: 'Followers' }
+      ]
+    })
+
+
+
+    //將各個拿到的資料的id, image整理成 array
     const totalRestInfo = commentedRest.map(item => {
       return {
         id: item.Restaurant.id,
         image: item.Restaurant.image
       }
     })
+
+    let userFollowing = followInfo.dataValues.Followings
+    userFollowing = userFollowing.map(item => ({
+      id: item.dataValues.id,
+      image: item.dataValues.image
+    }))
+
+    let userFollower = followInfo.dataValues.Followers
+    userFollower = userFollower.map(item => ({
+      id: item.dataValues.id,
+      image: item.dataValues.image
+    }))
+
+    userFavor = userFavor.dataValues.FavoritedRestaurants
+    userFavor = userFavor.map(item => ({
+      id: item.dataValues.id,
+      image: item.dataValues.image
+    }))
+
+    //將重複評論的餐廳去除
     const set = new Set()
     const restInfo = totalRestInfo.filter(item => {
       return !set.has(item.id) ? set.add(item.id) : false
     })
-    const totalComment = restInfo.length
-    const user = await User.findByPk(id)
+    //整理各個總數
+    const totalCount = {
+      countComment: restInfo.length,
+      countFavor: userFavor.length,
+      countFollower: userFollower.length,
+      countFollowing: userFollowing.length,
+    }
+    console.log(totalCount)
+
     return res.render('userProfile', {
-      id,
+      id: helpers.getUser(req).id,
       thisUser: user.toJSON(),
-      totalComment,
-      restInfo
+      totalCount,
+      restInfo,
+      userFavor,
+      userFollower,
+      userFollowing
     })  
   },
   editUser: (req, res) => {
