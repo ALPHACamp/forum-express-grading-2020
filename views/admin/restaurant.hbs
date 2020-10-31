@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{restaurant.name}}</h1>
+    <p>[{{restaurant.Category.name}}]</p>
+  </div>
+  <img class="img-responsive center-block" src="{{restaurant.image}}" style="width: 250px;margin-bottom: 25px;">
+  <div class="col-md-4">
+    <br>
+    <div class="well">
+      <ul class="list-unstyled">
+        <li><strong>Opening Hour:</strong> {{restaurant.opening_hours}}</li>
+        <li><strong>Tel:</strong> {{restaurant.tel}}</li>
+        <li><strong>Address:</strong> {{restaurant.address}}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <p>{{restaurant.description}}</p>
+    {{#if isFavorited }}
+    <form action="/favorite/{{restaurant.id}}?_method=DELETE" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-danger">移除最愛</button></form>
+    {{else}}
+    <form action="/favorite/{{restaurant.id}}" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-primary">加到最愛</button></form>
+    {{/if}}
+  </div>
+  <hr>
+</div>
+
+<hr>
+<br /><br />
+<h3>所有評論：</h3>
+{{#each restaurant.Comments}}
+<blockquote class="blockquote mb-0">
+  <h4><a href="/users/{{this.User.id}}">{{this.User.name}}</a></h4>
+  <p>{{this.text}}</p>
+  <footer class="blockquote-footer">{{this.createdAt}}</footer>
+</blockquote>
+<hr />
+{{/each}}
+
+<br />
+<br />
+<a href="javascript:history.back()">回上一頁</a>
