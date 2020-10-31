@@ -1,0 +1,11 @@
+<form action="/users/{{user.id}}?_method=PUT" method="post" class="mt-4" enctype="multipart/form-data">
+  <div class="d-flex flex-column ">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" value="{{user.name}}" class="form-control">
+  </div>
+  <div class="d-flex flex-column mt-3">
+    <label for="image">Image</label>
+    <input type="file" name="image" id="image" class="form-control-file" value="{{user.image}}">
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">SUBMIT</button>
+</form>
