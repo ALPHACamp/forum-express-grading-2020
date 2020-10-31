@@ -1,0 +1,13 @@
+<div>
+  <h1>{{restaurant.name}}</h1>
+  <a href="/restaurants?categoryId={{restaurant.Category.id}}" class="mt-2 btn btn-outline-danger">
+    {{restaurant.Category.name}}
+  </a>
+  <br />
+  <hr />
+  <ul>
+    <li>評論數： {{countComment}}</li>
+    <li>瀏覽次數：{{restaurant.viewCounts}}</li>
+    <li>收藏數： {{totalsLikes}}</li>
+  </ul>
+</div>
