@@ -11,11 +11,10 @@ const passport = require("./config/passport");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine("handlebars", handlebars()); // Handlebars 註冊樣板引擎
 app.set("view engine", "handlebars"); // 設定使用 Handlebars 做為樣板引擎
-// 設定 view engine 使用 handlebars
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(session({ secret: "secret", resave: false, saveUninitialized: false }));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash("success_messages");
