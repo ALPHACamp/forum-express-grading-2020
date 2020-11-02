@@ -7,6 +7,8 @@ const port = 3000;
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("./config/passport");
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine("handlebars", handlebars()); // Handlebars 註冊樣板引擎
