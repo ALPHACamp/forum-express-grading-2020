@@ -1,6 +1,7 @@
 const fs = require("fs");
 const db = require("../models");
 const Restaurant = db.Restaurant;
+const User = db.User;
 const imgur = require("imgur-node-api");
 const IMGUR_CLIENT_ID = "49e3187e6d178f9";
 
@@ -119,6 +120,20 @@ const adminController = {
     return Restaurant.findByPk(req.params.id).then((restaurant) => {
       restaurant.destroy().then((restaurant) => {
         res.redirect("/admin/restaurants");
+      });
+    });
+  },
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true }).then((users) => {
+      return res.render("admin/users", { users });
+    });
+  },
+  putUser: async (req, res) => {
+    return User.findByPk(req.params.id).then((user) => {
+      let isAdmin = !user.isAdmin;
+      user.update({ isAdmin }).then(() => {
+        req.flash("success_messages", "successfully change!");
+        return res.redirect("/admin/users");
       });
     });
   },
