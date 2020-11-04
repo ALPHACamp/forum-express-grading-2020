@@ -3,6 +3,13 @@
     <h1>{{restaurant.name}}</h1>
     <p>[{{restaurant.Category.name}}]</p>
     <a href="/restaurants/{{restaurant.id}}/dashboard"><button class="btn btn-primary">Dashboard</button></a>
+    {{#if isFavorited }}
+    <form action="/favorite/{{restaurant.id}}?_method=DELETE" method="POST" style="display: contents;"><button
+        type="submit" class="btn btn-danger">移除最愛</button></form>
+    {{else}}
+    <form action="/favorite/{{restaurant.id}}" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-primary">加到最愛</button></form>
+    {{/if}}
   </div>
   <div class="col-md-4">
     <img class="img-responsive center-block" src="{{restaurant.image}}" style="width: 250px;margin-bottom: 25px;">
