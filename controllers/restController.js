@@ -108,7 +108,11 @@ let restController = {
   getDashboard: (req, res) => {
     console.log(req.params.id);
     return Restaurant.findByPk(req.params.id, {
-      include: [Category, { model: Comment, include: [User] }],
+      include: [
+        Category,
+        { model: Comment, include: [User] },
+        { model: User, as: "FavoritedUsers" },
+      ],
     }).then((restaurant) => {
       let totalComments = restaurant.dataValues.Comments.length;
       return res.render("dashboard", {

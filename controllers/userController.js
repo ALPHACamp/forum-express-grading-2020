@@ -61,12 +61,23 @@ const userController = {
   getUser: (req, res) => {
     if (Number(req.params.id) === helpers.getUser(req).id) {
       return User.findByPk(req.params.id, {
-        include: { model: Comment, include: [Restaurant] },
+        include: [
+          { model: Comment, include: [Restaurant] },
+          { model: Restaurant, as: "FavoritedRestaurants" },
+          { model: User, as: "Followers" },
+          { model: User, as: "Followings" },
+        ],
       }).then((user) => {
-        let totalComments = user.dataValues.Comments.length;
+        let results = new Set();
+        let data = user.toJSON().Comments.map((c) => c);
+        let comments = data.filter((item) =>
+          !results.has(item.RestaurantId)
+            ? results.add(item.RestaurantId)
+            : false
+        );
         return res.render("user", {
-          user: user.toJSON(),
-          totalComments: totalComments,
+          getUser: user.toJSON(),
+          comments: comments,
         });
       });
     } else {
@@ -181,7 +192,10 @@ const userController = {
         // 計算追蹤者人數
         FollowerCount: user.Followers.length,
         // 判斷目前登入使用者是否已追蹤該 User 物件
-        isFollowed: req.user.Followings.map((d) => d.id).includes(user.id),
+        isFollowed: helpers
+          .getUser(req)
+          .Followings.map((d) => d.id)
+          .includes(user.id),
       }));
       // 依追蹤者人數排序清單
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount);
@@ -190,7 +204,7 @@ const userController = {
   },
   addFollowing: (req, res) => {
     return Followship.create({
-      followerId: req.user.id,
+      followerId: helpers.getUser(req).id,
       followingId: req.params.userId,
     }).then((followship) => {
       return res.redirect("back");
@@ -200,7 +214,7 @@ const userController = {
   removeFollowing: (req, res) => {
     return Followship.findOne({
       where: {
-        followerId: req.user.id,
+        followerId: helpers.getUser(req).id,
         followingId: req.params.userId,
       },
     }).then((followship) => {
