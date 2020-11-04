@@ -1,6 +1,7 @@
 const restController = require("../controllers/restController.js");
 const adminController = require("../controllers/adminController.js");
 const userController = require("../controllers/userController.js");
+const categoryController = require("../controllers/categoryController.js");
 const multer = require("multer");
 const upload = multer({ dest: "temp/" });
 const helpers = require("../_helpers");
@@ -83,4 +84,29 @@ module.exports = (app, passport) => {
   );
   app.get("/admin/users", authenticatedAdmin, adminController.getUsers);
   app.put("/admin/users/:id", authenticatedAdmin, adminController.putUser);
+  app.get(
+    "/admin/categories",
+    authenticatedAdmin,
+    categoryController.getCategories
+  );
+  app.post(
+    "/admin/categories",
+    authenticatedAdmin,
+    categoryController.postCategory
+  );
+  app.get(
+    "/admin/categories/:id",
+    authenticatedAdmin,
+    categoryController.getCategories
+  );
+  app.put(
+    "/admin/categories/:id",
+    authenticatedAdmin,
+    categoryController.putCategory
+  );
+  app.delete(
+    "/admin/categories/:id",
+    authenticatedAdmin,
+    categoryController.deleteCategory
+  );
 };
