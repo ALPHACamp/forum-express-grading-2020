@@ -1,6 +1,10 @@
+const restaurantController = require('../controllers/restaurantController')
+
 module.exports = (app) => {
 
-  app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+  //如果使用者訪問首頁，就導向 /restaurants 的頁面
+  app.get('/', (req, res) => res.redirect('/restaurants'))
+
+  //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
+  app.get('/restaurants', restaurantController.getRestaurants)
 }
