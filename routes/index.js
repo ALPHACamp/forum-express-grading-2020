@@ -1,4 +1,7 @@
 const restaurantController = require('../controllers/restaurantController')
+const adminController = require('../controllers/adminController.js')
+
+// -----------------------------------------------------------------------------------
 
 module.exports = (app) => {
 
@@ -7,4 +10,12 @@ module.exports = (app) => {
 
   //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
   app.get('/restaurants', restaurantController.getRestaurants)
+
+  // -----------------------------------------------------------------------------------
+
+  // 連到 /admin 頁面就轉到 /admin/restaurants
+  app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
+
+  // 在 /admin/restaurants 底下則交給 adminController.getRestaurants 處理
+  app.get('/admin/restaurants', adminController.getRestaurants)
 }
