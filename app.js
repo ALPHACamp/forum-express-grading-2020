@@ -2,6 +2,7 @@ const express = require('express')
 const handlebars = require('express-handlebars') // 引入 handlebars
 const db = require('./models')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport')
@@ -18,6 +19,8 @@ app.set('view engine', 'handlebars') // 設定使用 Handlebars 做為樣板引�
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(methodOverride('_method'))
+
 // -----------------------------------------------------------------------------------
 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
@@ -31,6 +34,7 @@ app.use((req, res, next) => {
 })
 
 // -----------------------------------------------------------------------------------
+
 app.use(passport.initialize())
 app.use(passport.session())
 

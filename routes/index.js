@@ -37,6 +37,12 @@ module.exports = (app, passport) => {
 
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
 
+  app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
+
+  app.put('/admin/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
+
+  app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
+
   // -----------------------------------------------------------------------------------
 
   //如果使用者訪問首頁，就導向 /restaurants 的頁面
