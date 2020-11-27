@@ -32,6 +32,26 @@ const userController = {
         }
       })
     }
+  },
+
+  // -----------------------------------------------------------------------------------
+
+  signInPage: (req, res) => {
+    return res.render('signin')
+  },
+
+  signIn: (req, res) => {
+    req.flash('success_messages', '成功登入！')
+    res.redirect('/restaurants')
+  },
+
+  // -----------------------------------------------------------------------------------
+
+  logout: (req, res) => {
+    req.flash('success_messages', '登出成功！')
+    // 而 logout 動作也只需要使用 Passport 提供的 req.logout() 就可以了
+    req.logout()
+    res.redirect('/signin')
   }
 }
 

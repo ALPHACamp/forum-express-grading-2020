@@ -4,6 +4,7 @@ const db = require('./models')
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('./config/passport')
 
 // -----------------------------------------------------------------------------------
 
@@ -28,10 +29,13 @@ app.use((req, res, next) => {
   next()
 })
 
+// -----------------------------------------------------------------------------------
+app.use(passport.initialize())
+app.use(passport.session())
 
 // -----------------------------------------------------------------------------------
 
-require('./routes')(app)
+require('./routes')(app, passport)
 
 // -----------------------------------------------------------------------------------
 
