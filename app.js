@@ -3,6 +3,7 @@ const handlebars = require('express-handlebars');
 const flash = require('connect-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const passport = require('./config/passport');
 
 const db = require('./models');
 
@@ -16,6 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages');
