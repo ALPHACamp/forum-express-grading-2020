@@ -35,6 +35,8 @@ module.exports = (app, passport) => {
 
   app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
 
+  app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
+
   // -----------------------------------------------------------------------------------
 
   //如果使用者訪問首頁，就導向 /restaurants 的頁面
