@@ -23,21 +23,19 @@ module.exports = (app, passport) => {
 
   // -----------------------------------------------------------------------------------
 
-  //如果使用者訪問首頁，就導向 /restaurants 的頁面
-  app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
-
-  // -----------------------------------------------------------------------------------
-
-  //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
-  app.get('/restaurants', authenticated, restaurantController.getRestaurants)
-
-  // -----------------------------------------------------------------------------------
-
   // 連到 /admin 頁面就轉到 /admin/restaurants
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
 
   // 在 /admin/restaurants 底下則交給 adminController.getRestaurants 處理
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
+
+  // -----------------------------------------------------------------------------------
+
+  //如果使用者訪問首頁，就導向 /restaurants 的頁面
+  app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
+
+  //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
+  app.get('/restaurants', authenticated, restaurantController.getRestaurants)
 
   // -----------------------------------------------------------------------------------
 
