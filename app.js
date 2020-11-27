@@ -21,6 +21,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
+// 這是因為我們剛剛建立了 upload 資料夾來存放圖片，可是卻沒有設定 express 的路由，因此外界沒辦法存取到 / upload 這個路徑. 設定靜態檔案路徑 /upload
+app.use('/upload', express.static(__dirname + '/upload'))
+
 // -----------------------------------------------------------------------------------
 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))

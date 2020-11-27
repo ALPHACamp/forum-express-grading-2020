@@ -9,7 +9,9 @@ ehthumbs.db
 Desktop.ini
 
 # npm
-node_modules
+node_modules/
+temp/
+upload/
 *.log
 *.gz
 .env

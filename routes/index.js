@@ -1,3 +1,6 @@
+const multer = require('multer')
+const upload = multer({ dest: 'temp/' })
+
 const restaurantController = require('../controllers/restaurantController')
 const adminController = require('../controllers/adminController.js')
 const userController = require('../controllers/userController.js')
@@ -33,13 +36,14 @@ module.exports = (app, passport) => {
 
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
 
-  app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
+  app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
 
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
 
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
 
-  app.put('/admin/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
+  // 加上這個 middleware(upload.single('image')) 以後，multer 只要碰到 request 裡面有圖片的檔案，就會自動把檔案複製到 temp 資料夾去
+  app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 
   app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
 
