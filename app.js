@@ -11,6 +11,8 @@ const db = require('./models');
 const app = express();
 const port = 3000;
 
+app.use('/upload', express.static(__dirname + '/upload'));
+
 app.engine('hbs', handlebars({ defaultLayout: 'main.hbs' }));
 app.set('view engine', 'hbs');
 
