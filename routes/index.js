@@ -49,6 +49,11 @@ module.exports = (app) => {
     authenticatedAdmin,
     adminController.getRestaurant
   );
+  app.get(
+    '/admin/restaurants/:id/edit',
+    authenticatedAdmin,
+    adminController.editRestaurant
+  );
 
   app.get('/signup', userController.signUpPage);
   app.post('/signup', userController.signUp);
