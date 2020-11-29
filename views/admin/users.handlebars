@@ -20,21 +20,12 @@
       <td>{{this.name}}</td>
       <td>{{this.email}}</td>
       <td>
-        {{#if this.isAdmin}}
-        admin
-        {{else}}
-        user
-        {{/if}}
+        {{#if this.isAdmin}}admin{{else}}user{{/if}}
       </td>
       <td>
-        <form action="/admin/users/{{this.id}}?_method=PUT" method="POST" style="display: inline;">
-          {{#if this.isAdmin}}
-          <input type="hidden" name="isAdmin" value="false" />
-          <button type="submit" class="btn btn-link">set as user</button>
-          {{else}}
+        <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST" style="display: inline;">
           <input type="hidden" name="isAdmin" value="true" />
-          <button type="submit" class="btn btn-link">set as admin</button>
-          {{/if}}
+          <button type="submit" class="btn btn-link">set as {{#if this.isAdmin}}user{{else}}admin{{/if}}</button>
         </form>
       </td>
     </tr>
