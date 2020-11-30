@@ -1,3 +1,5 @@
+const helpers = require('../_helpers');
+
 const passport = require('passport');
 const multer = require('multer');
 
@@ -9,14 +11,14 @@ const userController = require('../controllers/userController.js');
 
 module.exports = (app) => {
   const authenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (helpers.ensureAuthenticated(req)) {
       return next();
     }
     res.redirect('/signin');
   };
   const authenticatedAdmin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (req.user.isAdmin) {
+    if (helpers.ensureAuthenticated(req)) {
+      if (helpers.getUser(req).isAdmin) {
         return next();
       }
       return res.redirect('/');
@@ -83,4 +85,7 @@ module.exports = (app) => {
     userController.signIn
   );
   app.get('/logout', userController.logout);
+
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers);
+  app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.putUsers);
 };
