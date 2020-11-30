@@ -5,6 +5,10 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const passport = require('./config/passport');
 const db = require('./models');
 
