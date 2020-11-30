@@ -85,4 +85,7 @@ module.exports = (app) => {
     userController.signIn
   );
   app.get('/logout', userController.logout);
+
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers);
+  app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.putUsers);
 };

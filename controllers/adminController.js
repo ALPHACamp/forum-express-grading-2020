@@ -2,6 +2,7 @@
 const imgur = require('imgur-node-api');
 const db = require('../models');
 const Restaurant = db.Restaurant;
+const User = db.User;
 
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
@@ -19,7 +20,7 @@ const adminController = {
       req.flash('error_messages', "name didn't exist");
       return res.redirect('back');
     }
-    const { file } = req; 
+    const { file } = req;
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
@@ -120,6 +121,25 @@ const adminController = {
       restaurant.destroy().then((restaurant) => {
         res.redirect('/admin/restaurants');
       });
+    });
+  },
+
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true }).then((users) => {
+      return res.render('admin/users', { users: users });
+    });
+  },
+  putUsers: (req, res) => {
+    return User.findByPk(req.params.id).then((user) => {
+      let toggleAdmin = user.isAdmin === false ? true : false;
+      user
+        .update({
+          isAdmin: toggleAdmin,
+        })
+        .then((user) => {
+          req.flash('success_messages', 'user was successfully to update');
+          res.redirect('/admin/users');
+        });
     });
   },
 };
