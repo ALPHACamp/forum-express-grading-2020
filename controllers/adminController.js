@@ -19,7 +19,7 @@ const adminController = {
       req.flash('error_messages', "name didn't exist");
       return res.redirect('back');
     }
-    const { file } = req; // equal to const file = req.file
+    const { file } = req; 
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
