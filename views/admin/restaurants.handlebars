@@ -1,0 +1,73 @@
+<h1>餐廳後台</h1>
+
+<div class="mb-5">
+  <big>
+    <a href="/admin/restaurants">Restaurants</a>
+    <span> | </span>
+    <a href="/admin/categories">Categories</a>
+    <span> | </span>
+    <a href="/admin/users">Users</a>
+  </big>
+</div>
+
+<a href='/admin/restaurants/create'>
+  <button type="button" class="btn btn-primary">New Restaurant</button>
+</a>
+
+<br />
+<br />
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Category</th>
+      <th scope="col">Name</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each restaurants}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.Category.name}}</td>
+      <td>{{this.name}}</td>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a href="/admin/restaurants/{{this.id}}">
+            Show
+          </a>
+        </button>
+        <button type="button" class="btn btn-link">
+          <a href="/admin/restaurants/{{this.id}}/edit">
+            Edit
+          </a>
+        </button>
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#deleteModal-{{this.id}}">
+          Delete
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<!-- Delete Modal -->
+{{#each restaurants}}
+<div class="modal fade" id="deleteModal-{{this.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <big class="modal-body">
+        Do you want to delete "<strong>{{this.name}}</strong>" ?
+      </big>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST">
+          <button type="submit" class="btn btn-danger">delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}
