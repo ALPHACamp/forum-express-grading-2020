@@ -7,6 +7,7 @@ const restaurantController = require('../controllers/restaurantController')
 const adminController = require('../controllers/adminController.js')
 const userController = require('../controllers/userController.js')
 const categoryController = require('../controllers/categoryController.js')
+const commentController = require('../controllers/commentController.js')
 
 // -----------------------------------------------------------------------------------
 
@@ -35,6 +36,9 @@ module.exports = (app, passport) => {
   //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
   app.get('/restaurants', authenticated, restaurantController.getRestaurants)
   app.get('/restaurants/:id', authenticated, restaurantController.getRestaurant)
+
+
+  app.post('/comments', authenticated, commentController.postComment)
 
   // -----------------------------------------------------------------------------------
 
