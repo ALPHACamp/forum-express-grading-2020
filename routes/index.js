@@ -34,6 +34,7 @@ module.exports = (app, passport) => {
 
   //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
   app.get('/restaurants', authenticated, restaurantController.getRestaurants)
+  app.get('/restaurants/:id', authenticated, restaurantController.getRestaurant)
 
   // -----------------------------------------------------------------------------------
 
@@ -66,8 +67,6 @@ module.exports = (app, passport) => {
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
-
-  // -----------------------------------------------------------------------------------
 
   app.get('/signin', userController.signInPage)
   // 讓 Passport 直接做身份驗證，因為當 userController.signIn 收到 request 時，就一定是登入後的使用者了，這是為什麼剛才在 userController.signIn 沒看到驗證的邏輯
