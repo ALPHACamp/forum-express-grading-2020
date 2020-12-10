@@ -17,13 +17,22 @@ module.exports = (app, passport) => {
     if (helpers.ensureAuthenticated(req)) {
       return next()
     }
+
     res.redirect('/signin')
   }
+
   const authenticatedAdmin = (req, res, next) => {
     // if(req.isAuthenticated)
     if (helpers.ensureAuthenticated(req)) {
       if (helpers.getUser(req).isAdmin) { return next() }
       return res.redirect('/')
+    }
+    res.redirect('/signin')
+  }
+
+  const checkUserId = (req, res, next) => {
+    if (parseInt(req.params.id) === parseInt(req.user.id)) {
+      return next()
     }
     res.redirect('/signin')
   }
@@ -41,7 +50,10 @@ module.exports = (app, passport) => {
   app.post('/comments', authenticated, commentController.postComment)
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
-  app.get('/users/:id', authenticated, userController.getUser)
+
+  app.get('/users/:id', authenticated, checkUserId, userController.getUser)
+  app.get('/users/:id/edit', authenticated, checkUserId, userController.editUser)
+  app.put('/users/:id', authenticated, checkUserId, upload.single('image'), userController.putUser)
 
   // -----------------------------------------------------------------------------------
 
