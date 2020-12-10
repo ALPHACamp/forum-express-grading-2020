@@ -12,4 +12,19 @@
   <hr>
 </div>
 
+<hr>
+<div class="col-md-12">
+  <div class="card">
+    <h5 class="card-header">{{count}} 已評論餐廳</h5>
+    <div class="card-body">
+      {{#each comments}}
+      <a href="/restaurants/{{this.Restaurant.id}}">
+        <img class="img-responsive center-block mx-1" src="{{this.Restaurant.image}}"
+          style="width: 50px;margin-bottom: 25px;">
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
 <a href="javascript:history.back()">回上一頁</a>

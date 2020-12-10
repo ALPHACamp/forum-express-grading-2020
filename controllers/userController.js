@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const db = require('../models')
 const { getUsers } = require('./adminController')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 // -----------------------------------------------------------------------------------
 
@@ -41,9 +43,21 @@ const userController = {
   getUser: (req, res) => {
     return User.findByPk(req.user.id)
       .then((user) => {
-        return res.render('profile', {
-          user: user.toJSON()
+        return Comment.findAndCountAll({
+          include: [{ model: Restaurant }],
+          where: { UserId: user.id },
+          offset: 0
         })
+          .then(result => {
+            return res.render('profile', {
+              user: user.toJSON(),
+              count: result.count,
+              comments: result.rows.map(r => ({
+                ...r.dataValues,
+                Restaurant: r.Restaurant.dataValues
+              }))
+            })
+          })
       })
   },
 
