@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.addColumn('Restaurants', 'CategoryId', {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: 1,
       references: {
         model: 'Categories',
         key: 'id'

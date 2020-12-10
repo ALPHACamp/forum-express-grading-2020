@@ -19,13 +19,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-    await queryInterface.bulkInsert('Categories', [{
-      id: 1,
-      name: 'default restaurant',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {});
+    })
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Categories');
