@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-const restController = {
-  getRestaurants: (req, res) => {
-    return res.render('restaurants');
-=======
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const Category = db.Category;
@@ -85,7 +80,6 @@ const restController = {
     } catch (err) {
       console.log(err);
     }
->>>>>>> A19-test
   },
 };
 module.exports = restController;

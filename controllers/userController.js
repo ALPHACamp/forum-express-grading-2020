@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 const fs = require('fs');
->>>>>>> A19-test
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const User = db.User;
@@ -51,8 +48,6 @@ const userController = {
     req.logout();
     res.redirect('/signin');
   },
-<<<<<<< HEAD
-=======
 
   getUser: async (req, res) => {
     try {
@@ -103,7 +98,6 @@ const userController = {
       console.log(err);
     }
   },
->>>>>>> A19-test
 };
 
 module.exports = userController;

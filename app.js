@@ -1,70 +1,52 @@
-const express = require('express');
-const handlebars = require('express-handlebars');
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> A19-test
-const flash = require('connect-flash');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const methodOverride = require('method-override');
+const express = require("express");
+const handlebars = require("express-handlebars");
+const flash = require("connect-flash");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
 }
 
-const passport = require('./config/passport');
-const db = require('./models');
+const passport = require("./config/passport");
+const db = require("./models");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use('/upload', express.static(__dirname + '/upload'));
+app.use("/upload", express.static(__dirname + "/upload"));
 
-<<<<<<< HEAD
-app.engine('hbs', handlebars({ defaultLayout: 'main.hbs' }));
-=======
 app.engine(
-  'hbs',
+  "hbs",
   handlebars({
-    defaultLayout: 'main.hbs',
-    helpers: require('./config/handlebars-helpers'),
+    defaultLayout: "main.hbs",
+    helpers: require("./config/handlebars-helpers"),
   })
 );
->>>>>>> A19-test
-app.set('view engine', 'hbs');
+app.set("view engine", "hbs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
+app.use(session({ secret: "secret", resave: false, saveUninitialized: false }));
 app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req, res, next) => {
-  res.locals.success_messages = req.flash('success_messages');
-  res.locals.error_messages = req.flash('error_messages');
+  res.locals.success_messages = req.flash("success_messages");
+  res.locals.error_messages = req.flash("error_messages");
   res.locals.user = req.user;
   next();
 });
 
-app.use(methodOverride('_method'));
-<<<<<<< HEAD
-=======
-=======
-const app = express();
-const port = 3000;
-
-app.engine('hbs', handlebars());
-app.set('view engine', 'hbs');
->>>>>>> c6d45c0... Initialize project
->>>>>>> A19-test
+app.use(methodOverride("_method"));
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-require('./routes')(app);
+require("./routes")(app);
 
 module.exports = app;
