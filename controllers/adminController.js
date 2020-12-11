@@ -3,17 +3,40 @@ const imgur = require('imgur-node-api');
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const User = db.User;
+<<<<<<< HEAD
+=======
+const Category = db.Category;
+>>>>>>> A19-test
 
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
 const adminController = {
   getRestaurants: (req, res) => {
+<<<<<<< HEAD
     return Restaurant.findAll({ raw: true }).then((restaurants) => {
+=======
+    return Restaurant.findAll({
+      raw: true,
+      nest: true,
+      include: [Category],
+    }).then((restaurants) => {
+>>>>>>> A19-test
       return res.render('admin/restaurants', { restaurants: restaurants });
     });
   },
   createRestaurant: (req, res) => {
+<<<<<<< HEAD
     return res.render('admin/create');
+=======
+    Category.findAll({
+      raw: true,
+      nest: true,
+    }).then((categories) => {
+      return res.render('admin/create', {
+        categories: categories,
+      });
+    });
+>>>>>>> A19-test
   },
   postRestaurant: (req, res) => {
     if (!req.body.name) {
@@ -31,6 +54,10 @@ const adminController = {
           opening_hours: req.body.opening_hours,
           description: req.body.description,
           image: file ? img.data.link : null,
+<<<<<<< HEAD
+=======
+          CategoryId: req.body.categoryId,
+>>>>>>> A19-test
         }).then((restaurant) => {
           req.flash('success_messages', 'restaurant was successfully created');
           return res.redirect('/admin/restaurants');
@@ -44,6 +71,10 @@ const adminController = {
         opening_hours: req.body.opening_hours,
         description: req.body.description,
         image: null,
+<<<<<<< HEAD
+=======
+        CategoryId: req.body.categoryId,
+>>>>>>> A19-test
       }).then((restaurant) => {
         req.flash('success_messages', 'restaurant was successfully created');
         return res.redirect('/admin/restaurants');
@@ -51,20 +82,41 @@ const adminController = {
     }
   },
   getRestaurant: (req, res) => {
+<<<<<<< HEAD
     return Restaurant.findByPk(req.params.id, { raw: true }).then(
       (restaurant) => {
         return res.render('admin/restaurant', {
           restaurant: restaurant,
+=======
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      (restaurant) => {
+        return res.render('admin/restaurant', {
+          restaurant: restaurant.toJSON(),
+>>>>>>> A19-test
         });
       }
     );
   },
   editRestaurant: (req, res) => {
+<<<<<<< HEAD
     return Restaurant.findByPk(req.params.id, { raw: true }).then(
       (restaurant) => {
         return res.render('admin/create', { restaurant: restaurant });
       }
     );
+=======
+    Category.findAll({
+      raw: true,
+      nest: true,
+    }).then((categories) => {
+      return Restaurant.findByPk(req.params.id).then((restaurant) => {
+        return res.render('admin/create', {
+          restaurant: restaurant.toJSON(),
+          categories: categories,
+        });
+      });
+    });
+>>>>>>> A19-test
   },
   putRestaurant: (req, res) => {
     if (!req.body.name) {
@@ -85,6 +137,10 @@ const adminController = {
               opening_hours: req.body.opening_hours,
               description: req.body.description,
               image: file ? img.data.link : restaurant.image,
+<<<<<<< HEAD
+=======
+              CategoryId: req.body.categoryId,
+>>>>>>> A19-test
             })
             .then((restaurant) => {
               req.flash(
@@ -105,6 +161,10 @@ const adminController = {
             opening_hours: req.body.opening_hours,
             description: req.body.description,
             image: restaurant.image,
+<<<<<<< HEAD
+=======
+            CategoryId: req.body.categoryId,
+>>>>>>> A19-test
           })
           .then((restaurant) => {
             req.flash(

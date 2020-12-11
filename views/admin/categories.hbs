@@ -1,0 +1,58 @@
+<h1>餐廳後台</h1>
+<a href='/admin/restaurants'>
+    <button type="button" class="btn btn-primary">Restaurants</button>
+</a>
+<a href='/admin/users'>
+    <button type="button" class="btn btn-primary">Users</button>
+</a>
+
+<br />
+<br />
+
+
+
+<form action="/admin/categories" method="POST">
+    <div class="form-group">
+        <label for="name">Category</label>
+        <input type="text" class="form-control" name="categoryName" id="name" placeholder="Enter Category Name">
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
+{{#if category.name}}
+<form action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="name">Update Category #{{category.id}}</label>
+        <input type="text" class="form-control" name="categoryName" id="name" placeholder="Enter Category Name"
+            value="{{category.name}}">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>
+{{/if}}
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Category</th>
+            <th scope="col">#</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each categories}}
+        <tr>
+            <th scope="row">{{this.id}}</th>
+            <td>{{this.name}}</td>
+            <td>
+                <button type="button" class="btn btn-link">
+                    <a href="/admin/categories/{{this.id}}">
+                        Edit
+                    </a>
+                </button>
+                <form action="/admin/categories/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-link">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

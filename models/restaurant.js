@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+<<<<<<< HEAD
       // define association here
+=======
+      Restaurant.belongsTo(models.Category)
+      Restaurant.hasMany(models.Comment)
+>>>>>>> A19-test
     }
   }
   Restaurant.init(
@@ -19,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       opening_hours: DataTypes.STRING,
       description: DataTypes.TEXT,
       image: DataTypes.STRING,
+<<<<<<< HEAD
+=======
+      CategoryId: DataTypes.INTEGER,
+>>>>>>> A19-test
     },
     {
       sequelize,

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+const fs = require('fs');
+>>>>>>> A19-test
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const User = db.User;
@@ -47,6 +51,59 @@ const userController = {
     req.logout();
     res.redirect('/signin');
   },
+<<<<<<< HEAD
+=======
+
+  getUser: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.user.id);
+      res.render('profile', { user: user.toJSON() });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  editUser: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.user.id);
+      res.render('editProfile', { user: user.toJSON() });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  putUser: async (req, res) => {
+    try {
+      const { file } = req;
+      const user = await User.findByPk(req.user.id);
+      if (file) {
+        fs.readFile(file.path, (err, data) => {
+          if (err) return console.log(err);
+          const fileName = `upload/${req.user.name}.${Date.now()}.jpg`;
+          fs.writeFile(
+            `${fileName}`,
+            data,
+            async () => {
+              await user.update({
+                name: req.body.userName,
+                email: req.body.userEmail,
+                image: file ? `/${fileName}` : null,
+              });
+            }
+          );
+        });
+      } else {
+        console.log('no image');
+        await user.update({
+          name: req.body.userName,
+          email: req.body.userEmail,
+          image: null,
+        });
+      }
+      res.redirect(`/users/${req.user.id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+>>>>>>> A19-test
 };
 
 module.exports = userController;
