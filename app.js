@@ -1,6 +1,5 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
-<<<<<<< HEAD
 const flash = require('connect-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -43,13 +42,6 @@ app.use((req, res, next) => {
 });
 
 app.use(methodOverride('_method'));
-=======
-const app = express();
-const port = 3000;
-
-app.engine('hbs', handlebars());
-app.set('view engine', 'hbs');
->>>>>>> c6d45c0... Initialize project
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
