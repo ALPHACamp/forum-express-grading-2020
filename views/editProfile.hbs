@@ -1,0 +1,24 @@
+<form action="/users/{{user.id}}?_method=PUT" method="POST" style="width: 100%;" enctype="multipart/form-data">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">個人資料</h1>
+    </div>
+    <div class="form-label-group">
+        <label for="userName">Name</label>
+        <input type="text" name="userName" class="form-control" value={{user.name}}>
+    </div>
+    <br />
+    <div class="form-label-group">
+        <label for="userEmail">Email</label>
+        <input type="email" name="userEmail" class="form-control" value={{user.email}}>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="userImage">Photo</label>
+        <input type="file" class="form-control-file" id="userImage" name="userImage">
+    </div>
+    <br />
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+    <div class="text-center mb-4">
+        <p><a href="/users/{{user.id}}">回上一頁</a></p>
+    </div>
+</form>
