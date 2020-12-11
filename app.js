@@ -1,12 +1,12 @@
-const express = require("express");
-const handlebars = require("express-handlebars");
-const flash = require("connect-flash");
-const session = require("express-session");
-const bodyParser = require("body-parser");
-const methodOverride = require("method-override");
+const express = require('express');
+const handlebars = require('express-handlebars');
+const flash = require('connect-flash');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
 }
 
 const passport = require("./config/passport");
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(methodOverride("_method"));
+app.use(methodOverride('_method'));
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
