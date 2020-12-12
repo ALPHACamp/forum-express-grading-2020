@@ -31,7 +31,7 @@ module.exports = (app, passport) => {
   }
 
   const checkUserId = (req, res, next) => {
-    if (parseInt(req.params.id) === parseInt(req.user.id)) {
+    if (Number(req.params.id) === Number(helpers.getUser(req).id)) {
       return next()
     }
     res.redirect('/signin')
