@@ -1,8 +1,3 @@
-
-
-
-
-
 <form>
     <legend>{{user.name}}</legend>
     <div class="form-group row">
@@ -18,3 +13,17 @@
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
 </form>
+<br />
+<br />
+<div class="row">
+    {{#each comments}}
+    <div class="card" style="width:200px">
+        <img class="card-img-top" src="{{this.restaurantImage}}" alt="Card image">
+        <div class="card-body">
+            <h4 class="card-title">{{this.restaurantName}}</h4>
+            <p class="card-text">{{this.text}}</p>
+            <a href="/restaurants/{{this.RestaurantId}}" class="btn btn-primary">See Restaurant</a>
+        </div>
+    </div>
+    {{/each}}
+</div>

@@ -2,6 +2,8 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const User = db.User;
+const Comment = db.Comment;
+const Restaurant = db.Restaurant;
 
 const userController = {
   signUpPage: (req, res) => {
@@ -52,7 +54,16 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const user = await User.findByPk(req.user.id);
-      res.render('profile', { user: user.toJSON() });
+      const comments = await Comment.findAll({
+        where: { UserId: user.id },
+        include: Restaurant,
+      });
+      const data = comments.map((el) => ({
+        ...el.dataValues,
+        restaurantName: el.Restaurant.name,
+        restaurantImage: el.Restaurant.image,
+      }));
+      res.render('profile', { user: user.toJSON(), comments: data });
     } catch (err) {
       console.log(err);
     }
@@ -73,17 +84,13 @@ const userController = {
         fs.readFile(file.path, (err, data) => {
           if (err) return console.log(err);
           const fileName = `upload/${req.user.name}.${Date.now()}.jpg`;
-          fs.writeFile(
-            `${fileName}`,
-            data,
-            async () => {
-              await user.update({
-                name: req.body.userName,
-                email: req.body.userEmail,
-                image: file ? `/${fileName}` : null,
-              });
-            }
-          );
+          fs.writeFile(`${fileName}`, data, async () => {
+            await user.update({
+              name: req.body.userName,
+              email: req.body.userEmail,
+              image: file ? `/${fileName}` : null,
+            });
+          });
         });
       } else {
         console.log('no image');
