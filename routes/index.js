@@ -44,7 +44,9 @@ module.exports = (app, passport) => {
 
   //在 /restaurants 底下則交給 restaurantController.getRestaurants 來處理
   app.get('/restaurants', authenticated, restaurantController.getRestaurants)
+  app.get('/restaurants/feeds', authenticated, restaurantController.getFeeds)
   app.get('/restaurants/:id', authenticated, restaurantController.getRestaurant)
+  app.get('/restaurants/:id/dashboard', authenticated, restaurantController.getDashboard)
 
 
   app.post('/comments', authenticated, commentController.postComment)
