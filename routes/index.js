@@ -51,7 +51,7 @@ module.exports = (app, passport) => {
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
 
-  app.get('/users/:id', authenticated, checkUserId, userController.getUser)
+  app.get('/users/:id', authenticated, userController.getUser)
   app.get('/users/:id/edit', authenticated, checkUserId, userController.editUser)
   app.put('/users/:id', authenticated, checkUserId, upload.single('image'), userController.putUser)
 

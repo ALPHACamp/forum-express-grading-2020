@@ -5,6 +5,8 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 
+const helpers = require('../_helpers')
+
 // -----------------------------------------------------------------------------------
 
 const userController = {
@@ -41,7 +43,8 @@ const userController = {
   // -----------------------------------------------------------------------------------
 
   getUser: (req, res) => {
-    return User.findByPk(req.user.id)
+    console.log('getUser ' + req.params.id)
+    return User.findByPk(req.params.id)
       .then((user) => {
         return Comment.findAndCountAll({
           include: [{ model: Restaurant }],
@@ -55,14 +58,15 @@ const userController = {
               comments: result.rows.map(r => ({
                 ...r.dataValues,
                 Restaurant: r.Restaurant.dataValues
-              }))
+              })),
+              isSelf: Number(helpers.getUser(req).id) === Number(req.params.id)
             })
           })
       })
   },
 
   editUser: (req, res) => {
-    return User.findByPk(req.user.id)
+    return User.findByPk(req.params.id)
       .then((user) => {
         return res.render('profileEdit', {
           user: user.toJSON()
@@ -88,12 +92,13 @@ const userController = {
             })
               .then(() => {
                 req.flash('success_messages', 'restaurant was successfully to update')
-                res.redirect('/users/profile')
+                res.redirect(`/users/${req.params.id}`)
               })
           })
       })
     }
     else {
+      console.log('no image ' + req.params.id)
       return User.findByPk(req.params.id)
         .then((user) => {
           user.update({
@@ -102,7 +107,7 @@ const userController = {
           })
             .then(() => {
               req.flash('success_messages', 'restaurant was successfully to update')
-              res.redirect('/users/profile')
+              res.redirect(`/users/${req.params.id}`)
             })
         })
     }
