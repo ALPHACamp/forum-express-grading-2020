@@ -57,6 +57,10 @@ module.exports = (app, passport) => {
   app.get('/users/:id/edit', authenticated, checkUserId, userController.editUser)
   app.put('/users/:id', authenticated, checkUserId, upload.single('image'), userController.putUser)
 
+
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+
   // -----------------------------------------------------------------------------------
 
   // 連到 /admin 頁面就轉到 /admin/restaurants

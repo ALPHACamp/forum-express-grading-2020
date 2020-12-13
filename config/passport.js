@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Restaurant = db.Restaurant
 
 // -----------------------------------------------------------------------------------
 
@@ -37,8 +38,13 @@ passport.serializeUser((user, cb) => {
 })
 
 passport.deserializeUser((id, cb) => {
-  User.findByPk(id).then(user => {
-    user = user.toJSON() // 此處與影片示範不同
+  User.findByPk(id, {
+    include: [
+      // 這時候我們用 as 來標明我們想要引入的關係，而這個 as 會對應到我們在 model 裡設定的別名
+      { model: Restaurant, as: 'FavoritedRestaurants' }
+    ]
+  }).then(user => {
+    user = user.toJSON()
     return cb(null, user)
   })
 })

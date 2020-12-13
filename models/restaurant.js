@@ -14,8 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Restaurant.belongsTo(models.Category)
       Restaurant.hasMany(models.Comment)
+
+      // favorate is a joint table
+      Restaurant.belongsToMany(models.User, {
+        through: models.Favorite,
+        foreignKey: 'RestaurantId',
+        as: 'FavoritedUsers'
+      })
     }
   };
+
   Restaurant.init({
     name: DataTypes.STRING,
     tel: DataTypes.STRING,
@@ -29,5 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Restaurant',
   });
+
   return Restaurant;
 };

@@ -41,7 +41,8 @@ const restaurantController = {
       const data = result.rows.map(r => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.Category.name,
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       Category.findAll({
@@ -65,14 +66,18 @@ const restaurantController = {
     const restaurant = await Restaurant.findByPk(req.params.id, {
       include: [
         Category,
+        { model: User, as: 'FavoritedUsers' },
         { model: Comment, include: [User] }
       ]
     })
 
+    const isFavorited = await restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+
     await restaurant.increment({ 'viewCounts': 1 })
 
     await res.render('restaurant', {
-      restaurant: restaurant.toJSON()
+      restaurant: restaurant.toJSON(),
+      isFavorited: isFavorited
     })
   },
 
