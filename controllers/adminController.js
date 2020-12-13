@@ -74,15 +74,8 @@ const adminController = {
   // -----------------------------------------------------------------------------------
 
   getRestaurant: (req, res) => {
-    // 使用 find.findByPk 取出資料後，需要用 { raw: true } 轉換成 JS 原生物件
-    return Restaurant.findByPk(req.params.id, {
-      // raw: true,
-      // nest: true,
-      include: [Category]
-    }).then(restaurant => {
-      return res.render('admin/restaurant', {
-        restaurant: restaurant.toJSON()
-      })
+    adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
     })
   },
 
