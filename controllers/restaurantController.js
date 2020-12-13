@@ -1,3 +1,4 @@
+const { sequelize } = require('../models')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -119,8 +120,35 @@ const restaurantController = {
       console.log(restaurant)
       return res.render('dashboard', { restaurant: restaurant.toJSON() })
     })
+  },
+
+  getTopRestaurant: (req, res) => {
+    return Restaurant.findAll({
+      limit: 10,
+      raw: true,
+      nest: true,
+      attributes: [
+        'id',
+        'name',
+        'description',
+        'image',
+        [sequelize.literal('(SELECT COUNT(*) FROM Favorites WHERE Favorites.RestaurantId = Restaurant.id)'), 'FavoritedUsersCount']
+      ],
+      order: [[sequelize.literal('FavoritedUsersCount'), 'DESC']]
+      // include: [{ model: User, as: 'FavoritedUsers' }]
+    }).then((restaurants) => {
+      return restaurants.map(r => ({
+        ...r,
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+      }))
+    }).then((restaurants) => {
+      return res.render('restaurantsTop', {
+        restaurants: restaurants
+      })
+    })
   }
 }
+
 
 // -----------------------------------------------------------------------------------
 
