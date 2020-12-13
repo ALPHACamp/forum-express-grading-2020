@@ -42,7 +42,8 @@ const restaurantController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       Category.findAll({
@@ -67,17 +68,20 @@ const restaurantController = {
       include: [
         Category,
         { model: User, as: 'FavoritedUsers' },
+        { model: User, as: 'LikedUsers' },
         { model: Comment, include: [User] }
       ]
     })
 
     const isFavorited = await restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+    const isLiked = await restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
 
     await restaurant.increment({ 'viewCounts': 1 })
 
     await res.render('restaurant', {
       restaurant: restaurant.toJSON(),
-      isFavorited: isFavorited
+      isFavorited: isFavorited,
+      isLiked: isLiked
     })
   },
 
