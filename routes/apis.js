@@ -18,6 +18,7 @@ router.put('/admin/restaurants/:id', upload.single('image'), adminController.put
 
 router.get('/admin/categories', categoryController.getCategories)
 router.post('/admin/categories', categoryController.postCategory)
+router.put('/admin/categories/:id', categoryController.putCategory)
 
 // -----------------------------------------------------------------------------------
 
