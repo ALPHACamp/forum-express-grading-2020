@@ -13,7 +13,6 @@ let categoryController = {
   },
 
   postCategory: (req, res) => {
-    // 先檢查 name 是否為空，如果是空的話就回傳錯誤訊息，否則就建立一個新的分類並且導回瀏覽分類頁面
     categoryService.postCategory(req, res, (data) => {
       if (data['status'] === 'error') {
         req.flash('error_messages', data['message'])
@@ -36,14 +35,13 @@ let categoryController = {
   },
 
   deleteCategory: (req, res) => {
-    return Category.findByPk(req.params.id)
-      .then((category) => {
-        category.destroy()
-          .then((category) => {
-            res.redirect('/admin/categories')
-          })
-      })
-  }
+    categoryService.deleteCategory(req, res, (data) => {
+      if (data['status'] === 'success') {
+        return res.redirect('/admin/categories')
+      }
+    })
+  },
+
 }
 
 // -----------------------------------------------------------------------------------

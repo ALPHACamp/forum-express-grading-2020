@@ -19,6 +19,7 @@ let categoryService = {
   },
 
   postCategory: (req, res, callback) => {
+    console.log('================== categoryServices ' + req.body.name)
     if (!req.body.name) {
       callback({ status: "error", message: "name didn\'t exist" })
     } else {
@@ -43,6 +44,16 @@ let categoryService = {
             })
         })
     }
+  },
+
+  deleteCategory: (req, res, callback) => {
+    return Category.findByPk(req.params.id)
+      .then((category) => {
+        category.destroy()
+          .then((category) => {
+            callback({ status: 'success', message: '' })
+          })
+      })
   },
 }
 
