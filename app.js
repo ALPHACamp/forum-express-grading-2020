@@ -28,16 +28,22 @@ app.engine('handlebars', handlebars({
 }))
 app.set('view engine', 'handlebars')
 
+
 app.use(bodyParser.urlencoded({ extended: true }))
+// 使用表單傳輸檔案時，會改用 multipart / form - data
 app.use(bodyParser.json())
+
 
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 app.use(passport.session())
 
+
 app.use(flash())
 
+
 app.use(methodOverride('_method'))
+
 
 app.use('/upload', express.static(__dirname + '/upload'))
 
