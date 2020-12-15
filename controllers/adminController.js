@@ -1,3 +1,6 @@
+const db = require('../models');
+const Restaurant = db.Restaurant;
+
 const adminController = {
   getAdmin: (req, res) => {
     return res.redirect('/admin/restaurants');
@@ -7,7 +10,7 @@ const adminController = {
       const restaurants = await Restaurant.findAll({
         raw: true,
         nest: true,
-        include: [Category],
+        // include: [Category],
       });
       return res.render('admin/restaurants', { restaurants: restaurants });
     } catch (err) {
@@ -15,7 +18,7 @@ const adminController = {
     }
   },
   createRestaurant: (req, res) => {
-    return res.render('admin/restaurants/create');
+    return res.render('admin/create');
   },
   postRestaurant: async (req, res) => {
     try {
