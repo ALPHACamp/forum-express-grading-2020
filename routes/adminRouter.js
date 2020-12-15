@@ -10,7 +10,10 @@ router
   .get(adminController.getRestaurants)
   .post(adminController.postRestaurant);
 
-router.route('/restaurants/:id').get(adminController.getRestaurant);
+router
+  .route('/restaurants/:id')
+  .get(adminController.getRestaurant)
+  .put(adminController.putRestaurant);
 
 router.route('/restaurants/:id/edit').get(adminController.editRestaurant);
 
