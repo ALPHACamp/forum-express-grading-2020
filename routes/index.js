@@ -1,10 +1,8 @@
 const restController = require('../controllers/restController.js');
 const adminRouter = require('./adminRouter');
+const rootRouter = require('./rootRouter');
 
 module.exports = (app) => {
-  app.get('/', (req, res) => {
-    res.redirect('/restaurants');
-  });
-  app.get('/restaurants', restController.getRestaurants);
+  app.use('/', rootRouter);
   app.use('/admin', adminRouter);
 };
