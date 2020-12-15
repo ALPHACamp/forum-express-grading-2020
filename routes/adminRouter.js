@@ -13,7 +13,8 @@ router
 router
   .route('/restaurants/:id')
   .get(adminController.getRestaurant)
-  .put(adminController.putRestaurant);
+  .put(adminController.putRestaurant)
+  .delete(adminController.deleteRestaurant);
 
 router.route('/restaurants/:id/edit').get(adminController.editRestaurant);
 
