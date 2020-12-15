@@ -12,6 +12,8 @@ router
 
 router.route('/restaurants/:id').get(adminController.getRestaurant);
 
+router.route('/restaurants/:id/edit').get(adminController.editRestaurant);
+
 router.route('/restaurants/create').get(adminController.createRestaurant);
 
 module.exports = router;
