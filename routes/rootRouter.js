@@ -15,4 +15,11 @@ router
   .get(userController.signUpPage)
   .post(userController.signUp);
 
+router
+  .route('/signin')
+  .get(userController.signInPage)
+  .post(userController.passportAuth, userController.signIn);
+
+router.route('/logout').get(userController.logout);
+
 module.exports = router;
