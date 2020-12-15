@@ -33,6 +33,7 @@ const userController = {
       console.log(err);
     }
   },
+  
 };
 
 module.exports = userController;
