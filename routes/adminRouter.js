@@ -9,6 +9,9 @@ router
   .route('/restaurants')
   .get(adminController.getRestaurants)
   .post(adminController.postRestaurant);
+
+router.route('/restaurants/:id').get(adminController.getRestaurant);
+
 router.route('/restaurants/create').get(adminController.createRestaurant);
 
 module.exports = router;
