@@ -6,3 +6,5 @@ upload/
 .env
 
 .prettierrc
+
+package-lock.json
