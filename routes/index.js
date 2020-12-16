@@ -3,6 +3,7 @@ const helpers = require('../_helpers');
 const adminRouter = require('./adminRouter');
 const rootRouter = require('./rootRouter');
 const restRouter = require('./restRouter');
+const commentRouter = require('./commentRouter');
 
 module.exports = (app) => {
   const authenticated = (req, res, next) => {
@@ -22,5 +23,7 @@ module.exports = (app) => {
   };
   app.use('/', rootRouter);
   app.use('/', authenticated, restRouter);
+  app.use('/comment', authenticated, commentRouter);
+  app.use('/comment/:id', authenticatedAdmin, commentRouter);
   app.use('/admin', authenticatedAdmin, adminRouter);
 };
