@@ -23,23 +23,21 @@ const limitDescription = (description, limit = 48) => {
 const restController = {
   getRestaurants: async (req, res) => {
     try {
-      // let offset = 0;
-      // let categoryId = '';
+      let offset = 0;
+      let categoryId = '';
       const whereCategory = {};
-      // if (req.query.page) {
-      //   offset = (req.query.page - 1) * pageLimit;
-      // }
+      if (req.query.page) {
+        offset = (req.query.page - 1) * pageLimit;
+      }
       if (req.query.categoryId) {
         categoryId = Number(req.query.categoryId);
         whereCategory.CategoryId = categoryId;
       }
       const restaurants = await Restaurant.findAndCountAll({
-        // raw: true,
-        // nest: true,
         include: Category,
         where: whereCategory,
-        // offset,
-        // limit: pageLimit,
+        offset,
+        limit: pageLimit,
       });
       const categories = await Category.findAll({ raw: true, nest: true });
 
@@ -49,22 +47,22 @@ const restController = {
         categoryName: r.Category.name,
       }));
 
-      // const page = Number(req.query.page) || 1;
-      // const pages = Math.ceil(restaurants.count / pageLimit);
-      // const totalPage = Array.from({ length: pages }).map(
-      //   (item, index) => index + 1
-      // );
-      // const prev = page - 1 < 1 ? 1 : page - 1;
-      // const next = page + 1 > pages ? pages : page + 1;
+      const page = Number(req.query.page) || 1;
+      const pages = Math.ceil(restaurants.count / pageLimit);
+      const totalPage = Array.from({ length: pages }).map(
+        (item, index) => index + 1
+      );
+      const prev = page - 1 < 1 ? 1 : page - 1;
+      const next = page + 1 > pages ? pages : page + 1;
 
       res.render('restaurants', {
         restaurants: data,
         categories,
         categoryId,
-        // page,
-        // totalPage,
-        // prev,
-        // next,
+        page,
+        totalPage,
+        prev,
+        next,
       });
     } catch (err) {
       console.log(err);
