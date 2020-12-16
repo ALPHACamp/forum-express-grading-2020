@@ -8,6 +8,9 @@ const router = express.Router();
 
 router.route('/').get(adminController.getAdmin);
 
+router.route('/users').get(adminController.getUsers);
+router.route('/users/:id/toggleAdmin').put(adminController.toggleAdmin);
+
 router.route('/restaurants/create').get(adminController.createRestaurant);
 router
   .route('/restaurants')
@@ -21,6 +24,5 @@ router
   .delete(adminController.deleteRestaurant);
 
 router.route('/restaurants/:id/edit').get(adminController.editRestaurant);
-
 
 module.exports = router;
