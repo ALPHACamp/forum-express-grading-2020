@@ -13,7 +13,13 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-app.engine('hbs', handlebars({ defaultLayout: 'main.hbs' }));
+app.engine(
+  'hbs',
+  handlebars({
+    defaultLayout: 'main.hbs',
+    helpers: require('./config/handlebars-helpers'),
+  })
+);
 app.set('view engine', 'hbs');
 
 app.use('/upload', express.static(__dirname + '/upload'));
