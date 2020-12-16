@@ -1,3 +1,4 @@
+const fs = require('fs');
 const db = require('../models');
 const Restaurant = db.Restaurant;
 
@@ -26,25 +27,35 @@ const adminController = {
         req.flash('error_messages', "name didn't exist");
         return res.redirect('back');
       }
-      // const { file } = req;
-      // if (file) {
-      //   imgur.setClientID(IMGUR_CLIENT_ID);
-      //   imgur.upload(file.path, (err, img) => {
-      //     return Restaurant.create({
-      //       name: req.body.name,
-      //       tel: req.body.tel,
-      //       address: req.body.address,
-      //       opening_hours: req.body.opening_hours,
-      //       description: req.body.description,
-      //       image: file ? img.data.link : null,
-      //       CategoryId: req.body.categoryId,
-      //     }).then((restaurant) => {
-      //       req.flash("success_messages", "restaurant was successfully created");
-      //       return res.redirect("/admin/restaurants");
-      //     });
-      //   });
-      // }
-
+      const { file } = req;
+      if (file) {
+        await fs.readFile(file.path, async (err, data) => {
+          try {
+            if (err) return console.log('Error: ', err);
+            await fs.writeFile(
+              `upload/${file.originalname}`,
+              data,
+              async () => {
+                await Restaurant.create({
+                  name: req.body.name,
+                  tel: req.body.tel,
+                  address: req.body.address,
+                  opening_hours: req.body.opening_hours,
+                  description: req.body.description,
+                  image: file ? `/upload/${file.originalname}` : null,
+                });
+                req.flash(
+                  'success_messages',
+                  'restaurant was successfully created'
+                );
+                return res.redirect('/admin/restaurants');
+              }
+            );
+          } catch (err) {
+            console.log(err);
+          }
+        });
+      }
       await Restaurant.create({
         name: req.body.name,
         tel: req.body.tel,
@@ -52,7 +63,6 @@ const adminController = {
         opening_hours: req.body.opening_hours,
         description: req.body.description,
         image: null,
-        CategoryId: req.body.categoryId,
       });
       req.flash('success_messages', 'restaurant was successfully created');
       return res.redirect('/admin/restaurants');
@@ -90,32 +100,38 @@ const adminController = {
         req.flash('error_messages', "name didn't exist");
         return res.redirect('back');
       }
-
-      // const { file } = req;
-      // if (file) {
-      //   imgur.setClientID(IMGUR_CLIENT_ID);
-      //   imgur.upload(file.path, (err, img) => {
-      //     return Restaurant.findByPk(req.params.id).then((restaurant) => {
-      //       restaurant
-      //         .update({
-      //           name: req.body.name,
-      //           tel: req.body.tel,
-      //           address: req.body.address,
-      //           opening_hours: req.body.opening_hours,
-      //           description: req.body.description,
-      //           image: file ? img.data.link : restaurant.image,
-      //           CategoryId: req.body.categoryId,
-      //         })
-      //         .then((restaurant) => {
-      //           req.flash(
-      //             'success_messages',
-      //             'restaurant was successfully to update'
-      //           );
-      //           res.redirect('/admin/restaurants');
-      //         });
-      //     });
-      //   });
-      // } else {
+      const { file } = req;
+      if (file) {
+        await fs.readFile(file.path, async (err, data) => {
+          try {
+            if (err) return console.log('Error: ', err);
+            await fs.writeFile(
+              `upload/${file.originalname}`,
+              data,
+              async () => {
+                const restaurant = await Restaurant.findByPk(req.params.id);
+                restaurant.update({
+                  name: req.body.name,
+                  tel: req.body.tel,
+                  address: req.body.address,
+                  opening_hours: req.body.opening_hours,
+                  description: req.body.description,
+                  image: file
+                    ? `/upload/${file.originalname}`
+                    : restaurant.image,
+                });
+                req.flash(
+                  'success_messages',
+                  'restaurant was successfully to update'
+                );
+                return res.redirect('/admin/restaurants');
+              }
+            );
+          } catch (err) {
+            console.log(err);
+          }
+        });
+      }
       const restaurant = await Restaurant.findByPk(req.params.id);
       restaurant.update({
         name: req.body.name,
@@ -123,7 +139,7 @@ const adminController = {
         address: req.body.address,
         opening_hours: req.body.opening_hours,
         description: req.body.description,
-        // image: restaurant.image,
+        image: restaurant.image,
         // CategoryId: req.body.categoryId,
       });
       req.flash('success_messages', 'restaurant was successfully to update');
