@@ -1,4 +1,6 @@
 const fs = require('fs');
+const imgur = require('imgur-node-api');
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 const db = require('../models');
 const Restaurant = db.Restaurant;
 
@@ -29,28 +31,22 @@ const adminController = {
       }
       const { file } = req;
       if (file) {
-        await fs.readFile(file.path, async (err, data) => {
+        imgur.setClientID(IMGUR_CLIENT_ID);
+        await imgur.upload(file.path, async (err, img) => {
           try {
-            if (err) return console.log('Error: ', err);
-            await fs.writeFile(
-              `upload/${file.originalname}`,
-              data,
-              async () => {
-                await Restaurant.create({
-                  name: req.body.name,
-                  tel: req.body.tel,
-                  address: req.body.address,
-                  opening_hours: req.body.opening_hours,
-                  description: req.body.description,
-                  image: file ? `/upload/${file.originalname}` : null,
-                });
-                req.flash(
-                  'success_messages',
-                  'restaurant was successfully created'
-                );
-                return res.redirect('/admin/restaurants');
-              }
+            await Restaurant.create({
+              name: req.body.name,
+              tel: req.body.tel,
+              address: req.body.address,
+              opening_hours: req.body.opening_hours,
+              description: req.body.description,
+              image: file ? img.data.link : null,
+            });
+            req.flash(
+              'success_messages',
+              'restaurant was successfully created'
             );
+            return res.redirect('/admin/restaurants');
           } catch (err) {
             console.log(err);
           }
@@ -102,31 +98,23 @@ const adminController = {
       }
       const { file } = req;
       if (file) {
-        await fs.readFile(file.path, async (err, data) => {
+        imgur.setClientID(IMGUR_CLIENT_ID);
+        await imgur.upload(file.path, async (err, img) => {
           try {
-            if (err) return console.log('Error: ', err);
-            await fs.writeFile(
-              `upload/${file.originalname}`,
-              data,
-              async () => {
-                const restaurant = await Restaurant.findByPk(req.params.id);
-                restaurant.update({
-                  name: req.body.name,
-                  tel: req.body.tel,
-                  address: req.body.address,
-                  opening_hours: req.body.opening_hours,
-                  description: req.body.description,
-                  image: file
-                    ? `/upload/${file.originalname}`
-                    : restaurant.image,
-                });
-                req.flash(
-                  'success_messages',
-                  'restaurant was successfully to update'
-                );
-                return res.redirect('/admin/restaurants');
-              }
+            const restaurant = await Restaurant.findByPk(req.params.id);
+            restaurant.update({
+              name: req.body.name,
+              tel: req.body.tel,
+              address: req.body.address,
+              opening_hours: req.body.opening_hours,
+              description: req.body.description,
+              image: file ? img.data.link : restaurant.image,
+            });
+            req.flash(
+              'success_messages',
+              'restaurant was successfully to update'
             );
+            return res.redirect('/admin/restaurants');
           } catch (err) {
             console.log(err);
           }
