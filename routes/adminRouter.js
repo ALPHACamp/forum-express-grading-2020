@@ -1,5 +1,6 @@
 const express = require('express');
 const adminController = require('../controllers/adminController.js');
+const categoryController = require('../controllers/categoryController.js');
 
 const multer = require('multer');
 const upload = multer({ dest: 'temp/' });
@@ -7,6 +8,17 @@ const upload = multer({ dest: 'temp/' });
 const router = express.Router();
 
 router.route('/').get(adminController.getAdmin);
+
+router
+  .route('/categories')
+  .get(categoryController.getCategories)
+  .post(categoryController.postCategory);
+
+router
+  .route('/categories/:id')
+  .get(categoryController.getCategories)
+  .put(categoryController.putCategory)
+  .delete(categoryController.deleteCategory);
 
 router.route('/users').get(adminController.getUsers);
 router.route('/users/:id/toggleAdmin').put(adminController.toggleAdmin);
