@@ -23,7 +23,7 @@ module.exports = (app) => {
   };
   app.use('/', rootRouter);
   app.use('/', authenticated, restRouter);
-  app.use('/comment', authenticated, commentRouter);
-  app.use('/comment/:id', authenticatedAdmin, commentRouter);
+  app.use('/comments', authenticatedAdmin, commentRouter);
+  app.use('/comments', authenticated, commentRouter);
   app.use('/admin', authenticatedAdmin, adminRouter);
 };

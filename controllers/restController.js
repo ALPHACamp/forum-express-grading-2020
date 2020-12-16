@@ -1,7 +1,7 @@
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const Category = db.Category;
-// const Comment = db.Comment;
+const Comment = db.Comment;
 const User = db.User;
 
 const pageLimit = 9;
@@ -71,8 +71,7 @@ const restController = {
   getRestaurant: async (req, res) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id, {
-        // include: [Category, { model: Comment, include: [User] }],
-        include: [Category],
+        include: [Category, { model: Comment, include: [User] }],
       });
       res.render('restaurant', { restaurant: restaurant.toJSON() });
     } catch (err) {

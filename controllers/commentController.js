@@ -16,6 +16,7 @@ const commentController = {
   },
   deleteComment: async (req, res) => {
     try {
+      console.log(req.params.id);
       const comment = await Comment.findByPk(req.params.id);
       await comment.destroy();
       return res.redirect(`/restaurants/${comment.RestaurantId}`);
