@@ -9,4 +9,6 @@ router.get('/', (req, res) => {
 
 router.get('/restaurants', restController.getRestaurants);
 
+router.get('/restaurants/:id', restController.getRestaurant);
+
 module.exports = router;
