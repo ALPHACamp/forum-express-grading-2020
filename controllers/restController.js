@@ -25,19 +25,19 @@ const restController = {
     try {
       // let offset = 0;
       // let categoryId = '';
-      // const whereCategory = {};
+      const whereCategory = {};
       // if (req.query.page) {
       //   offset = (req.query.page - 1) * pageLimit;
       // }
-      // if (req.query.categoryId) {
-      //   categoryId = Number(req.query.categoryId);
-      //   whereCategory.CategoryId = categoryId;
-      // }
+      if (req.query.categoryId) {
+        categoryId = Number(req.query.categoryId);
+        whereCategory.CategoryId = categoryId;
+      }
       const restaurants = await Restaurant.findAndCountAll({
         // raw: true,
         // nest: true,
         include: Category,
-        // where: whereCategory,
+        where: whereCategory,
         // offset,
         // limit: pageLimit,
       });
@@ -60,7 +60,7 @@ const restController = {
       res.render('restaurants', {
         restaurants: data,
         categories,
-        // categoryId,
+        categoryId,
         // page,
         // totalPage,
         // prev,
