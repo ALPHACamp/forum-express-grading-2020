@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="well">
+            <img class="img-responsive center-block" src="{{user.image}}" style="width: 250px;margin-bottom: 25px;">
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h1>{{user.name}}</h1>
+        <ul class="list-unstyled">
+            <li><strong>Email:</strong> {{user.email}}</li>
+        </ul>
+        <a href='/users/{{user.id}}/edit'>
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
+    </div>
+</div>
+
+<br />
+<br />
+
+<div class="row">
+    {{#each comments}}
+    <div class="card" style="width:200px">
+        <img class="card-img-top" src="{{this.restaurantImage}}" alt="Card image">
+        <div class="card-body">
+            <h4 class="card-title">{{this.restaurantName}}</h4>
+            <p class="card-text">{{this.text}}</p>
+            <a href="/restaurants/{{this.RestaurantId}}" class="btn btn-primary">See Restaurant</a>
+        </div>
+    </div>
+    {{/each}}
+</div>

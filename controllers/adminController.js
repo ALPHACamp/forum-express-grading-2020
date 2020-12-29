@@ -1,6 +1,5 @@
 const fs = require('fs');
 const imgur = require('imgur-node-api');
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const User = db.User;
@@ -62,26 +61,20 @@ const adminController = {
       }
       const { file } = req;
       if (file) {
-        imgur.setClientID(IMGUR_CLIENT_ID);
+        imgur.setClientID(process.env.IMGUR_CLIENT_ID);
         await imgur.upload(file.path, async (err, img) => {
-          try {
-            await Restaurant.create({
-              name: req.body.name,
-              tel: req.body.tel,
-              address: req.body.address,
-              opening_hours: req.body.opening_hours,
-              description: req.body.description,
-              image: file ? img.data.link : null,
-              CategoryId: req.body.categoryId,
-            });
-            req.flash(
-              'success_messages',
-              'restaurant was successfully created'
-            );
-            return res.redirect('/admin/restaurants');
-          } catch (err) {
-            console.log(err);
-          }
+          if (err) return console.log(err);
+          await Restaurant.create({
+            name: req.body.name,
+            tel: req.body.tel,
+            address: req.body.address,
+            opening_hours: req.body.opening_hours,
+            description: req.body.description,
+            image: file ? img.data.link : null,
+            CategoryId: req.body.categoryId,
+          });
+          req.flash('success_messages', 'restaurant was successfully created');
+          return res.redirect('/admin/restaurants');
         });
       }
       await Restaurant.create({

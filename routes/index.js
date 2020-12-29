@@ -4,6 +4,7 @@ const adminRouter = require('./adminRouter');
 const rootRouter = require('./rootRouter');
 const restRouter = require('./restRouter');
 const commentRouter = require('./commentRouter');
+const userRouter = require('./userRouter');
 
 module.exports = (app) => {
   const authenticated = (req, res, next) => {
@@ -25,5 +26,6 @@ module.exports = (app) => {
   app.use('/', authenticated, restRouter);
   app.use('/comments', authenticatedAdmin, commentRouter);
   app.use('/comments', authenticated, commentRouter);
+  app.use('/users', authenticated, userRouter);
   app.use('/admin', authenticatedAdmin, adminRouter);
 };
