@@ -61,17 +61,18 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id);
-      // const comments = await Comment.findAll({
-      //   where: { UserId: user.id },
-      //   include: [Restaurant],
-      // });
-      // const data = comments.map((el) => ({
-      //   ...el.dataValues,
-      //   restaurantName: el.Restaurant.name,
-      //   restaurantImage: el.Restaurant.image,
-      // }));
-      res.render('profile', { user: user.toJSON()
-        // , comments: data 
+      const comments = await Comment.findAll({
+        where: { UserId: user.id },
+        include: [Restaurant],
+      });
+      const data = comments.map((el) => ({
+        ...el.dataValues,
+        restaurantName: el.Restaurant.name,
+        restaurantImage: el.Restaurant.image,
+      }));
+      res.render('profile', {
+        user: user.toJSON(),
+        comments: data,
       });
     } catch (err) {
       console.log(err);

@@ -18,14 +18,18 @@
 <br />
 <br />
 
+<h5>
+    已評論餐廳
+    <span class="badge badge-primary badge-pill">{{comments.length}}</span>
+</h5>
 <div class="row">
+
     {{#each comments}}
     <div class="card" style="width:200px">
         <img class="card-img-top" src="{{this.restaurantImage}}" alt="Card image">
         <div class="card-body">
-            <h4 class="card-title">{{this.restaurantName}}</h4>
+            <a class="card-title" href="/restaurants/{{this.RestaurantId}}">{{this.restaurantName}}</a>
             <p class="card-text">{{this.text}}</p>
-            <a href="/restaurants/{{this.RestaurantId}}" class="btn btn-primary">See Restaurant</a>
         </div>
     </div>
     {{/each}}
