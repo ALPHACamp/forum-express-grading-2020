@@ -71,7 +71,7 @@ const userController = {
         restaurantImage: el.Restaurant.image,
       }));
       res.render('profile', {
-        user: user.toJSON(),
+        profile: user.toJSON(),
         comments: data,
       });
     } catch (err) {
