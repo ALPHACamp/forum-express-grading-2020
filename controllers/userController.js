@@ -60,19 +60,18 @@ const userController = {
 
   getUser: async (req, res) => {
     try {
-      const user = await User.findByPk(req.params.id);
-      const comments = await Comment.findAll({
-        where: { UserId: user.id },
-        include: [Restaurant],
+      const user = await User.findByPk(req.params.id, {
+        include: [{ model: Comment, include: [Restaurant] }],
       });
-      const data = comments.map((el) => ({
+      const comments = user.Comments.map((el) => ({
         ...el.dataValues,
         restaurantName: el.Restaurant.name,
+        restaurantId: el.Restaurant.id,
         restaurantImage: el.Restaurant.image,
       }));
       res.render('profile', {
         profile: user.toJSON(),
-        comments: data,
+        comments,
       });
     } catch (err) {
       console.log(err);
