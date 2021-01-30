@@ -3,6 +3,7 @@ const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('./config/passport')
 const app = express()
 const PORT = 3000
 
@@ -11,6 +12,8 @@ app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 
 app.use((req, res, next) => {
@@ -23,6 +26,6 @@ app.listen(PORT, () => {
   console.log(`The server is listening to http://localhost:${PORT}.`)
 })
 
-require('./routes')(app)
+require('./routes')(app, passport)
 
 module.exports = app
