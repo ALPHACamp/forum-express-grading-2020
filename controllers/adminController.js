@@ -3,10 +3,8 @@ const db = require('../models');
 const { Restaurant } = db;
 
 const adminController = {
-  getRestaurants: (req, res) => Restaurant.findAll({ raw: true }).then((restaurants) => res.render('admin/restaurants', { restaurants })),
-
+  // Create
   createRestaurant: (req, res) => res.render('admin/create'),
-
   postRestaurant: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', "name didn't exist");
@@ -24,6 +22,11 @@ const adminController = {
         res.redirect('/admin/restaurants');
       });
   },
+
+  // Read
+  getRestaurants: (req, res) => Restaurant.findAll({ raw: true }).then((restaurants) => res.render('admin/restaurants', { restaurants })),
+  getRestaurant: (req, res) => Restaurant.findByPk(req.params.id, { raw: true }).then((restaurant) => res.render('admin/restaurant', { restaurant })),
+
 };
 
 module.exports = adminController;
