@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const flash = require('connect-flash');
 const session = require('express-session');
+const methodOverride = require('method-override');
 const db = require('./models');
 const passport = require('./config/passport');
 
@@ -10,6 +11,7 @@ const port = 3000;
 
 app.engine('handlebars', handlebars({ defaultLayout: 'main' })); // Handlebars 註冊樣板引擎
 app.set('view engine', 'handlebars'); // 設定使用 Handlebars 做為樣板引擎
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
