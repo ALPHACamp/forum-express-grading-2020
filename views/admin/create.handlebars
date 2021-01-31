@@ -1,4 +1,4 @@
-<form action="/admin/restaurants{{#if restaurant}}/{{restaurant.id}}?_method=PUT{{/if}}" method="POST">
+<form action="/admin/restaurants{{#if restaurant}}/{{restaurant.id}}?_method=PUT{{/if}}" method="POST" enctype="multipart/form-data">
   <div class="form-group">
     <label for="name">Name</label>
     <input type="text" class="form-control" name="name" id="name" placeholder="Enter name" value="{{restaurant.name}}">
