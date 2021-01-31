@@ -1,5 +1,9 @@
+const db = require('../models');
+
+const { Restaurant } = db;
+
 const adminController = {
-  getRestaurants: (req, res) => res.render('admin/restaurants'),
+  getRestaurants: (req, res) => Restaurant.findAll({ raw: true }).then((restaurants) => res.render('admin/restaurants', { restaurants })),
 };
 
 module.exports = adminController;
