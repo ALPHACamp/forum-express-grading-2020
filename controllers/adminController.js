@@ -50,6 +50,13 @@ const adminController = {
       });
   },
 
+  // Delete
+  deleteRestaurant: (req, res) => Restaurant.findByPk(req.params.id).then((restaurant) => {
+    restaurant.destroy()
+      .then((restaurant) => {
+        res.redirect('/admin/restaurants');
+      });
+  }),
 };
 
 module.exports = adminController;
