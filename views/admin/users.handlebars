@@ -1,0 +1,37 @@
+<div class="container mb-3">
+  <div class="row d-flex justify-content-between">
+    <h1 class="mb-0">餐廳後台</h1>
+    <div class="d-flex justify-content-end align-items-center">
+      <a class="mr-1" href="/admin/restaurants">餐廳管理</a> / <a class="ml-1" href="/admin/users">用戶管理</a>
+    </div>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+      <tr>
+        <th class="align-middle" scope="row">{{this.id}}</th>
+        <td class="align-middle">{{this.name}}</td>
+        <td class="align-middle">{{this.email}}</td>
+        <td class="align-middle">{{#if isAdmin}}Admin{{else}}User{{/if}}</td>
+        <td>
+          {{#if isAdmin}}
+            <a href="/admin/restaurants/{{this.id}}">Set as user</a>
+          {{else}}
+            <a href="/admin/restaurants/{{this.id}}">Set as administrator</a>
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

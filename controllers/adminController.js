@@ -4,9 +4,12 @@ const { IMGUR_CLIENT_ID } = process.env;
 const fs = require('fs');
 const db = require('../models');
 
-const { Restaurant } = db;
+const { Restaurant, User } = db;
 
 const adminController = {
+  /* * * * * * * *
+   * Restaurant  *
+   * * * * * * * */
   // Create
   createRestaurant: (req, res) => res.render('admin/create'),
   postRestaurant: (req, res) => {
@@ -100,6 +103,15 @@ const adminController = {
         res.redirect('/admin/restaurants');
       });
   }),
+
+  /* * * * * *
+   *  Admin  *
+   * * * * * */
+  // Create
+  // Read
+  getUsers: (req, res) => User.findAll({ raw: true }).then((users) => res.render('admin/users', { users })),
+  // Update
+  // Delete
 };
 
 module.exports = adminController;
