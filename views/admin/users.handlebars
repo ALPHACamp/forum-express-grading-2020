@@ -26,9 +26,13 @@
         <td class="align-middle">{{#if isAdmin}}Admin{{else}}User{{/if}}</td>
         <td>
           {{#if isAdmin}}
-            <a href="/admin/restaurants/{{this.id}}">Set as user</a>
+            <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
+              <button type="submit" class="btn btn-link">Set as user</button>
+            </form>
           {{else}}
-            <a href="/admin/restaurants/{{this.id}}">Set as administrator</a>
+            <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
+              <button type="submit" class="btn btn-link">Set as administrator</button>
+            </form>
           {{/if}}
         </td>
       </tr>
