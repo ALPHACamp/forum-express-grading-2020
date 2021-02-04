@@ -4,7 +4,7 @@ const { IMGUR_CLIENT_ID } = process.env;
 const fs = require('fs');
 const db = require('../models');
 
-const { Restaurant, User } = db;
+const { Restaurant, User, Category } = db;
 
 const adminController = {
   /* * * * * * * *
@@ -48,8 +48,18 @@ const adminController = {
   },
 
   // Read
-  getRestaurants: (req, res) => Restaurant.findAll({ raw: true }).then((restaurants) => res.render('admin/restaurants', { restaurants })),
   getRestaurant : (req, res) => Restaurant.findByPk(req.params.id, { raw: true }).then((restaurant) => res.render('admin/restaurant', { restaurant })),
+  getRestaurants: (req, res) => {
+    Restaurant
+    .findAll({
+      raw    : true,
+      nest   : true,
+      include: [Category], // From db model included earlier
+    })
+    .then((restaurants) => {
+      res.render('admin/restaurants', { restaurants });
+    });
+  },
 
   // Update
   editRestaurant: (req, res) => Restaurant.findByPk(req.params.id, { raw: true }).then((restaurant) => res.render('admin/create', { restaurant })),
