@@ -48,7 +48,6 @@ const adminController = {
   },
 
   // Read
-  getRestaurant : (req, res) => Restaurant.findByPk(req.params.id, { raw: true }).then((restaurant) => res.render('admin/restaurant', { restaurant })),
   getRestaurants: (req, res) => {
     Restaurant
     .findAll({
@@ -58,6 +57,19 @@ const adminController = {
     })
     .then((restaurants) => {
       res.render('admin/restaurants', { restaurants });
+    });
+  },
+  getRestaurant: (req, res) => {
+    Restaurant
+    .findByPk(req.params.id, {
+      raw    : true,
+      nest   : true,
+      include: [Category],
+    })
+    .then((restaurant) => {
+      console.log(restaurant);
+      // console.log(restaurant.toJSON());
+      res.render('admin/restaurant', { restaurant });
     });
   },
 
