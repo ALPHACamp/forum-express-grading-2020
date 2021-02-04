@@ -7,9 +7,9 @@ const db = require('../models');
 const { Restaurant, User } = db;
 
 const adminController = {
-  /* * * * * * * *
-   * Restaurant  *
-   * * * * * * * */
+/* * * * * * * *
+* Restaurant  *
+* * * * * * * */
   // Create
   createRestaurant: (req, res) => res.render('admin/create'),
   postRestaurant: (req, res) => {
@@ -92,6 +92,9 @@ const adminController = {
               req.flash('success_messages', 'restaurant was successfully to update');
               res.redirect('/admin/restaurants');
             });
+        })
+        .then((test) => {
+          console.log(test);
         });
     }
   },
@@ -105,8 +108,8 @@ const adminController = {
   }),
 
   /* * * * * *
-   *  Admin  *
-   * * * * * */
+*  Admin  *
+* * * * * */
   // Create
   // Read
   getUsers: (req, res) => User.findAll({ raw: true }).then((users) => res.render('admin/users', { users })),
@@ -120,7 +123,7 @@ const adminController = {
         res.redirect('/admin/users');
       });
   }),
-  // Delete
+// Delete
 };
 
 module.exports = adminController;
