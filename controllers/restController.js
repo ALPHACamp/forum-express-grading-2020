@@ -1,7 +1,8 @@
 const db = require('../models');
 
-const { Restaurant } = db;
-const { Category } = db;
+const {
+  Restaurant, Category, Comment, User,
+} = db;
 
 const pageLimit = 10;
 
@@ -51,13 +52,19 @@ const restController = {
     });
   },
   getRestaurant: (req, res) => {
-    Restaurant
-    .findByPk(req.params.id, {
-      include: Category,
+    Restaurant.findByPk(req.params.id, {
+      include: [
+        Category,
+        { model: Comment, include: [User] },
+      ],
     })
-    .then((restaurant) => res.render('restaurant', {
-      restaurant: restaurant.toJSON(),
-    }));
+    .then((restaurant) => {
+      console.log(restaurant.Comments[0].dataValues);
+
+      res.render('restaurant', {
+        restaurant: restaurant.toJSON(),
+      });
+    });
   },
 };
 
