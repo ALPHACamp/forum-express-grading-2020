@@ -5,7 +5,7 @@ const { User } = db;
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
-  signUp: (req, res) => {
+  signUp    : (req, res) => {
     // confirm password
     if (req.body.passwordCheck !== req.body.password) {
       req.flash('error_messages', '兩次密碼輸入不同！');
@@ -18,8 +18,8 @@ const userController = {
         return res.redirect('/signup');
       }
       User.create({
-        name: req.body.name,
-        email: req.body.email,
+        name    : req.body.name,
+        email   : req.body.email,
         password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null),
       }).then((user) => {
         req.flash('success_messages', '成功註冊帳號！');
@@ -29,7 +29,7 @@ const userController = {
   },
 
   signInPage: (req, res) => res.render('signin'),
-  signIn: (req, res) => {
+  signIn    : (req, res) => {
     req.flash('success_messages', '成功登入！');
     res.redirect('/restaurants');
   },
@@ -37,6 +37,15 @@ const userController = {
     req.flash('success_messages', '登出成功！');
     req.logout();
     res.redirect('/signin');
+  },
+
+  // Profile Management
+  // Read
+  getUser: (req, res) => {
+    User.findByPk(req.params.id)
+    .then((user) => res.render('profile', {
+      user: user.toJSON(),
+    }));
   },
 };
 
