@@ -13,12 +13,20 @@ const restController = {
         description : r.dataValues.description.substring(0, 50), // override desc with shorter ver
         categoryName: r.Category.name,
       }));
-      console.log('data', data);
 
       return res.render('restaurants', {
         restaurants: data,
       });
     });
+  },
+  getRestaurant: (req, res) => {
+    Restaurant
+    .findByPk(req.params.id, {
+      include: Category,
+    })
+    .then((restaurant) => res.render('restaurant', {
+      restaurant: restaurant.toJSON(),
+    }));
   },
 };
 
