@@ -13,7 +13,6 @@ const adminController = {
       nest: true, 
       include: [Category]
     }).then(restaurants => {
-      console.log(restaurants[0])
       return res.render('admin/restaurants', {restaurants: restaurants })
     })
   },
