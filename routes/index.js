@@ -24,6 +24,13 @@ module.exports = (app, passport) => {
     }
     res.redirect('/signin');
   };
+  const ownedProfile = (req, res, next) => {
+    if (Number(helpers.getUser(req).id) !== Number(req.params.id)) {
+      req.flash('error_messages', '無訪問權限！');
+      return res.redirect(`/users/${req.user.id}`);
+    }
+    return next();
+  };
 
   // 如果使用者訪問首頁，就導向 /restaurants 的頁面
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'));
@@ -38,6 +45,8 @@ module.exports = (app, passport) => {
 
   // Profile
   app.get('/users/:id', authenticated, userController.getUser);
+  app.get('/users/:id/edit', authenticated, ownedProfile, userController.editUser);
+  app.put('/users/:id', authenticated, ownedProfile, upload.single('image'), userController.putUser);
 
   // 連到 /admin 頁面就轉到 /admin/restaurants
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'));
