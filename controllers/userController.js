@@ -3,6 +3,10 @@ const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
+const Category = db.category
+const sequelize = db.sequelize
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
@@ -48,10 +52,28 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    return User.findByPk(req.params.id)
-      .then(user => {
-        return res.render('user', { user: user.toJSON() })
-      })
+    // return User.findByPk(req.params.id)
+    return User.findByPk(req.params.id, {
+      attributes: { include: [
+        [sequelize.literal(`(SELECT COUNT(DISTINCT RestaurantId) FROM comments)`), 'restaurant_count'],
+        [sequelize.literal(`(SELECT COUNT(DISTINCT id) FROM comments)`), 'comment_count']
+      ]},
+      group: ['comments.RestaurantId'],
+      nest: true,
+      include: { 
+        model: Comment,
+        attributes: ['RestaurantId'],
+        nest: true,
+        include: [{
+          model: Restaurant
+        }]
+      }
+    }).then(user => {
+      console.log(user.toJSON())
+      console.log(user.toJSON().Comments[0].Restaurant)
+      const restaurants = user.toJSON().Comments.map(comment => comment.Restaurant)
+      return res.render('user', { user: user.toJSON(), restaurants })
+    })
   },
 
   editUser: (req, res) => {
