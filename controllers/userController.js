@@ -69,9 +69,10 @@ const userController = {
         }]
       }
     }).then(user => {
-      console.log(user.toJSON())
-      console.log(user.toJSON().Comments[0].Restaurant)
-      const restaurants = user.toJSON().Comments.map(comment => comment.Restaurant)
+      let restaurants = null
+      if (user.toJSON().Comments.length > 0) {
+        restaurants = user.toJSON().Comments.map(comment => comment.Restaurant)
+      } 
       return res.render('user', { user: user.toJSON(), restaurants })
     })
   },
