@@ -6,7 +6,7 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 
-const { User } = db;
+const { User, Comment, Restaurant } = db;
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
@@ -47,10 +47,35 @@ const userController = {
   // Profile Management
   // Read
   getUser: (req, res) => {
-    User.findByPk(req.params.id)
-    .then((user) => res.render('profile', {
-      user: user.toJSON(),
-    }));
+    User.findByPk(req.params.id, {
+      include: [
+        { model: Comment, include: [Restaurant] },
+      ],
+    })
+    .then((user) => {
+      user = user.toJSON();
+
+      // Filter out unique restaurants
+      const commentedRestaurant = new Map();
+      user.Comments.forEach((value, index) => {
+        const restaurantInfo = {
+          RestaurantId   : value.RestaurantId,
+          RestaurantImage: value.Restaurant.image,
+        };
+        if (!commentedRestaurant.has(value.RestaurantId)) {
+          commentedRestaurant.set(value.RestaurantId, restaurantInfo);
+        }
+      });
+
+      // Added comments count and commented restaurants for frontend display
+      user.commentsCount = commentedRestaurant.size;
+      user.commentedRestaurant = commentedRestaurant.values();
+
+      // Remove unnecessary obj to be carried forward to save resource / speed up
+      delete user.Comments;
+
+      return res.render('profile', { user });
+    });
   },
   // Update
   editUser: (req, res) => {
