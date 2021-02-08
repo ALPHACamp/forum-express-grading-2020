@@ -8,23 +8,23 @@
       <div class="card-body" style="width: 75%;">
         <h5 class="card-title">{{user.name}}</h5>
         <p class="card-text">{{user.email}}</p>
-        <p class="card-text">已評論餐廳數: {{user.restaurant_count}}</p>
-        <p class="card-text">總評論數: {{user.comment_count}}</p>
+        <p class="card-text">已評論餐廳數: {{restaurant_count}}</p>
+        <p class="card-text">總評論數: {{comment_count}}</p>
         <a href="/users/{{user.id}}/edit" class="btn btn-primary">edit</a>
       </div>
     </div>
   </div>
 </div>
 
-{{#if restaurants}}
+{{#if user.Comments.length}}
 <div class="row mt-3">
-  {{#each restaurants}}
+  {{#each user.Comments}}
   <div class="col-3">
   <div class="card">
     <div class="card-body">
       <div class="d-flex" style="flex-direction: column;">
-        <img src="{{this.image}}" alt="restaurant-img">
-        <a href="/restaurants/{{this.id}}">{{this.name}}</a>
+        <img src="{{this.Restaurant.image}}" alt="restaurant-img">
+        <a href="/restaurants/{{this.Restaurant.id}}">{{this.Restaurant.name}}</a>
       </div>
     </div>
   </div>

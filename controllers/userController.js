@@ -52,28 +52,19 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    // return User.findByPk(req.params.id)
     return User.findByPk(req.params.id, {
-      attributes: { include: [
-        [sequelize.literal(`(SELECT COUNT(DISTINCT RestaurantId) FROM comments)`), 'restaurant_count'],
-        [sequelize.literal(`(SELECT COUNT(DISTINCT id) FROM comments)`), 'comment_count']
-      ]},
-      group: ['comments.RestaurantId'],
       nest: true,
-      include: { 
-        model: Comment,
-        attributes: ['RestaurantId'],
-        nest: true,
-        include: [{
-          model: Restaurant
-        }]
-      }
-    }).then(user => {
-      let restaurants = null
-      if (user.toJSON().Comments.length > 0) {
-        restaurants = user.toJSON().Comments.map(comment => comment.Restaurant)
-      } 
-      return res.render('user', { user: user.toJSON(), restaurants })
+      include: { model: Comment, nest: true, include: Restaurant },
+      group: ['comments.RestaurantId']
+    })
+    .then(async user => {
+      const comment_count = await Comment.count({ where: { UserId: req.params.id } })
+      const restaurant_count = await Comment.count({ 
+          where: { UserId: req.params.id },
+          distinct: true,
+          col: 'RestaurantId'
+       })
+      return res.render('user', { user: user.toJSON(), comment_count, restaurant_count})
     })
   },
 
