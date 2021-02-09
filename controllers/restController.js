@@ -89,6 +89,18 @@ const resController = {
         comments: comments
       })
     })
+  },
+
+  getDashboard: (req, res) => {
+    return Promise.all([
+      Comment.count({ where: { RestaurantId: req.params.id } }),
+      Restaurant.findByPk(req.params.id, {
+        nest: true,
+        include: [Category]
+      })
+    ]).then(([commentCount, restaurant]) => {
+      res.render('dashboard', { commentCount, restaurant: restaurant.toJSON() })
+    })
   }
 }
 
