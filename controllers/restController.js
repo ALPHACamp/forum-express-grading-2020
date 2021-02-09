@@ -60,7 +60,8 @@ const resController = {
           Category,
           { model: Comment, include: [User] }
         ]
-      }).then(restaurant => {
+      }).then(async restaurant => {
+        if (restaurant) restaurant = await restaurant.increment('viewCounts', { by: 1 })
         return res.render('restaurant', {
           restaurant: restaurant.toJSON()
         })
@@ -96,9 +97,11 @@ const resController = {
       Comment.count({ where: { RestaurantId: req.params.id } }),
       Restaurant.findByPk(req.params.id, {
         nest: true,
-        include: [Category]
+        include: [Category],
+        attributes: { include: ['viewCounts'] } //if not included, viewCounts won't be fetched
       })
-    ]).then(([commentCount, restaurant]) => {
+    ]).then(async ([commentCount, restaurant]) => {
+      console.log('before increment:', restaurant.dataValues.viewCounts) //can't access without dataValues
       res.render('dashboard', { commentCount, restaurant: restaurant.toJSON() })
     })
   }
