@@ -54,7 +54,7 @@ const userController = {
   getUser: (req, res) => {
     return User.findByPk(req.params.id, {
       nest: true,
-      include: { model: Comment, nest: true, include: Restaurant },
+      include: { model: Comment, nest: true, include: Restaurant, attributes: ['RestaurantId'] },
       group: ['RestaurantId']
     })
     .then(async user => {
