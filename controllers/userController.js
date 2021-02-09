@@ -52,20 +52,23 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    return User.findByPk(req.params.id, {
-      nest: true,
-      include: { model: Comment, nest: true, include: Restaurant, attributes: ['RestaurantId'] },
-      group: ['RestaurantId']
-    })
+    return User.findByPk(req.params.id)
     .then(async user => {
+      const comments = await Comment.findAll({ 
+        where: { UserId: req.params.id },
+        raw: true, 
+        nest: true, 
+        include: Restaurant,
+        attributes: ['RestaurantId'],
+        group: ['RestaurantId']
+      }).then(comments => comments)
       const comment_count = await Comment.count({ where: { UserId: req.params.id } })
       const restaurant_count = await Comment.count({ 
           where: { UserId: req.params.id },
           distinct: true,
           col: 'RestaurantId'
        })
-       console.log(user.toJSON())
-      return res.render('user', { user: user.toJSON(), comment_count, restaurant_count})
+      return res.render('user', { user: user.toJSON(), comments, comment_count, restaurant_count})
     })
   },
 
