@@ -4,22 +4,22 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Comments', [{
         text: '會想再來!!',
-        UserId: 31,
-        RestaurantId: 1001,
+        UserId: 1,
+        RestaurantId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         text: '難吃到爆!!',
-        UserId: 31,
-        RestaurantId: 1011,
+        UserId: 1,
+        RestaurantId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         text: '米其林1星!!',
-        UserId: 31,
-        RestaurantId: 1001,
+        UserId: 1,
+        RestaurantId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }], {})

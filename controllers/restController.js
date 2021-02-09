@@ -97,11 +97,10 @@ const resController = {
       Comment.count({ where: { RestaurantId: req.params.id } }),
       Restaurant.findByPk(req.params.id, {
         nest: true,
-        include: [Category],
-        attributes: { include: ['viewCounts'] } //if not included, viewCounts won't be fetched
+        include: [Category]
       })
-    ]).then(async ([commentCount, restaurant]) => {
-      console.log('before increment:', restaurant.dataValues.viewCounts) //can't access without dataValues
+    ]).then(([commentCount, restaurant]) => {
+      console.log('before increment:', restaurant.dataValues) //can't access without dataValues
       res.render('dashboard', { commentCount, restaurant: restaurant.toJSON() })
     })
   }
