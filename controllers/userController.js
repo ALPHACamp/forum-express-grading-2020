@@ -55,7 +55,7 @@ const userController = {
     return User.findByPk(req.params.id, {
       nest: true,
       include: { model: Comment, nest: true, include: Restaurant },
-      group: ['comments.RestaurantId']
+      group: ['RestaurantId']
     })
     .then(async user => {
       const comment_count = await Comment.count({ where: { UserId: req.params.id } })
@@ -64,6 +64,7 @@ const userController = {
           distinct: true,
           col: 'RestaurantId'
        })
+       console.log(user.toJSON())
       return res.render('user', { user: user.toJSON(), comment_count, restaurant_count})
     })
   },
