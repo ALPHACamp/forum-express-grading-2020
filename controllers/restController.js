@@ -35,7 +35,8 @@ const resController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
       }))
       
       Category.findAll({ 
@@ -60,14 +61,17 @@ const resController = {
         include: [
           Category,
           { model: User, as: 'FavoritedUsers' },
+          { model: User, as: 'LikedUsers' },
           { model: Comment, include: [User] }
         ]
       }).then(async restaurant => {
         const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
+        const isLiked = req.user.LikedRestaurants.map(d => d.id).includes(Number(req.params.id)) //string => number
         if (restaurant) restaurant = await restaurant.increment('viewCounts', { by: 1 })
         return res.render('restaurant', {
           restaurant: restaurant.toJSON(),
-          isFavorited
+          isFavorited,
+          isLiked
         })
       })
    },
