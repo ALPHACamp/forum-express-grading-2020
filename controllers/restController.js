@@ -59,12 +59,15 @@ const resController = {
     return Restaurant.findByPk(req.params.id, {
         include: [
           Category,
+          { model: User, as: 'FavoritedUsers' },
           { model: Comment, include: [User] }
         ]
       }).then(async restaurant => {
+        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
         if (restaurant) restaurant = await restaurant.increment('viewCounts', { by: 1 })
         return res.render('restaurant', {
-          restaurant: restaurant.toJSON()
+          restaurant: restaurant.toJSON(),
+          isFavorited
         })
       })
    },
