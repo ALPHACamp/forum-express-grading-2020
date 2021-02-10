@@ -9,6 +9,7 @@ const Category = db.category
 const sequelize = db.sequelize
 const Favorite = db.Favorite
 const Like = db.Like
+const helpers = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
@@ -106,7 +107,7 @@ const userController = {
 
   addFavorite: (req, res) => {
     return Favorite.create({
-      UserId: req.user.id,
+      UserId: helpers.getUser(req).id,
       RestaurantId: req.params.restaurantId
     }).then(favorite => {
       return res.redirect('back')
@@ -116,7 +117,7 @@ const userController = {
   removeFavorite: (req, res) => {
     return Favorite.findOne({
       where: {
-        UserId: req.user.id,
+        UserId: helpers.getUser(req).id,
         RestaurantId: req.params.restaurantId
       }
     })
@@ -129,8 +130,8 @@ const userController = {
   },
 
   addLike: (req, res) => {
-    Like.create({
-      UserId: req.user.id,
+    return Like.create({
+      UserId: helpers.getUser(req).id,
       RestaurantId: req.params.restaurantId
     }).then(like => {
       return res.redirect('back')
@@ -138,9 +139,9 @@ const userController = {
   },
 
   removeLike: (req, res) => {
-    Like.findOne({
+    return Like.findOne({
       where: {
-        UserId: req.user.id,
+        UserId: helpers.getUser(req).id,
         RestaurantId: req.params.restaurantId
       }
     }).then(like => {

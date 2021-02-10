@@ -4,6 +4,7 @@ const Category = db.Category
 const Comment = db.Comment
 const User = db.User
 const pageLimit = 10
+const helpers = require('../_helpers')
 
 const resController = {
   getRestaurants: (req, res) => {
@@ -35,8 +36,8 @@ const resController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
-        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.length > 0 ? helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id) : false,
+        isLiked: helpers.getUser(req).LikedRestaurants.length > 0 ? helpers.getUser(req).LikedRestaurants.map(d => d.id).includes(r.id) : false
       }))
       
       Category.findAll({ 
@@ -65,8 +66,8 @@ const resController = {
           { model: Comment, include: [User] }
         ]
       }).then(async restaurant => {
-        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
-        const isLiked = req.user.LikedRestaurants.map(d => d.id).includes(Number(req.params.id)) //string => number
+        const isFavorited = restaurant.FavoritedUsers.length > 0 ? restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id) : false// 找出收藏此餐廳的 user
+        const isLiked = restaurant.LikedUsers.length > 0 ? restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id) : false
         if (restaurant) restaurant = await restaurant.increment('viewCounts', { by: 1 })
         return res.render('restaurant', {
           restaurant: restaurant.toJSON(),
