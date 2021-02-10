@@ -7,6 +7,7 @@ const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Category = db.category
 const sequelize = db.sequelize
+const Favorite = db.Favorite
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
@@ -100,6 +101,30 @@ const userController = {
           res.redirect(`/users/${req.params.id}`)
         })
       }) 
+  },
+
+  addFavorite: (req, res) => {
+    return Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    }).then(restaurant => {
+      return res.redirect('back')
+    })
+  },
+
+  removeFavorite: (req, res) => {
+    return Favorite.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    })
+      .then((favorite) => {
+        favorite.destroy()
+          .then((restaurant) => {
+            return res.redirect('back')
+          })
+      })
   }
 
 }
