@@ -28,7 +28,8 @@ module.exports = (app, passport) => {
 
   app.post('/like/:restaurantId', authenticated, userController.addLike)
   app.delete('/like/:restaurantId', authenticated, userController.removeLike)
-
+  
+  app.get('/restaurants/top', authenticated, resController.getTopRestaurants)
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)

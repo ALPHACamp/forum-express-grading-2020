@@ -110,7 +110,26 @@ const resController = {
       })
     ]).then(([commentCount, restaurant]) => {
       console.log('before increment:', restaurant.dataValues) //can't access without dataValues
+      console.log(restaurant.name)
       res.render('dashboard', { commentCount, restaurant: restaurant.toJSON() })
+    })
+  },
+
+  getTopRestaurants: (req, res) => {
+    return Restaurant.findAll({
+      nest: true,
+      include: [{ model: User, as: 'FavoritedUsers' }],
+      limit: 10,
+      offset: 0
+    }).then(restaurants => {
+
+      restaurants = restaurants.map(r => ({
+        ...r.dataValues,
+        UserCount: r.FavoritedUsers.length,
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
+      })).sort((a, b) => b.UserCount - a.UserCount)
+
+      res.render('topRestaurants', { restaurants })
     })
   }
 }
