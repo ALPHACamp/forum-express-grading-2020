@@ -56,8 +56,13 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    return User.findByPk(req.params.id)
-    .then(async user => {
+    return User.findByPk(req.params.id, {
+      include: [
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' }
+      ]
+    }).then(async user => {
       const comments = await Comment.findAll({ 
         where: { UserId: req.params.id },
         raw: true, 
@@ -73,13 +78,15 @@ const userController = {
           col: 'RestaurantId'
       })
       
+      user = user.toJSON()
       const data = {
-        favoritedRestaurants: helpers.getUser(req).FavoritedRestaurants,
-        followers: helpers.getUser(req).Followers,
-        followings: helpers.getUser(req).Followings
+        favoritedRestaurants: user.FavoritedRestaurants,
+        followers: user.Followers,
+        followings: user.Followings
       }
 
-      return res.render('user', { user: user.toJSON(), data, comments, comment_count, restaurant_count})
+      return res.render('user', { profile: user, data, comments, comment_count, restaurant_count})
+      //cant use user, will overwrite locals
     })
   },
 

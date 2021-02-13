@@ -109,8 +109,6 @@ const resController = {
         include: [Category]
       })
     ]).then(([commentCount, restaurant]) => {
-      console.log('before increment:', restaurant.dataValues) //can't access without dataValues
-      console.log(restaurant.name)
       res.render('dashboard', { commentCount, restaurant: restaurant.toJSON() })
     })
   },

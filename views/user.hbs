@@ -2,18 +2,18 @@
   <div class="col">
     <div class="card" style="flex-direction: row;">
       <div class="profile-img"  style="width: 25%;">
-        <img src="{{user.image}}" alt="Profile-image" 
+        <img src="{{profile.image}}" alt="Profile-image" 
         style="object-fit: cover; width: 100%; height: 100%;">
       </div>
       <div class="card-body" style="width: 75%;">
-        <h5 class="card-title">{{user.name}}</h5>
-        <p class="card-text">{{user.email}}</p>
+        <h5 class="card-title">{{profile.name}}</h5>
+        <p class="card-text">{{profile.email}}</p>
         <p class="card-text"><strong>{{comment_count}}</strong> 則評論</p>
         <p class="card-text"><strong>{{restaurant_count}}</strong> 已評論餐廳</p>
         <p class="card-text"><strong>{{data.favoritedRestaurants.length}}</strong> 收藏的餐廳</p>
-        <p class="card-text"><strong>{{data.followers.length}}</strong> followers</p>
         <p class="card-text"><strong>{{data.followings.length}}</strong> followings</p>
-        <a href="/users/{{user.id}}/edit" class="btn btn-primary">edit</a>
+        <p class="card-text"><strong>{{data.followers.length}}</strong> followers</p>
+        <a href="/users/{{profile.id}}/edit" class="btn btn-primary">edit</a>
       </div>
     </div>
   </div>
@@ -22,21 +22,22 @@
 
 <div class="row mt-3">
 
-  <div class="col-md-4">
+    <div class="col-md-4">
     <div class="card">
-      <div class="card-header"><strong>{{data.followers.length}}</strong> followers</div>
+      <div class="card-header"><strong>{{data.followings.length}}</strong> followings</div>
       <div class="card-body">
         <div class="row">
-          {{#each data.followers}}
-          <div class="d-flex col-md-3" style="flex-direction: column;">
-            <img src="{{this.image}}" alt="user-img">
-            <a href="/users/{{this.id}}">{{this.name}}</a>
-          </div>
-          {{/each}}
+        {{#each data.followings}}
+        <div class="d-flex col-md-3" style="flex-direction: column;">
+          <img src="{{this.image}}" alt="user-img">
+          <a href="/users/{{this.id}}">{{this.name}}</a>
+        </div>
+        {{/each}}
         </div>
       </div>
     </div>
   </div>
+
 
   <div class="col-md-8">
       <div class="card">
@@ -54,17 +55,17 @@
       </div>
   </div>
 
-  <div class="col-md-4">
+   <div class="col-md-4">
     <div class="card">
-      <div class="card-header"><strong>{{data.followings.length}}</strong> followings</div>
+      <div class="card-header"><strong>{{data.followers.length}}</strong> followers</div>
       <div class="card-body">
         <div class="row">
-        {{#each data.followings}}
-        <div class="d-flex col-md-3" style="flex-direction: column;">
-          <img src="{{this.image}}" alt="user-img">
-          <a href="/users/{{this.id}}">{{this.name}}</a>
-        </div>
-        {{/each}}
+          {{#each data.followers}}
+          <div class="d-flex col-md-3" style="flex-direction: column;">
+            <img src="{{this.image}}" alt="user-img">
+            <a href="/users/{{this.id}}">{{this.name}}</a>
+          </div>
+          {{/each}}
         </div>
       </div>
     </div>
