@@ -71,8 +71,15 @@ const userController = {
           where: { UserId: req.params.id },
           distinct: true,
           col: 'RestaurantId'
-       })
-      return res.render('user', { user: user.toJSON(), comments, comment_count, restaurant_count})
+      })
+      
+      const data = {
+        favoritedRestaurants: helpers.getUser(req).FavoritedRestaurants,
+        followers: helpers.getUser(req).Followers,
+        followings: helpers.getUser(req).Followings
+      }
+
+      return res.render('user', { user: user.toJSON(), data, comments, comment_count, restaurant_count})
     })
   },
 
@@ -176,7 +183,7 @@ const userController = {
 
   addFollowing: (req, res) => {
     return Followship.create({
-      followerId: req.user.id,
+      followerId: helpers.getUser(req).id,
       followingId: req.params.userId
     })
      .then((followship) => {
@@ -186,7 +193,7 @@ const userController = {
    
    removeFollowing: (req, res) => {
     return Followship.findOne({where: {
-      followerId: req.user.id,
+      followerId: helpers.getUser(req).id,
       followingId: req.params.userId
     }})
       .then((followship) => {
