@@ -38,6 +38,6 @@ app.listen(PORT, () => {
   console.log(`The server is listening to http://localhost:${PORT}.`)
 })
 
-require('./routes')(app, passport)
+require('./routes')(app)
 
 module.exports = app
