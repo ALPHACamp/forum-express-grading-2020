@@ -20,6 +20,7 @@ app.engine('hbs', hbs({
 app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 app.use(session({ secret: 'JacksonSecret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 app.use(passport.session())
