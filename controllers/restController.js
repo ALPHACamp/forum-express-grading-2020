@@ -123,7 +123,7 @@ const resController = {
         ...r.dataValues,
         UserCount: r.FavoritedUsers.length,
         isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
-      })).sort((a, b) => b.UserCount - a.UserCount).slice(0, 9)
+      })).sort((a, b) => b.UserCount - a.UserCount).slice(0, 10)
 
       res.render('topRestaurants', { restaurants })
     })
