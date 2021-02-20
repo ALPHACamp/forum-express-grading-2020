@@ -1,0 +1,119 @@
+<div class="row d-flex justify-content-center" style="">
+  <div class="col-md-3">
+    <img class="userImage" src="
+      {{#if profile.image}} {{profile.image}} {{else}} https://i.imgur.com/Vb0T2OC.png
+        {{/if}}" alt="" style="width:200px; border-radius: 90%;">
+  </div>
+  <div class="col-md-9 userData">
+    <h4 style="font-weight:bold;">{{profile.name}}</h4>
+    <strong>{{profile.email}}</strong>
+    <strong>{{commentAmount}}</strong> 已評論餐廳
+    <strong>{{profile.Followings.length}}</strong> follings (追蹤者)
+    <strong>{{profile.Followers.length}}</strong> followers (追隨者)
+    <br />
+
+
+    {{#if isCurrentUser}}
+    <a class="btn btn-primary" href="/users/{{profile.id}}/edit">edit</a>
+    {{else}}
+
+    {{#if isFollowed }}
+    <form action="/following/{{profile.id}}?_method=DELETE" method="POST" style="display: contents;"><button
+        type="submit" class="btn btn-danger">取消追蹤</button></form>
+    {{else}}
+
+    <form action="/following/{{profile.id}}" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-primary">追蹤</button></form>
+    {{/if}}
+
+    {{/if}}
+  </div>
+</div>
+
+<br />
+
+<div class="row justify-content-between mb-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <strong>{{profile.Followings.length}}</strong> follings (追蹤者)
+      </div>
+      <div class="card-body d-flex flex-nowrap" style="overflow: auto;">
+        <a class="card-text">
+          {{#each profile.Followings}}
+          <a href="/users/{{this.id}}">
+            <img class="img-comment m-1"
+              src="{{#if this.image}} {{this.image}} {{else}} https://i.imgur.com/Vb0T2OC.png{{/if}}" alt=""
+              style="height: 100px; width:110px;">
+          </a>
+          {{/each}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    <div class="card ">
+      <div class="card-header">
+        <strong>{{commentAmount}}</strong> 已評論餐廳
+      </div>
+      <div class="card-body d-flex flex-nowrap" style="overflow: auto;">
+        <a class="card-text">
+          {{#each commentRestarant}}
+          <a href="/restaurants/{{this.id}}">
+            <img class="img-comment m-1" src="{{this.image}}" alt="" style="height: 100px; width:110px;">
+          </a>
+          {{/each}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+<div class="row justify-content-between">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <strong>{{profile.Followers.length}}</strong> followers (追隨者)
+      </div>
+      <div class="card-body d-flex flex-nowrap" style="overflow: auto;">
+        <a class="card-text">
+          {{#each profile.Followers}}
+          <a href="/users/{{this.id}}">
+            <img class="img-comment m-1"
+              src="{{#if this.image}} {{this.image}} {{else}} https://i.imgur.com/Vb0T2OC.png {{/if}}" alt=""
+              style="height: 100px; width:110px;">
+          </a>
+          {{/each}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header">
+        <strong>{{profile.FavoritedRestaurants.length }}</strong> 收藏的餐廳
+      </div>
+      <div class="card-body d-flex flex-nowrap" style="overflow: auto;">
+        <a class="card-text">
+          {{#each profile.FavoritedRestaurants }}
+          <a href="/restaurants/{{this.id}}">
+            <img class="img-comment m-1" src="{{this.image}}" alt="" style="height: 100px; width:110px;">
+          </a>
+          {{/each}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+<br />
+<a href="javascript:history.back()">回上一頁</a>

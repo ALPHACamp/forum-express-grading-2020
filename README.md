@@ -8,6 +8,7 @@
 ### Initialize
 ```
 git remote add upstream https://github.com/ALPHACamp/forum-express-grading.git  # 建立上游連線
+
 npm install
 ```
 
@@ -45,7 +46,9 @@ git commit -m "...."
 
 ## 繳交作業
 
+
 ```
+
 git push origin A17           # 上傳本地進度
 ```
 
