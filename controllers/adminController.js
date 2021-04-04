@@ -127,16 +127,15 @@ const adminController = {
   },
 
   // 刪除餐廳
-  deleteRestaurant: (req, res) => {
-    return Restaurant
-      .findByPk(req.params.id)
-      .then((restaurant) => {
-        restaurant.destroy()
-        console.log(restaurant)
-          .then((restaurant) => {
-            res.redirect('/admin/restaurants')
-          })
-      })
+  deleteRestaurant: async (req, res) => {
+    const id = req.params.id
+    try {
+      const restaurant = await Restaurant.findByPk(id)
+      await restaurant.destroy()
+      res.redirect('/admin/restaurants')
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
