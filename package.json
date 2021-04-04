@@ -2,7 +2,7 @@
   "name": "forum-express-workspace",
   "version": "1.0.0",
   "description": "",
-  "main": "_helpers.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
