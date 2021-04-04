@@ -1,11 +1,13 @@
+const { ensureAuthenticated, getUser } = require('../_helpers')
+
 // 一般使用者驗證
 const authenticated = (req, res, next) => {
-  req.isAuthenticated() ? next() : res.redirect('/signin')
+  ensureAuthenticated(req) ? next() : res.redirect('/signin')
 }
 
 // 管理員驗證
 const authenticatedAdmin = (req, res, next) => {
-  req.isAuthenticated() && req.user.isAdmin ? next() : res.redirect('/signin')
+  ensureAuthenticated(req) && getUser(req).isAdmin ? next() : res.redirect('/signin')
 }
 
 // 檢查登入資料

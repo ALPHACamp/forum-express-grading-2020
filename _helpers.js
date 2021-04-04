@@ -6,7 +6,4 @@ function getUser (req) {
   return req.user
 }
 
-module.exports = {
-  ensureAuthenticated,
-  getUser
-}
+module.exports = { ensureAuthenticated, getUser }

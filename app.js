@@ -40,3 +40,5 @@ require('./routes')(app)
 app.listen(PORT, () => {
   console.log(`The server is running on localhost:${PORT}`)
 })
+
+module.exports = app

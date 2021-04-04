@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const { getUser } = require('../_helpers')
 
 const userController = {
 
@@ -54,7 +55,7 @@ const userController = {
   // 登入 post
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入！')
-    req.user.isAdmin ? res.redirect('/admin/restaurants') : res.redirect('/restaurants')
+    getUser(req).isAdmin ? res.redirect('/admin/restaurants') : res.redirect('/restaurants')
   },
 
   // 登出 get
