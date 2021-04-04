@@ -1,5 +1,6 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -134,6 +135,35 @@ const adminController = {
       await restaurant.destroy()
       req.flash('success_messages', '餐廳刪除成功')
       res.redirect('/admin/restaurants')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 權限頁面
+  getUsers: async (req, res) => {
+    try {
+      const users = await User.findAll({ raw: true, nest: true })
+      res.render('admin/users', { users })
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 改變權限
+  toggleAdmin: async (req, res) => {
+    const id = req.params.id
+    try {
+      const user = await User.findByPk(id)
+      const userAdmin = await User.findByPk(id, { raw: true })
+      if (!userAdmin.isAdmin) {
+        user.update({ isAdmin: true })
+      }
+      if (userAdmin.isAdmin) {
+        user.update({ isAdmin: false })
+      }
+      req.flash('success_messages', '權限更新完成')
+      res.redirect('/admin/users')
     } catch (e) {
       console.log(e)
     }

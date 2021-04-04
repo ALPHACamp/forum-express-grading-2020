@@ -25,6 +25,8 @@ router.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRest
 router.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
 router.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
+router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
 // 註冊
 router.get('/signup', userController.signUpPage)
