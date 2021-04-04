@@ -1,6 +1,3 @@
-module.exports = (app) => {
+const routes = require('./routes')
 
-  app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
-}
+module.exports = app => { app.use('/', routes) }

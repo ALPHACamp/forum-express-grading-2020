@@ -41,7 +41,6 @@ npm run test
 git checkout -b A17           # 開新分支
 git merge origin/A17-test     # 下載作業規格
 npm run test                  # 直到綠燈全亮
-
 git add .
 git commit -m "...."
 ```
