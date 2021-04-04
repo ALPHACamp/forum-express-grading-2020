@@ -29,9 +29,9 @@ app.use(methodOverride('_method'))
 userPassport(app)
 
 app.use((req, res, next) => {
-  res.locals.user = req.user
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
+  res.locals.user = req.user
   next()
 })
 
@@ -40,5 +40,3 @@ require('./routes')(app)
 app.listen(PORT, () => {
   console.log(`The server is running on localhost:${PORT}`)
 })
-
-module.exports = app

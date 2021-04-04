@@ -1,48 +1,63 @@
 const bcrypt = require('bcryptjs')
-const passport = require('passport')
 const db = require('../models')
 const User = db.User
 
 const userController = {
+
+  // 註冊 get
   signUpPage: (req, res) => {
-    res.render('signup')
+    return res.render('signup')
   },
 
+  // 註冊 post
   signUp: (req, res) => {
-    if (req.body.passwordCheck !== req.body.password) {
-      req.flash('error_messages', '兩次密碼輸入不同！')
-      return res.redirect('/signup')
-    } else {
-      User.findOne({ where: { email: req.body.email } }).then(user => {
-        if (user) {
-          req.flash('error_messages', '信箱重複！')
-          return res.redirect('/signup')
-        } else {
-          User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
-          }).then(user => {
-            req.flash('success_messages', '成功註冊帳號！')
-            return res.redirect('/signin')
-          })
-        }
-      })
+    const { name, email, password, passwordCheck } = req.body
+    if (!name || !email || !password || !passwordCheck) {
+      console.log('error_messages : 全部都要輸入')
+      req.flash('error_messages', '全部都需要輸入')
+      return res.render('signup', { name, email })
     }
+    if (!email.match(/.+@.+\..+/)) {
+      console.log('error_messages : 請輸入正確信箱')
+      req.flash('error_messages', '請輸入正確信箱')
+      return res.render('signup', { name, email })
+    }
+    if (!password.match(/[_a-zA-Z0-9_]{8,}/)) {
+      console.log('error_messages : 請輸入八位以上英文或數字')
+      req.flash('error_messages', '請輸入八位以上英文或數字')
+      return res.render('signup', { name, email })
+    }
+    if (passwordCheck !== password) {
+      console.log('error_messages : 密碼與確認密碼不相符！')
+      req.flash('error_messages', '密碼與確認密碼不相符！')
+      return res.redirect('/signup')
+    }
+    const user = User.findOne({ where: { email } })
+    if (user) {
+      req.flash('error_messages', '信箱重複！')
+      return res.redirect('/signup')
+    }
+    User.create({
+      name,
+      email,
+      password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
+    })
+    req.flash('success_messages', '成功註冊帳號！')
+    return res.redirect('/signin')
   },
 
+  // 登入 get
   signInPage: (req, res) => {
-    res.render('signin')
+    return res.render('signin')
   },
 
-  signIn:
-    passport.authenticate('local',
-      {
-        successRedirect: '/restaurants',
-        failureRedirect: '/signin',
-        failureFlash: true
-      }),
+  // 登入 post
+  signIn: (req, res) => {
+    req.flash('success_messages', '成功登入！')
+    req.user.isAdmin ? res.redirect('/admin/restaurants') : res.redirect('/restaurants')
+  },
 
+  // 登出 get
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
     req.logout()

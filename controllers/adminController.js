@@ -5,6 +5,7 @@ const IMGUR_CLIENT_ID = 'process.env.IMGUR_CLIENT_ID'
 
 const adminController = {
   getRestaurants: (req, res) => {
+    console.log(db)
     return Restaurant
       .findAll({ raw: true, nest: true })
       .then(restaurants => {
