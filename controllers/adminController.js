@@ -1,7 +1,7 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = 'process.env.IMGUR_CLIENT_ID'
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const adminController = {
 
@@ -22,40 +22,40 @@ const adminController = {
 
   // 建立餐廳資料
   postRestaurant: (req, res) => {
-    if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
-      return res.redirect('back')
-    }
-
+    // eslint-disable-next-line camelcase
+    const { name, tel, address, opening_hours, description } = req.body
     const { file } = req
     if (file) {
+      console.log('file有喔')
       imgur.setClientID(IMGUR_CLIENT_ID)
       // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
         return Restaurant.create({
-          name: req.body.name,
-          tel: req.body.tel,
-          address: req.body.address,
-          opening_hours: req.body.opening_hours,
-          description: req.body.description,
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
           image: file ? img.data.link : null
-        }).then(() => {
-          req.flash('success_messages', 'restaurant was successfully created')
-          return res.redirect('/admin/restaurants')
         })
+          .then(() => {
+            req.flash('success_messages', '餐廳建立成功')
+            return res.redirect('/admin/restaurants')
+          })
       })
     } else {
       return Restaurant.create({
-        name: req.body.name,
-        tel: req.body.tel,
-        address: req.body.address,
-        opening_hours: req.body.opening_hours,
-        description: req.body.description,
+        name,
+        tel,
+        address,
+        opening_hours,
+        description,
         image: null
-      }).then((restaurant) => {
-        req.flash('success_messages', 'restaurant was successfully created')
-        return res.redirect('/admin/restaurants')
       })
+        .then(() => {
+          req.flash('success_messages', '餐廳建立成功')
+          return res.redirect('/admin/restaurants')
+        })
     }
   },
 
@@ -80,46 +80,46 @@ const adminController = {
       console.log(e)
     }
   },
-  putRestaurant: (req, res) => {
-    if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
-      return res.redirect('back')
-    }
 
+  // 編輯餐廳資料
+  putRestaurant: (req, res) => {
+    // eslint-disable-next-line camelcase
+    const { name, tel, address, opening_hours, description } = req.body
     const { file } = req
+    const id = req.params.id
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
-        return Restaurant.findByPk(req.params.id)
+        return Restaurant.findByPk(id)
           .then((restaurant) => {
             restaurant.update({
-              name: req.body.name,
-              tel: req.body.tel,
-              address: req.body.address,
-              opening_hours: req.body.opening_hours,
-              description: req.body.description,
+              name,
+              tel,
+              address,
+              opening_hours,
+              description,
               image: file ? img.data.link : restaurant.image
             })
-              .then((restaurant) => {
-                req.flash('success_messages', 'restaurant was successfully to update')
+              .then(() => {
+                req.flash('success_messages', '餐廳更新成功')
                 res.redirect('/admin/restaurants')
               })
           })
       })
     } else {
-      return Restaurant.findByPk(req.params.id)
+      return Restaurant.findByPk(id)
         .then((restaurant) => {
           restaurant.update({
-            name: req.body.name,
-            tel: req.body.tel,
-            address: req.body.address,
-            opening_hours: req.body.opening_hours,
-            description: req.body.description,
+            name,
+            tel,
+            address,
+            opening_hours,
+            description,
             image: restaurant.image
           })
-            .then((restaurant) => {
-              req.flash('success_messages', 'restaurant was successfully to update')
+            .then(() => {
+              req.flash('success_messages', '餐廳更新成功')
               res.redirect('/admin/restaurants')
             })
         })
@@ -132,6 +132,7 @@ const adminController = {
     try {
       const restaurant = await Restaurant.findByPk(id)
       await restaurant.destroy()
+      req.flash('success_messages', '餐廳刪除成功')
       res.redirect('/admin/restaurants')
     } catch (e) {
       console.log(e)
