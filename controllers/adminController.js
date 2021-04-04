@@ -9,7 +9,7 @@ const adminController = {
   // 全部餐廳頁面
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findAll({ raw: true, nest: true })
+      const restaurants = await Restaurant.findAll({ raw: true })
       return res.render('admin/restaurants', { restaurants })
     } catch (e) {
       console.log(e)
@@ -64,7 +64,7 @@ const adminController = {
   getRestaurant: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true })
+      const restaurant = await Restaurant.findByPk(id, { raw: true })
       return res.render('admin/restaurant', { restaurant })
     } catch (e) {
       console.log(e)
@@ -75,7 +75,7 @@ const adminController = {
   editRestaurant: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true })
+      const restaurant = await Restaurant.findByPk(id, { raw: true })
       return res.render('admin/create', { restaurant })
     } catch (e) {
       console.log(e)
@@ -84,13 +84,11 @@ const adminController = {
 
   // 編輯餐廳資料
   putRestaurant: (req, res) => {
-    // eslint-disable-next-line camelcase
     const { name, tel, address, opening_hours, description } = req.body
     const { file } = req
     const id = req.params.id
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
-      // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
         return Restaurant.findByPk(id)
           .then((restaurant) => {
@@ -143,7 +141,7 @@ const adminController = {
   // 權限頁面
   getUsers: async (req, res) => {
     try {
-      const users = await User.findAll({ raw: true, nest: true })
+      const users = await User.findAll({ raw: true })
       res.render('admin/users', { users })
     } catch (e) {
       console.log(e)
@@ -155,13 +153,7 @@ const adminController = {
     const id = req.params.id
     try {
       const user = await User.findByPk(id)
-      const userAdmin = await User.findByPk(id, { raw: true })
-      if (!userAdmin.isAdmin) {
-        user.update({ isAdmin: true })
-      }
-      if (userAdmin.isAdmin) {
-        user.update({ isAdmin: false })
-      }
+      await user.update({ ...user, isAdmin: user.isAdmin ? 0 : 1 })
       req.flash('success_messages', '權限更新完成')
       res.redirect('/admin/users')
     } catch (e) {
