@@ -1,6 +1,6 @@
 const restController = {
   getRestaurants: (req, res) => {
-    res.render('restaurants')
+    return res.render('restaurants')
   }
 }
 module.exports = restController

@@ -4,17 +4,23 @@ const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = 'process.env.IMGUR_CLIENT_ID'
 
 const adminController = {
-  getRestaurants: (req, res) => {
-    console.log(db)
-    return Restaurant
-      .findAll({ raw: true, nest: true })
-      .then(restaurants => {
-        return res.render('admin/restaurants', { restaurants })
-      })
+
+  // 全部餐廳頁面
+  getRestaurants: async (req, res) => {
+    try {
+      const restaurants = await Restaurant.findAll({ raw: true, nest: true })
+      return res.render('admin/restaurants', { restaurants })
+    } catch (e) {
+      console.log(e)
+    }
   },
+
+  // 建立餐廳頁面
   createRestaurant: (req, res) => {
-    res.render('admin/create')
+    return res.render('admin/create')
   },
+
+  // 建立餐廳資料
   postRestaurant: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', "name didn't exist")
@@ -52,19 +58,27 @@ const adminController = {
       })
     }
   },
-  getRestaurant: (req, res) => {
-    return Restaurant
-      .findByPk(req.params.id, { raw: true, nest: true })
-      .then(restaurant => {
-        return res.render('admin/restaurant', { restaurant })
-      })
+
+  // 單獨餐廳詳細頁面
+  getRestaurant: async (req, res) => {
+    const id = req.params.id
+    try {
+      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true })
+      return res.render('admin/restaurant', { restaurant })
+    } catch (e) {
+      console.log(e)
+    }
   },
-  editRestaurant: (req, res) => {
-    return Restaurant
-      .findByPk(req.params.id, { raw: true, nest: true })
-      .then(restaurant => {
-        return res.render('admin/create', { restaurant })
-      })
+
+  // 編輯餐廳頁面
+  editRestaurant: async (req, res) => {
+    const id = req.params.id
+    try {
+      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true })
+      return res.render('admin/create', { restaurant })
+    } catch (e) {
+      console.log(e)
+    }
   },
   putRestaurant: (req, res) => {
     if (!req.body.name) {
@@ -111,11 +125,14 @@ const adminController = {
         })
     }
   },
+
+  // 刪除餐廳
   deleteRestaurant: (req, res) => {
     return Restaurant
       .findByPk(req.params.id)
       .then((restaurant) => {
         restaurant.destroy()
+        console.log(restaurant)
           .then((restaurant) => {
             res.redirect('/admin/restaurants')
           })
