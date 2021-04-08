@@ -1,0 +1,22 @@
+<div class="row my-5">
+  <div class="col-md-4 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mt-3">Login</h1>
+      {{>message}}
+      <form action="/users/signIn" method="POST" class="needs-validation" novalidate>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password"
+            required>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Login</button>
+      </form>
+      <a class="btn btn-outline-primary mt-1" href="/auth/facebook">Login with Facebook</a>
+      <a class="btn btn-outline-info lead mt-4" href="/users/signUp">Register</a>
+    </div>
+  </div>
+</div>
