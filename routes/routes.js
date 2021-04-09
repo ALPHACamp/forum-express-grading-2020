@@ -19,7 +19,6 @@ router.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/rest
 // 一般使用者
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
-router.post('/comments', authenticated, commentController.postComment)
 
 // 管理員
 router.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
@@ -33,6 +32,10 @@ router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.dele
 // 管理使用者
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+
+// 評論
+router.post('/comments', authenticated, commentController.postComment)
+router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
 // 管理餐廳種類
 router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)

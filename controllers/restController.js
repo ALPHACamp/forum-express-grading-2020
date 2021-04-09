@@ -1,6 +1,8 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const Comment = db.Comment
+const User = db.User
 
 const restController = {
 
@@ -58,6 +60,7 @@ const restController = {
     const id = req.params.id
     try {
       const restaurant = await Restaurant.findByPk(id, { include: Category })
+      console.log(restaurant)
       return res.render('restaurant', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.log(e)
