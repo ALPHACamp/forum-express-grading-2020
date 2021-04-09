@@ -31,8 +31,8 @@ router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.t
 
 router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
-router.get('/admin/categories/:id')
-router.put('/admin/categories/:id')
+router.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
+router.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
 router.delete('/admin/categories/:id')
 
 // 註冊
