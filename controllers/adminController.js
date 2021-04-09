@@ -1,4 +1,5 @@
 const db = require('../models')
+const Category = db.Category
 const Restaurant = db.Restaurant
 const User = db.User
 const imgur = require('imgur-node-api')
@@ -9,7 +10,7 @@ const adminController = {
   // 全部餐廳頁面
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findAll({ raw: true })
+      const restaurants = await Restaurant.findAll({ raw: true, nest: true, include: [Category] })
       return res.render('admin/restaurants', { restaurants })
     } catch (e) {
       console.log(e)
@@ -64,7 +65,7 @@ const adminController = {
   getRestaurant: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, { raw: true })
+      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true, include: [Category] })
       return res.render('admin/restaurant', { restaurant })
     } catch (e) {
       console.log(e)
@@ -84,11 +85,13 @@ const adminController = {
 
   // 編輯餐廳資料
   putRestaurant: (req, res) => {
+    // eslint-disable-next-line camelcase
     const { name, tel, address, opening_hours, description } = req.body
     const { file } = req
     const id = req.params.id
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
+      // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
         return Restaurant.findByPk(id)
           .then((restaurant) => {
