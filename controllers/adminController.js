@@ -21,8 +21,7 @@ const adminController = {
   createRestaurant: async (req, res) => {
     try {
       const categories = await Category.findAll({ raw: true, nest: true })
-      console.log(categories)
-      return res.render('admin/create', { categories: categories })
+      return res.render('admin/create', { categories })
     } catch (e) {
       console.log(e)
     }
