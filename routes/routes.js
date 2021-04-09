@@ -7,6 +7,7 @@ const router = express.Router()
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
+const categoryController = require('../controllers/categoryController')
 
 const { authenticated, authenticatedAdmin, checkAccount } = require('../middlewares/auth')
 
@@ -28,7 +29,7 @@ router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.dele
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
-router.get('/admin/categories')
+router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 router.post('/admin/categories')
 router.get('/admin/categories/:id')
 router.put('/admin/categories/:id')
