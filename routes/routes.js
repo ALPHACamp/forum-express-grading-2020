@@ -33,7 +33,7 @@ router.get('/admin/categories', authenticatedAdmin, categoryController.getCatego
 router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
 router.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
 router.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
-router.delete('/admin/categories/:id')
+router.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
 // 註冊
 router.get('/signup', userController.signUpPage)
