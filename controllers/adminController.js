@@ -18,8 +18,14 @@ const adminController = {
   },
 
   // 建立餐廳頁面
-  createRestaurant: (req, res) => {
-    return res.render('admin/create')
+  createRestaurant: async (req, res) => {
+    try {
+      const categories = await Category.findAll({ raw: true, nest: true })
+      console.log(categories)
+      return res.render('admin/create', { categories: categories })
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   // 建立餐廳資料
