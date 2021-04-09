@@ -30,7 +30,7 @@ router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
 router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
-router.post('/admin/categories')
+router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
 router.get('/admin/categories/:id')
 router.put('/admin/categories/:id')
 router.delete('/admin/categories/:id')
