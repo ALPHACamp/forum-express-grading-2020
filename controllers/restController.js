@@ -5,26 +5,52 @@ const Category = db.Category
 const restController = {
 
   // 顯示全部餐廳
-  getRestaurants: async (req, res) => {
-    const id = req.query.categoryId
-    const querystring = {}
+  getRestaurants: (req, res) => {
+    const pageLimit = 10
+    let offset = 0
+    const whereQuery = {}
     let categoryId = ''
-    if (id) {
-      categoryId = Number(id)
-      querystring.CategoryId = categoryId
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
     }
-    try {
-      const restaurants = await Restaurant.findAll({ include: Category, where: querystring })
-      const categories = await Category.findAll({ raw: true, nest: true })
-      const data = restaurants.map(restaurant => ({
-        ...restaurant.dataValues,
-        description: restaurant.dataValues.description.substring(0, 50),
-        categoryName: restaurant.Category.name
+    if (req.query.categoryId) {
+      categoryId = Number(req.query.categoryId)
+      whereQuery.categoryId = categoryId
+    }
+    Restaurant.findAndCountAll({
+      include: Category,
+      where: whereQuery,
+      offset: offset,
+      limit: pageLimit
+    }).then(result => {
+      // data for pagination
+      const page = Number(req.query.page) || 1
+      const pages = Math.ceil(result.count / pageLimit)
+      const totalPage = Array.from({ length: pages }).map((item, index) => index + 1)
+      const prev = page - 1 < 1 ? 1 : page - 1
+      const next = page + 1 > pages ? pages : page + 1
+
+      // clean up restaurant data
+      const data = result.rows.map(r => ({
+        ...r.dataValues,
+        description: r.dataValues.description.substring(0, 50),
+        categoryName: r.dataValues.Category.name
       }))
-      return res.render('restaurants', { restaurants: data, categories, categoryId })
-    } catch (e) {
-      console.log(e)
-    }
+      Category.findAll({
+        raw: true,
+        nest: true
+      }).then(categories => {
+        return res.render('restaurants', {
+          restaurants: data,
+          categories: categories,
+          categoryId: categoryId,
+          page: page,
+          totalPage: totalPage,
+          prev: prev,
+          next: next
+        })
+      })
+    })
   },
 
   // 單獨餐廳詳細資料
