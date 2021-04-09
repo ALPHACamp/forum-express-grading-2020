@@ -17,6 +17,17 @@ const restController = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  // 單獨餐廳詳細資料
+  getRestaurant: async (req, res) => {
+    const id = req.params.id
+    try {
+      const restaurant = await Restaurant.findByPk(id, { include: Category })
+      return res.render('restaurant', { restaurant: restaurant.toJSON() })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
