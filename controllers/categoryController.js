@@ -4,23 +4,18 @@ const Category = db.Category
 const categoryController = {
 
   // 全部餐廳種類
-  getCategories: (req, res) => {
-    return Category.findAll({
-      raw: true,
-      nest: true
-    }).then(categories => {
-      if (req.params.id) {
-        Category.findByPk(req.params.id)
-          .then((category) => {
-            return res.render('admin/categories', {
-              categories: categories,
-              category: category.toJSON()
-            })
-          })
-      } else {
-        return res.render('admin/categories', { categories: categories })
+  getCategories: async (req, res) => {
+    const id = req.params.id
+    try {
+      const categories = await Category.findAll({ raw: true, nest: true })
+      if (id) {
+        const category = await Category.findByPk(id)
+        return res.render('admin/categories', { categories, category: category.toJSON() })
       }
-    })
+      return res.render('admin/categories', { categories })
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   // 新增餐廳種類
@@ -35,30 +30,32 @@ const categoryController = {
   },
 
   // 修改餐廳種類
-  putCategory: (req, res) => {
-    if (!req.body.name) {
-      req.flash('error_messages', 'name didn\'t exist')
+  putCategory: async (req, res) => {
+    const { name } = req.body
+    const id = req.params.id
+    if (!name) {
+      req.flash('error_messages', '請輸入種類名稱')
       return res.redirect('back')
-    } else {
-      return Category.findByPk(req.params.id)
-        .then((category) => {
-          category.update(req.body)
-            .then((category) => {
-              res.redirect('/admin/categories')
-            })
-        })
+    }
+    try {
+      const category = await Category.findByPk(id)
+      category.update({ name })
+      return res.redirect('/admin/categories')
+    } catch (e) {
+      console.log(e)
     }
   },
 
   // 刪除餐廳種類
-  deleteCategory: (req, res) => {
-    return Category.findByPk(req.params.id)
-      .then((category) => {
-        category.destroy()
-          .then((category) => {
-            res.redirect('/admin/categories')
-          })
-      })
+  deleteCategory: async (req, res) => {
+    const id = req.params.id
+    try {
+      const category = await Category.findByPk(id)
+      category.destroy()
+      return res.redirect('/admin/categories')
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 module.exports = categoryController
