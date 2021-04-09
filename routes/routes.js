@@ -8,6 +8,7 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const categoryController = require('../controllers/categoryController')
+const commentController = require('../controllers/commentController')
 
 const { authenticated, authenticatedAdmin, checkAccount } = require('../middlewares/auth')
 
@@ -18,6 +19,7 @@ router.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/rest
 // 一般使用者
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
+router.post('/comments', authenticated, commentController.postComment)
 
 // 管理員
 router.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
