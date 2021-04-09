@@ -26,9 +26,12 @@ router.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRest
 router.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
 router.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
+
+// 管理使用者
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
+// 管理餐廳種類
 router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
 router.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
