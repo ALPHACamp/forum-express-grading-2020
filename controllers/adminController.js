@@ -83,7 +83,8 @@ const adminController = {
     const id = req.params.id
     try {
       const restaurant = await Restaurant.findByPk(id, { raw: true })
-      return res.render('admin/create', { restaurant })
+      const categories = await Category.findAll({ raw: true, nest: true })
+      return res.render('admin/create', { restaurant, categories })
     } catch (e) {
       console.log(e)
     }
@@ -92,7 +93,7 @@ const adminController = {
   // 編輯餐廳資料
   putRestaurant: (req, res) => {
     // eslint-disable-next-line camelcase
-    const { name, tel, address, opening_hours, description } = req.body
+    const { name, tel, address, opening_hours, description, categoryId } = req.body
     const { file } = req
     const id = req.params.id
     if (file) {
@@ -107,7 +108,8 @@ const adminController = {
               address,
               opening_hours,
               description,
-              image: file ? img.data.link : restaurant.image
+              image: file ? img.data.link : restaurant.image,
+              categoryId
             })
               .then(() => {
                 req.flash('success_messages', '餐廳更新成功')

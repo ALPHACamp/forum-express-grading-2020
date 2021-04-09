@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000
 // eslint-disable-next-line node/no-path-concat
 app.use('/upload', express.static(__dirname + '/upload'))
 
-app.engine('handlebars', handlebars())
+app.engine('handlebars', handlebars({ helpers: require('./config/handlebars-helpers') }))
 app.set('view engine', 'handlebars')
 
 app.use(bodyParser.urlencoded({ extended: true }))
