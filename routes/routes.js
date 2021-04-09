@@ -28,6 +28,12 @@ router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.dele
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
+router.get('/admin/categories')
+router.post('/admin/categories')
+router.get('/admin/categories/:id')
+router.put('/admin/categories/:id')
+router.delete('/admin/categories/:id')
+
 // 註冊
 router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
