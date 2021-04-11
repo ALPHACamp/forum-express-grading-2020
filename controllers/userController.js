@@ -79,42 +79,47 @@ const userController = {
   },
 
   // 編輯 profile
-  editUser: (req, res) => {
-    return res.render('users/edit')
+  editUser: async (req, res) => {
+    const id = req.params.id
+    try {
+      const user = await User.findByPk(id, { raw: true })
+      return res.render('users/edit', { user })
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   // 更新 profile
   putUser: (req, res) => {
     const id = req.params.id
-    const { name } = req.body
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
-        return User.findByPk(id, { raw: true })
+        return User.findByPk(id)
           .then((user) => {
             user.update({
-              name,
+              ...user,
               image: file ? img.data.link : user.image
             })
           })
           .then(() => {
             req.flash('success_messages', '使用者更新成功')
-            res.redirect('/users/profile')
+            res.redirect(`/users/${id}`)
           })
       })
     } else {
-      return User.findByPk(id, { raw: true })
+      return User.findByPk(id)
         .then((user) => {
           user.update({
-            name,
+            ...user,
             image: user.image
           })
         })
         .then(() => {
           req.flash('success_messages', '使用者更新成功')
-          res.redirect('/users/profile')
+          res.redirect(`/users/${id}`)
         })
     }
   }
