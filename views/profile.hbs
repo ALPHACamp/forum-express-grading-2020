@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="well">
+      <img class="img-responsive center-block" src="{{user.image}}" style="width: 250px;margin-bottom: 25px;">
+    </div>
+  </div>
+  <div class="col-md-8">
+    <h1>{{result.name}}</h1>
+    <ul class="list-unstyled">
+      <li><strong>Email:</strong> {{result.email}}</li>
+      <p><strong>{{commentCount}}</strong> 已評論餐廳</p>
+    </ul>
+    {{#if check}}
+    <a href='/users/{{result.id}}/edit'>
+      <button type="button" class="btn btn-primary">Edit</button>
+    </a>
+    {{/if}}
+  </div>
+</div>
+
+<br />
+<br />
+
+<div class="row">
+  <div class="col-12 bg-secondary text-white">
+    <p class="mb-0 py-2"><strong>{{commentCount}}</strong> 已評論餐廳</p>
+  </div>
+  {{#each restaurantList}}
+  <br>
+  <div class="col-3 bg-white pt-3">
+    <a class="d-flex flex-row align-items-center" href="/restaurants/{{this.id}}">
+      <img class="img-responsive center-block" src="{{this.image}}" alt="restaurant avatar"
+        style="width: 100px;margin-bottom: 25px;margin-right: 10px">
+      <p class="ml-4">{{this.name}}</p>
+    </a>
+  </div>
+  <div class="col-9 bg-white pt-3">
+    <p style="line-height: 58px;">{{this.comment}}</p>
+  </div>
+  <br />
+  {{/each}}
+</div>
