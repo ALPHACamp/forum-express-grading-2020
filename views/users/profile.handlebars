@@ -17,7 +17,28 @@
         <a href="/users/{{ user.id }}/edit">
           <button type="submit" class="btn btn-primary">edit</button>
         </a>
+        <ul class="list-unstyled list-inline">
+          <li><strong>{{ count }}</strong> 已評論餐廳
+          </li>
+        </ul>
       </div>
     </div>
   </div>
+</div>
+
+<div class="col-md-8">
+  <div class="card">
+    <div class="card-header">
+      <strong>{{ count }}</strong> 已評論餐廳
+    </div>
+    <div class="card-body">
+      {{#each comment}}
+        <a href="/restaurants/{{ this.Restaurant.id }}">
+          <img src={{ this.Restaurant.image }} width="60" height="60"
+            class="avatar" />
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
 </div>
