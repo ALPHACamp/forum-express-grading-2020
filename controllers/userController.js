@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
 const { getUser } = require('../_helpers')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const userController = {
 
@@ -63,6 +65,58 @@ const userController = {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
+  },
+
+  // 取得 profile
+  getUser: async (req, res) => {
+    const id = req.params.id
+    try {
+      const user = await User.findByPk(id, { raw: true })
+      return res.render('users/profile', { user })
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 編輯 profile
+  editUser: (req, res) => {
+    return res.render('users/edit')
+  },
+
+  // 更新 profile
+  putUser: (req, res) => {
+    const id = req.params.id
+    const { name } = req.body
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      // eslint-disable-next-line node/handle-callback-err
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(id, { raw: true })
+          .then((user) => {
+            user.update({
+              name,
+              image: file ? img.data.link : user.image
+            })
+          })
+          .then(() => {
+            req.flash('success_messages', '使用者更新成功')
+            res.redirect('/users/profile')
+          })
+      })
+    } else {
+      return User.findByPk(id, { raw: true })
+        .then((user) => {
+          user.update({
+            name,
+            image: user.image
+          })
+        })
+        .then(() => {
+          req.flash('success_messages', '使用者更新成功')
+          res.redirect('/users/profile')
+        })
+    }
   }
 }
 
