@@ -20,6 +20,7 @@ router.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/rest
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/feeds', authenticated, restController.getFeeds)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
+router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
 // 管理員
 router.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
