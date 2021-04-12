@@ -18,6 +18,7 @@ router.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/rest
 
 // 一般使用者
 router.get('/restaurants', authenticated, restController.getRestaurants)
+router.get('/restaurants/feeds', authenticated, restController.getFeeds)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
 // 管理員

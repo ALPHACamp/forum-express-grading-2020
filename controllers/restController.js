@@ -69,6 +69,29 @@ const restController = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  // 最新動態
+  getFeeds: async (req, res) => {
+    try {
+      const restaurants = await Restaurant.findAll({
+        raw: true,
+        nest: true,
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [Category]
+      })
+      const comments = await Comment.findAll({
+        raw: true,
+        nest: true,
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [User, Restaurant]
+      })
+      return res.render('feeds', { restaurants, comments })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
