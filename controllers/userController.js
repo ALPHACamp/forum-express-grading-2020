@@ -4,6 +4,7 @@ const User = db.User
 const Restaurant = db.Restaurant
 const Comment = db.Comment
 const Favorite = db.Favorite
+const Like = db.Like
 const { getUser } = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -138,7 +139,7 @@ const userController = {
     try {
       await Favorite.create({ UserId, RestaurantId })
       req.flash('success_messages', '成功加入我的最愛')
-      res.redirect('/restaurants')
+      res.redirect('back')
     } catch (e) {
       console.log(e)
     }
@@ -152,7 +153,34 @@ const userController = {
       const favorite = await Favorite.findOne({ where: { UserId, RestaurantId } })
       favorite.destroy()
       req.flash('success_messages', '成功刪除我的最愛')
-      res.redirect('/restaurants')
+      res.redirect('back')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 加入收藏
+  addLike: async (req, res) => {
+    const UserId = req.user.id
+    const RestaurantId = req.params.restaurantId
+    try {
+      await Like.create({ UserId, RestaurantId })
+      req.flash('success_messages', '成功加入我的收藏')
+      res.redirect('back')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 刪除收藏
+  removeLike: async (req, res) => {
+    const UserId = req.user.id
+    const RestaurantId = req.params.restaurantId
+    try {
+      const like = await Like.findOne({ where: { UserId, RestaurantId } })
+      like.destroy()
+      req.flash('success_messages', '成功刪除我的收藏')
+      res.redirect('back')
     } catch (e) {
       console.log(e)
     }

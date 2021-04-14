@@ -44,6 +44,10 @@ router.put('/users/:id', authenticated, upload.single('image'), userController.p
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
 router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
+// Like
+router.post('/like/:restaurantId', authenticated, userController.addLike)
+router.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
 // 評論
 router.post('/comments', authenticated, commentController.postComment)
 router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)

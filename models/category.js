@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate (models) {
       Category.hasMany(models.Restaurant)
     }
-  };
+  }
   Category.init({
     name: DataTypes.STRING
   }, {
