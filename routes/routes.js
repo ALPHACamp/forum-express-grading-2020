@@ -35,6 +35,9 @@ router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.dele
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
+// Top User
+router.get('/users/top', authenticated, userController.getTopUser)
+
 // Profile
 router.get('/users/:id', authenticated, userController.getUser)
 router.get('/users/:id/edit', authenticated, userController.editUser)
@@ -47,6 +50,10 @@ router.delete('/favorite/:restaurantId', authenticated, userController.removeFav
 // Like
 router.post('/like/:restaurantId', authenticated, userController.addLike)
 router.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+// Follow
+router.post('/following/:userId', authenticated, userController.addFollowing)
+router.delete('/following/:userId', authenticated, userController.removeFollowing)
 
 // 評論
 router.post('/comments', authenticated, commentController.postComment)

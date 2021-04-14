@@ -5,6 +5,7 @@ const Restaurant = db.Restaurant
 const Comment = db.Comment
 const Favorite = db.Favorite
 const Like = db.Like
+const Followship = db.Followship
 const { getUser } = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -180,6 +181,50 @@ const userController = {
       const like = await Like.findOne({ where: { UserId, RestaurantId } })
       like.destroy()
       req.flash('success_messages', '成功刪除我的收藏')
+      res.redirect('back')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 取得 top 10 使用者
+  getTopUser: (req, res) => {
+    return User.findAll({
+      include: [
+        { model: User, as: 'Followers' }
+      ]
+    }).then(users => {
+      users = users.map(user => ({
+        ...user.dataValues,
+        FollowerCount: user.Followers.length,
+        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+      }))
+      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
+      return res.render('topUser', { users: users })
+    })
+  },
+
+  // 加入追蹤
+  addFollowing: async (req, res) => {
+    const followerId = req.user.id
+    const followingId = req.params.userId
+    try {
+      await Followship.create({ followerId, followingId })
+      req.flash('success_messages', '成功加入我的收藏')
+      res.redirect('back')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 刪除追蹤
+  removeFollowing: async (req, res) => {
+    const followerId = req.user.id
+    const followingId = req.params.userId
+    try {
+      const followship = await Followship.findOne({ where: { followerId, followingId } })
+      followship.destroy()
+      req.flash('success_messages', '成功刪除我的追蹤')
       res.redirect('back')
     } catch (e) {
       console.log(e)
