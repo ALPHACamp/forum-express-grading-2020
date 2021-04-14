@@ -10,7 +10,11 @@ const adminController = {
   // 全部餐廳頁面
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findAll({ raw: true, nest: true, include: [Category] })
+      const restaurants = await Restaurant.findAll({
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
       return res.render('admin/restaurants', { restaurants })
     } catch (e) {
       console.log(e)
@@ -20,7 +24,10 @@ const adminController = {
   // 建立餐廳頁面
   createRestaurant: async (req, res) => {
     try {
-      const categories = await Category.findAll({ raw: true, nest: true })
+      const categories = await Category.findAll({
+        raw: true,
+        nest: true
+      })
       return res.render('admin/create', { categories })
     } catch (e) {
       console.log(e)
@@ -33,7 +40,6 @@ const adminController = {
     const { name, tel, address, opening_hours, description } = req.body
     const { file } = req
     if (file) {
-      console.log('file有喔')
       imgur.setClientID(IMGUR_CLIENT_ID)
       // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
@@ -70,7 +76,11 @@ const adminController = {
   getRestaurant: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, { raw: true, nest: true, include: [Category] })
+      const restaurant = await Restaurant.findByPk(id, {
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
       return res.render('admin/restaurant', { restaurant })
     } catch (e) {
       console.log(e)
@@ -81,8 +91,14 @@ const adminController = {
   editRestaurant: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, { raw: true })
-      const categories = await Category.findAll({ raw: true, nest: true })
+      const restaurant = await Restaurant.findByPk(id, {
+        raw: true,
+        nest: true
+      })
+      const categories = await Category.findAll({
+        raw: true,
+        nest: true
+      })
       return res.render('admin/create', { restaurant, categories })
     } catch (e) {
       console.log(e)
@@ -112,7 +128,7 @@ const adminController = {
             })
               .then(() => {
                 req.flash('success_messages', '餐廳更新成功')
-                res.redirect('/admin/restaurants')
+                return res.redirect('/admin/restaurants')
               })
           })
       })
@@ -129,7 +145,7 @@ const adminController = {
           })
             .then(() => {
               req.flash('success_messages', '餐廳更新成功')
-              res.redirect('/admin/restaurants')
+              return res.redirect('/admin/restaurants')
             })
         })
     }
@@ -140,9 +156,9 @@ const adminController = {
     const id = req.params.id
     try {
       const restaurant = await Restaurant.findByPk(id)
-      await restaurant.destroy()
+      restaurant.destroy()
       req.flash('success_messages', '餐廳刪除成功')
-      res.redirect('/admin/restaurants')
+      return res.redirect('/admin/restaurants')
     } catch (e) {
       console.log(e)
     }
@@ -151,8 +167,11 @@ const adminController = {
   // 權限頁面
   getUsers: async (req, res) => {
     try {
-      const users = await User.findAll({ raw: true })
-      res.render('admin/users', { users })
+      const users = await User.findAll({
+        raw: true,
+        nest: true
+      })
+      return res.render('admin/users', { users })
     } catch (e) {
       console.log(e)
     }
@@ -163,9 +182,12 @@ const adminController = {
     const id = req.params.id
     try {
       const user = await User.findByPk(id)
-      await user.update({ ...user, isAdmin: user.isAdmin ? 0 : 1 })
+      await user.update({
+        ...user,
+        isAdmin: user.isAdmin ? 0 : 1
+      })
       req.flash('success_messages', '權限更新完成')
-      res.redirect('/admin/users')
+      return res.redirect('/admin/users')
     } catch (e) {
       console.log(e)
     }

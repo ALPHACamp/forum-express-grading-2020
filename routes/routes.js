@@ -38,6 +38,13 @@ router.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.dele
 router.get('/admin/users', authenticatedAdmin, adminController.getUsers)
 router.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
+// 管理餐廳種類
+router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
+router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
+router.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
+router.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
+router.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
+
 // Top User
 router.get('/users/top', authenticated, userController.getTopUser)
 
@@ -61,13 +68,6 @@ router.delete('/following/:userId', authenticated, userController.removeFollowin
 // 評論
 router.post('/comments', authenticated, commentController.postComment)
 router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
-
-// 管理餐廳種類
-router.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
-router.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
-router.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
-router.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
-router.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
 // 註冊
 router.get('/signup', userController.signUpPage)

@@ -62,28 +62,36 @@ const userController = {
   // 登入 post
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入！')
-    getUser(req).isAdmin ? res.redirect('/admin/restaurants') : res.redirect('/restaurants')
+    return getUser(req).isAdmin ? res.redirect('/admin/restaurants') : res.redirect('/restaurants')
   },
 
   // 登出 get
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
     req.logout()
-    res.redirect('/signin')
+    return res.redirect('/signin')
   },
 
   // 取得 profile
   getUser: async (req, res) => {
     const id = req.params.id
     try {
-      const user = await User.findByPk(id, { raw: true })
-      const comment = await Comment.findAll(
-        { raw: true, nest: true, where: { userId: id }, include: Restaurant }
-      )
-      const count = comment.length
-      return res.render('users/profile', { user, count, comment })
+      const user = await User.findByPk(id, {
+        include: [
+          { model: Comment, include: Restaurant },
+          { model: Restaurant, as: 'FavoritedRestaurants' },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ]
+      })
+      // eslint-disable-next-line array-callback-return
+      const commentsRestaurant = user.Comments.map((comment) => {
+        return comment.dataValues.Restaurant.dataValues
+      })
+      const isFollowed = req.user.Followings.map(data => data.id).includes(user.id)
+      return res.render('users/profile', { user: user.toJSON(), commentsRestaurant, isFollowed })
     } catch (e) {
-      console.log(e)
+      console.loge(e)
     }
   },
 
@@ -211,7 +219,7 @@ const userController = {
     try {
       await Followship.create({ followerId, followingId })
       req.flash('success_messages', '成功加入我的收藏')
-      res.redirect('back')
+      return res.redirect('back')
     } catch (e) {
       console.log(e)
     }
@@ -225,7 +233,7 @@ const userController = {
       const followship = await Followship.findOne({ where: { followerId, followingId } })
       followship.destroy()
       req.flash('success_messages', '成功刪除我的追蹤')
-      res.redirect('back')
+      return res.redirect('back')
     } catch (e) {
       console.log(e)
     }

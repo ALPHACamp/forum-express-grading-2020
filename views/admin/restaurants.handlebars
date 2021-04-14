@@ -10,11 +10,15 @@
 <a href='/admin/restaurants/create'>
   <button type="button" class="btn btn-primary">New Restaurant</button>
 </a>
+<a href='/restaurants'>
+  <button type="button" class="btn btn-primary">Front</button>
+</a>
 
 <br />
 <br />
 
 <table class="table">
+
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
@@ -23,6 +27,7 @@
       <th scope="col">#</th>
     </tr>
   </thead>
+
   <tbody>
     {{#each restaurants}}
       <tr>
@@ -48,4 +53,5 @@
       </tr>
     {{/each}}
   </tbody>
+
 </table>

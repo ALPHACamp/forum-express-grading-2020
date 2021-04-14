@@ -60,6 +60,7 @@ const restController = {
   // 單獨餐廳詳細資料
   getRestaurant: async (req, res) => {
     const id = req.params.id
+    const userId = req.user.id
     try {
       const restaurant = await Restaurant.findByPk(id, {
         include: [
@@ -69,8 +70,12 @@ const restController = {
           { model: Comment, include: [User] }
         ]
       })
-      const isFavorited = await restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-      const isLiked = await restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
+      const isFavorited = await restaurant.FavoritedUsers
+        .map(data => data.id)
+        .includes(userId)
+      const isLiked = await restaurant.LikedUsers
+        .map(data => data.id)
+        .includes(userId)
       return res.render('restaurant', {
         restaurant: restaurant.toJSON(),
         isFavorited,
@@ -108,15 +113,24 @@ const restController = {
   getDashboard: async (req, res) => {
     const id = req.params.id
     try {
-      const restaurant = await Restaurant.findByPk(id, {
-        include: [Category, { model: Comment, include: [User] }]
-      })
-      return res.render('dashboard', { restaurant })
+      const restaurant = await Restaurant.findByPk(
+        id,
+        {
+          include: [
+            Category,
+            {
+              model: Comment,
+              include: [User]
+            }
+          ]
+        })
+      return res.render('dashboard', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.log(e)
     }
   },
 
+  // 取得 top 10 餐廳
   getTopRestaurants: (req, res) => {
     return Restaurant.findAll({
       include: [
