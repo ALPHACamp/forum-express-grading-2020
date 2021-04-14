@@ -16,6 +16,9 @@ const { authenticated, authenticatedAdmin, checkAccount } = require('../middlewa
 router.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
 router.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
 
+// Top Restaurant
+router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
+
 // 一般使用者
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.get('/restaurants/feeds', authenticated, restController.getFeeds)
