@@ -3,6 +3,7 @@ const db = require('../models')
 const User = db.User
 const Restaurant = db.Restaurant
 const Comment = db.Comment
+const Favorite = db.Favorite
 const { getUser } = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -127,6 +128,33 @@ const userController = {
           req.flash('success_messages', '使用者更新成功')
           res.redirect(`/users/${id}`)
         })
+    }
+  },
+
+  // 加入最愛
+  addFavorite: async (req, res) => {
+    const UserId = req.user.id
+    const RestaurantId = req.params.restaurantId
+    try {
+      await Favorite.create({ UserId, RestaurantId })
+      req.flash('success_messages', '成功加入我的最愛')
+      res.redirect('/restaurants')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  // 刪除最愛
+  removeFavorite: async (req, res) => {
+    const UserId = req.user.id
+    const RestaurantId = req.params.restaurantId
+    try {
+      const favorite = await Favorite.findOne({ where: { UserId, RestaurantId } })
+      favorite.destroy()
+      req.flash('success_messages', '成功刪除我的最愛')
+      res.redirect('/restaurants')
+    } catch (e) {
+      console.log(e)
     }
   }
 }
