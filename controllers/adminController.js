@@ -1,3 +1,4 @@
+const adminService = require('../services/adminService')
 const db = require('../models')
 const Category = db.Category
 const Restaurant = db.Restaurant
@@ -8,17 +9,10 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const adminController = {
 
   // 全部餐廳頁面
-  getRestaurants: async (req, res) => {
-    try {
-      const restaurants = await Restaurant.findAll({
-        raw: true,
-        nest: true,
-        include: [Category]
-      })
-      return res.render('admin/restaurants', { restaurants })
-    } catch (e) {
-      console.log(e)
-    }
+  getRestaurants: (req, res) => {
+    adminService.getRestaurants(req, res, (data) => {
+      return res.render('admin/restaurants', data)
+    })
   },
 
   // 建立餐廳頁面
@@ -73,18 +67,10 @@ const adminController = {
   },
 
   // 單獨餐廳詳細頁面
-  getRestaurant: async (req, res) => {
-    const id = req.params.id
-    try {
-      const restaurant = await Restaurant.findByPk(id, {
-        raw: true,
-        nest: true,
-        include: [Category]
-      })
-      return res.render('admin/restaurant', { restaurant })
-    } catch (e) {
-      console.log(e)
-    }
+  getRestaurant: (req, res) => {
+    adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
+    })
   },
 
   // 編輯餐廳頁面
