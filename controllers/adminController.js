@@ -30,40 +30,14 @@ const adminController = {
 
   // 建立餐廳資料
   postRestaurant: (req, res) => {
-    // eslint-disable-next-line camelcase
-    const { name, tel, address, opening_hours, description } = req.body
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      // eslint-disable-next-line node/handle-callback-err
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.create({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
-          image: file ? img.data.link : null
-        })
-          .then(() => {
-            req.flash('success_messages', '餐廳建立成功')
-            return res.redirect('/admin/restaurants')
-          })
-      })
-    } else {
-      return Restaurant.create({
-        name,
-        tel,
-        address,
-        opening_hours,
-        description,
-        image: null
-      })
-        .then(() => {
-          req.flash('success_messages', '餐廳建立成功')
-          return res.redirect('/admin/restaurants')
-        })
-    }
+    adminService.postRestaurant(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/restaurants')
+    })
   },
 
   // 單獨餐廳詳細頁面
@@ -138,16 +112,13 @@ const adminController = {
   },
 
   // 刪除餐廳
-  deleteRestaurant: async (req, res) => {
-    const id = req.params.id
-    try {
-      const restaurant = await Restaurant.findByPk(id)
-      restaurant.destroy()
-      req.flash('success_messages', '餐廳刪除成功')
-      return res.redirect('/admin/restaurants')
-    } catch (e) {
-      console.log(e)
-    }
+  deleteRestaurant: (req, res) => {
+    adminService.deleteRestaurant(req, res, (data) => {
+      if (data.status === 'success') {
+        req.flash('success_messages', data.message)
+        return res.redirect('/admin/restaurants')
+      }
+    })
   },
 
   // 權限頁面
