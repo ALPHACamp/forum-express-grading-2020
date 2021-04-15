@@ -36,6 +36,7 @@ const adminController = {
       return res.json(data)
     })
   }
+
 }
 
 module.exports = adminController

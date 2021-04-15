@@ -29,6 +29,7 @@ const categoryController = {
       return res.json(data)
     })
   }
+
 }
 
 module.exports = categoryController
