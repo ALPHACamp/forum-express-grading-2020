@@ -71,6 +71,40 @@ const adminService = {
     }
   },
 
+  // 編輯餐廳資料
+  putRestaurant: async (req, res, callback) => {
+    const { name, tel, address, opening_hours, description, categoryId } = req.body
+    const { file } = req
+    const id = req.params.id
+    if (!file) {
+      const restaurant = await Restaurant.findByPk(id)
+      restaurant.update({
+        name,
+        tel,
+        address,
+        opening_hours,
+        description,
+        image: restaurant.image,
+        CategoryId: categoryId
+      })
+      return callback({ status: 'success', message: '餐廳更新成功' })
+    }
+    imgur.setClientID(IMGUR_CLIENT_ID)
+    imgur.upload(file.path, async (err, img) => {
+      const restaurant = await Restaurant.findByPk(id)
+      restaurant.update({
+        name,
+        tel,
+        address,
+        opening_hours,
+        description,
+        image: file ? img.data.link : restaurant.image,
+        CategoryId: categoryId
+      })
+      return callback({ status: 'success', message: '餐廳更新成功' })
+    })
+  },
+
   // 刪除餐廳
   deleteRestaurant: async (req, res, callback) => {
     const id = req.params.id

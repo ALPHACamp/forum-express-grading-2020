@@ -3,8 +3,6 @@ const db = require('../models')
 const Category = db.Category
 const Restaurant = db.Restaurant
 const User = db.User
-const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const adminController = {
 
@@ -67,48 +65,14 @@ const adminController = {
 
   // 編輯餐廳資料
   putRestaurant: (req, res) => {
-    // eslint-disable-next-line camelcase
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
-    const { file } = req
-    const id = req.params.id
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      // eslint-disable-next-line node/handle-callback-err
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.findByPk(id)
-          .then((restaurant) => {
-            restaurant.update({
-              name,
-              tel,
-              address,
-              opening_hours,
-              description,
-              image: file ? img.data.link : restaurant.image,
-              categoryId
-            })
-              .then(() => {
-                req.flash('success_messages', '餐廳更新成功')
-                return res.redirect('/admin/restaurants')
-              })
-          })
-      })
-    } else {
-      return Restaurant.findByPk(id)
-        .then((restaurant) => {
-          restaurant.update({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
-            image: restaurant.image
-          })
-            .then(() => {
-              req.flash('success_messages', '餐廳更新成功')
-              return res.redirect('/admin/restaurants')
-            })
-        })
-    }
+    adminService.putRestaurant(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/restaurants')
+    })
   },
 
   // 刪除餐廳

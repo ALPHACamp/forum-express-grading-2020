@@ -10,6 +10,7 @@ const categoryController = require('../controllers/api/categoryController')
 router.get('/admin/restaurants', adminController.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminController.postRestaurant)
 router.get('/admin/restaurants/:id', adminController.getRestaurant)
+router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
 router.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
 
 // 管理餐廳種類

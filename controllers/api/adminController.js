@@ -23,6 +23,13 @@ const adminController = {
     })
   },
 
+  // 編輯餐廳資料
+  putRestaurant: (req, res) => {
+    adminService.putRestaurant(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+
   // 刪除餐廳
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, (data) => {
