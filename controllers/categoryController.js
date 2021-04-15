@@ -24,20 +24,15 @@ const categoryController = {
   },
 
   // 修改餐廳種類
-  putCategory: async (req, res) => {
-    const { name } = req.body
-    const id = req.params.id
-    if (!name) {
-      req.flash('error_messages', '請輸入種類名稱')
-      return res.redirect('back')
-    }
-    try {
-      const category = await Category.findByPk(id)
-      category.update({ name })
+  putCategory: (req, res) => {
+    categoryService.putCategory(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data.message)
       return res.redirect('/admin/categories')
-    } catch (e) {
-      console.log(e)
-    }
+    })
   },
 
   // 刪除餐廳種類

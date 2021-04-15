@@ -29,6 +29,20 @@ const categoryService = {
     if (!name) { return callback({ status: 'error', message: '請輸入種類名稱' }) }
     await Category.create({ name })
     return callback({ status: 'success', message: '種類建立成功' })
+  },
+
+  // 修改餐廳種類
+  putCategory: async (req, res, callback) => {
+    const { name } = req.body
+    const id = req.params.id
+    if (!name) return callback({ status: 'error', message: '請輸入種類名稱' })
+    try {
+      const category = await Category.findByPk(id)
+      category.update({ name })
+      return callback({ status: 'success', message: '種類建立成功' })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

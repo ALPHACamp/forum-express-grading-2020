@@ -14,6 +14,13 @@ const categoryController = {
     categoryService.postCategory(req, res, (data) => {
       return res.json(data)
     })
+  },
+
+  // 修改餐廳種類
+  putCategory: (req, res) => {
+    categoryService.putCategory(req, res, (data) => {
+      return res.json(data)
+    })
   }
 }
 
