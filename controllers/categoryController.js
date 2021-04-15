@@ -13,13 +13,14 @@ const categoryController = {
 
   // 新增餐廳種類
   postCategory: (req, res) => {
-    const { name } = req.body
-    if (!name) {
-      req.flash('error_messages', '請輸入種類名稱')
-      return res.redirect('back')
-    }
-    Category.create({ name })
-    return res.redirect('/admin/categories')
+    categoryService.postCategory(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/categories')
+    })
   },
 
   // 修改餐廳種類

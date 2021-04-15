@@ -21,6 +21,14 @@ const categoryService = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  // 新增餐廳種類
+  postCategory: async (req, res, callback) => {
+    const { name } = req.body
+    if (!name) { return callback({ status: 'error', message: '請輸入種類名稱' }) }
+    await Category.create({ name })
+    return callback({ status: 'success', message: '種類建立成功' })
   }
 }
 

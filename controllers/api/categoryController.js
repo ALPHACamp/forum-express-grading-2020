@@ -7,6 +7,13 @@ const categoryController = {
     categoryService.getCategories(req, res, (data) => {
       return res.json(data)
     })
+  },
+
+  // 新增餐廳種類
+  postCategory: (req, res) => {
+    categoryService.postCategory(req, res, (data) => {
+      return res.json(data)
+    })
   }
 }
 
