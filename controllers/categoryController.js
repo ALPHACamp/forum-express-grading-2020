@@ -1,6 +1,4 @@
 const categoryService = require('../services/categoryService')
-const db = require('../models')
-const Category = db.Category
 
 const categoryController = {
 
@@ -36,15 +34,14 @@ const categoryController = {
   },
 
   // 刪除餐廳種類
-  deleteCategory: async (req, res) => {
-    const id = req.params.id
-    try {
-      const category = await Category.findByPk(id)
-      category.destroy()
-      return res.redirect('/admin/categories')
-    } catch (e) {
-      console.log(e)
-    }
+  deleteCategory: (req, res) => {
+    categoryService.deleteCategory(req, res, (data) => {
+      if (data.status === 'success') {
+        req.flash('success_messages', data.message)
+        return res.redirect('/admin/categories')
+      }
+    })
   }
 }
+
 module.exports = categoryController

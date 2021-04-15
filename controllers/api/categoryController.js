@@ -21,6 +21,13 @@ const categoryController = {
     categoryService.putCategory(req, res, (data) => {
       return res.json(data)
     })
+  },
+
+  // 刪除餐廳種類
+  deleteCategory: (req, res) => {
+    categoryService.deleteCategory(req, res, (data) => {
+      return res.json(data)
+    })
   }
 }
 

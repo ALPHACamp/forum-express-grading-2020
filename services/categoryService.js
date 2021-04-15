@@ -43,6 +43,18 @@ const categoryService = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  // 刪除餐廳種類
+  deleteCategory: async (req, res, callback) => {
+    const id = req.params.id
+    try {
+      const category = await Category.findByPk(id)
+      category.destroy()
+      return callback({ status: 'success', message: '餐廳種類成功' })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
