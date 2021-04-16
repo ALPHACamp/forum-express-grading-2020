@@ -7,7 +7,7 @@ const adminController = require('../controllers/api/adminController')
 const categoryController = require('../controllers/api/categoryController')
 const commentController = require('../controllers/api/commentController')
 // const restController = require('../controllers/api/restController')
-const userController = require('../controllers/api/userController')
+// const userController = require('../controllers/api/userController')
 
 const { authenticated, authenticatedAdmin } = require('../middlewares/api/auth')
 
@@ -25,7 +25,7 @@ router.post('/admin/categories', categoryController.postCategory)
 router.put('/admin/categories/:id', categoryController.putCategory)
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
 
-router.post('/signup', userController.signUp)
-router.post('/signin', userController.signIn)
+// router.post('/signup', userController.signUp)
+// router.post('/signin', userController.signIn)
 
 module.exports = router
