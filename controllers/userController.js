@@ -92,7 +92,7 @@ const userController = {
       const isFollowed = req.user.Followings.map(data => data.id).includes(user.id)
       return res.render('users/profile', { user: user.toJSON(), commentsRestaurant, isFollowed })
     } catch (e) {
-      console.loge(e)
+      console.log(e)
     }
   },
 
@@ -100,7 +100,7 @@ const userController = {
   editUser: async (req, res) => {
     const id = req.params.id
     try {
-      const user = await User.findByPk(id, { raw: true })
+      const user = await User.findByPk(id, { raw: true, nest: true })
       return res.render('users/edit', { user })
     } catch (e) {
       console.log(e)
@@ -110,6 +110,7 @@ const userController = {
   // 更新 profile
   putUser: (req, res) => {
     const id = req.params.id
+    const { name } = req.body
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
@@ -117,7 +118,7 @@ const userController = {
         return User.findByPk(id)
           .then((user) => {
             user.update({
-              name: user.name,
+              name,
               image: file ? img.data.link : user.image
             })
           })
@@ -130,7 +131,7 @@ const userController = {
       return User.findByPk(id)
         .then((user) => {
           user.update({
-            name: user.name,
+            name,
             image: user.image
           })
         })

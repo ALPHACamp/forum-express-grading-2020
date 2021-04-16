@@ -7,11 +7,12 @@ const commentService = {
     const { text, restaurantId } = req.body
     const id = req.user.id
     try {
-      await Comment.create({ text, RestaurantId: restaurantId, UserId: id })
+      const comment = await Comment.create({ text, RestaurantId: restaurantId, UserId: id })
       return callback({
         status: 'success',
         message: '成功新增一則評論',
-        RestaurantId: restaurantId
+        RestaurantId: restaurantId,
+        CommentId: comment.id
       })
     } catch (e) {
       console.log(e)
