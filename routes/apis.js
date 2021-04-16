@@ -9,9 +9,9 @@ const commentController = require('../controllers/api/commentController')
 // const restController = require('../controllers/api/restController')
 // const userController = require('../controllers/api/userController')
 
-const { authenticated, authenticatedAdmin } = require('../middlewares/api/auth')
+// const { authenticated, authenticatedAdmin } = require('../middlewares/api/auth')
 
-router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
+router.get('/admin/restaurants', adminController.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminController.postRestaurant)
 router.get('/admin/restaurants/:id', adminController.getRestaurant)
 router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
