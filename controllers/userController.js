@@ -8,12 +8,13 @@ const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
 const { getUser } = require('../_helpers')
-const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const userController = {
 
