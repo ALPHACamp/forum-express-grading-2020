@@ -14,8 +14,8 @@
     "dialect": "mysql",
     "logging": false
   },
-  "production": {
-    "use_env_variable": "CLEARDB_SILVER_URL"
+   "production": {
+    "use_env_variable": "CLEARDB_DATABASE_URL"
   },
   "travis": {
     "username": "travis",
