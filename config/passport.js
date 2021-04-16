@@ -1,9 +1,25 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
 const Restaurant = db.Restaurant
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const jwt = require('jsonwebtoken')
+const passportJWT = require('passport-jwt')
+const ExtractJwt = passportJWT.ExtractJwt
+const JwtStrategy = passportJWT.Strategy
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+}
 
 module.exports = app => {
   app.use(passport.initialize())
@@ -51,4 +67,20 @@ module.exports = app => {
       return cb(null, user)
     })
   })
+
+  passport.use(new JwtStrategy(
+    jwtOptions,
+    (jwt_payload, next) => {
+      User.findByPk(jwt_payload.id, {
+        include: [
+          { model: db.Restaurant, as: 'FavoritedRestaurants' },
+          { model: db.Restaurant, as: 'LikedRestaurants' },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ]
+      }).then(user => {
+        if (!user) return next(null, false)
+        return next(null, user)
+      })
+    }))
 }
