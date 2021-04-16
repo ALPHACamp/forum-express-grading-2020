@@ -1,3 +1,4 @@
+/* eslint-disable node/handle-callback-err */
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
@@ -112,12 +113,11 @@ const userController = {
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
-      // eslint-disable-next-line node/handle-callback-err
       imgur.upload(file.path, (err, img) => {
         return User.findByPk(id)
           .then((user) => {
             user.update({
-              ...user,
+              name: user.name,
               image: file ? img.data.link : user.image
             })
           })
@@ -130,7 +130,7 @@ const userController = {
       return User.findByPk(id)
         .then((user) => {
           user.update({
-            ...user,
+            name: user.name,
             image: user.image
           })
         })
