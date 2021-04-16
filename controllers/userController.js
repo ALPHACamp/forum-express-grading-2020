@@ -8,6 +8,7 @@ const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
 const { getUser } = require('../_helpers')
+require('dotenv').config()
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -121,6 +122,7 @@ const userController = {
               name,
               image: img.data.link
             })
+            console.log(img.data.link)
           })
           .then(() => {
             req.flash('success_messages', '使用者更新成功')
