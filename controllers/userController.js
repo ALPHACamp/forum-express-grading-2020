@@ -11,6 +11,10 @@ const { getUser } = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const userController = {
 
   // 註冊 get
