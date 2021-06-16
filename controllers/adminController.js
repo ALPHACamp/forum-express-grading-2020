@@ -63,6 +63,16 @@ const adminController = {
         req.flash('success_msg', 'restaurant was successfully to update')
         return res.redirect('/admin/restaurants')
       })
+  },
+
+  deleteRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.destroy()
+          .then(restaurant => {
+            return res.redirect('/admin/restaurants')
+          })
+      })
   }
 }
 module.exports = adminController
