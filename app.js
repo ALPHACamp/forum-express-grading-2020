@@ -9,3 +9,9 @@ app.listen(port, () => {
 require('./routes')(app)
 
 module.exports = app
+
+console.log('test')
+console.log('test')
+console.log('test')
+console.log('test')
+console.log('test')
