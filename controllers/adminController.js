@@ -19,21 +19,12 @@ let adminController = {
   toggleAdmin:  (req, res) => {
     return User.findByPk(req.params.id)
       .then((user) => {
-        if(user.isAdmin){
-          user.update({ isAdmin: 0 })
-          .then(() => {
-            req.flash('success_messages', 'success: admin change to user')
-            res.redirect('/admin/users')
-        })
-        } else {
-          user.update({ isAdmin: 1 })
-          .then(() => {
-            req.flash('success_messages', 'success: user change to admin')
-            res.redirect('/admin/users')
-          })
-        }
+        user.update({ isAdmin: !user.isAdmin })
+        req.flash('success_messages', `success: ${user.name}\'s role changed`)
       })
-  
+      .then(() => {
+            res.redirect('/admin/users')
+      })
   },
 
   getRestaurants: (req, res) => {
