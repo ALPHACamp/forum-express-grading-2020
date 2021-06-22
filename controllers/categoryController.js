@@ -31,7 +31,7 @@ const categoryController = {
     }).then(categories => {
       Category.findByPk(req.params.id)
         .then(category => {
-          res.render('admin/category', { categories, category: category.toJSON() })
+          res.render('admin/categories', { categories, category: category.toJSON() })
         })
     })
   },
