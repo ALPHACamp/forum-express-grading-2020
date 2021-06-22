@@ -35,6 +35,8 @@ module.exports = app => {
 
   app.get('/admin/categories', authenticatedAdmin, adminController.getCategories)
   app.post('/admin/categories', authenticatedAdmin, adminController.postCategory)
+  app.get('/admin/categories/:id', authenticatedAdmin, adminController.getCategory)
+  app.put('/admin/categories/:id', authenticatedAdmin, adminController.putCategory)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
