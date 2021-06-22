@@ -7,7 +7,13 @@ const categoryController = {
       raw: true,
       nest: true
     }).then(categories => {
-      res.render('admin/categories', { categories })
+      if (req.params.id) {
+        return Category.findByPk(req.params.id)
+          .then(category => {
+            res.render('admin/categories', { categories, category: category.toJSON() })
+          })
+      }
+      return res.render('admin/categories', { categories })
     })
   },
 
@@ -22,18 +28,6 @@ const categoryController = {
         req.flash('success_msg', 'Category was successfully created!')
         return res.redirect('/admin/categories')
       })
-  },
-
-  getCategory: (req, res) => {
-    return Category.findAll({
-      raw: true,
-      nest: true
-    }).then(categories => {
-      Category.findByPk(req.params.id)
-        .then(category => {
-          res.render('admin/categories', { categories, category: category.toJSON() })
-        })
-    })
   },
 
   putCategory: (req, res) => {
