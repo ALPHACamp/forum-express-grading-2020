@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 })
 
 app.use(methodOverride('_method'))
+app.use('/upload', express.static(__dirname + '/upload'))
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
