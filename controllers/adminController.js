@@ -29,7 +29,7 @@ const adminController = {
 
   postRestaurant: (req, res) => {
     if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
+      req.flash('error_msg', "name didn't exist")
       return res.redirect('back')
     }
 
@@ -46,7 +46,7 @@ const adminController = {
           image: file ? img.data.link : null,
           CategoryId: req.body.categoryId
         }).then((restaurant) => {
-          req.flash('success_messages', 'restaurant was successfully created')
+          req.flash('success_msg', 'restaurant was successfully created')
           return res.redirect('/admin/restaurants')
         })
       })
@@ -61,7 +61,7 @@ const adminController = {
         image: null,
         CategoryId: req.body.categoryId
       }).then((restaurant) => {
-        req.flash('success_messages', 'restaurant was successfully created')
+        req.flash('success_msg', 'restaurant was successfully created')
         return res.redirect('/admin/restaurants')
       })
     }
@@ -93,7 +93,7 @@ const adminController = {
 
   putRestaurant: (req, res) => {
     if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
+      req.flash('error_msg', "name didn't exist")
       return res.redirect('back')
     }
 
@@ -113,7 +113,7 @@ const adminController = {
               CategoryId: req.body.categoryId
             })
               .then((restaurant) => {
-                req.flash('success_messages', 'restaurant was successfully to update')
+                req.flash('success_msg', 'restaurant was successfully to update')
                 res.redirect('/admin/restaurants')
               })
           })
@@ -132,7 +132,7 @@ const adminController = {
             CategoryId: req.body.categoryId
           })
             .then((restaurant) => {
-              req.flash('success_messages', 'restaurant was successfully to update')
+              req.flash('success_msg', 'restaurant was successfully to update')
               res.redirect('/admin/restaurants')
             })
         })
@@ -177,6 +177,21 @@ const adminController = {
     }).then(categories => {
       res.render('admin/categories', { categories })
     })
+  },
+
+  postCategory: (req, res) => {
+    const { name } = req.body
+    if (!name) {
+      req.flash('error_msg', "Please enter category's name.")
+      return res.redirect('/admin/categories')
+    }
+    return Category.create({ name })
+      .then(category => {
+        req.flash('success_msg', 'Category was successfully created!')
+        return res.redirect('/admin/categories')
+      })
+=======
+>>>>>>> parent of 6b4e706 (feat: add admin/categories page)
   }
 }
 module.exports = adminController
