@@ -225,6 +225,14 @@ const adminController = {
           return res.redirect('/admin/categories')
         })
     })
+  },
+
+  deleteCategory: (req, res) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        category.destroy()
+        return res.redirect('/admin/categories')
+      })
   }
 }
 module.exports = adminController
