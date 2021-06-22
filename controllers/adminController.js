@@ -168,6 +168,15 @@ const adminController = {
         req.flash('success_msg', 'User was successfully update!')
         res.redirect('/admin/users')
       })
+  },
+
+  getCategories: (req, res) => {
+    return Category.findAll({
+      raw: true,
+      nest: true
+    }).then(categories => {
+      res.render('admin/categories', { categories })
+    })
   }
 }
 module.exports = adminController

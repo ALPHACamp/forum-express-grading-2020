@@ -33,6 +33,8 @@ module.exports = app => {
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
+  app.get('/admin/categories', authenticatedAdmin, adminController.getCategories)
+
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
 
