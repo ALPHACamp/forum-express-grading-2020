@@ -1,0 +1,23 @@
+<div class="row d-flex align-items-center">
+  {{#if user.image }}
+  <div class="col-md-4">
+    <img class="img-responsive center-block" src="{{ user.image }}"
+      style="width: 250px;height: 250px;object-fit: cover;margin-bottom: 25px;border-radius:50%;">
+  </div>
+  {{else}}
+  <div class="col-md-4">
+    <img class="img-responsive center-block"
+      src="https://cdn.pixabay.com/photo/2016/03/31/19/58/avatar-1295429_1280.png"
+      style="width: 250px;height: 250px;object-fit: cover;margin-bottom: 25px;border-radius:50%;">
+  </div>
+  {{/if}}
+  <div class="col-md-8">
+    <p class="h4">{{user.name}}</p>
+    <p>{{user.email}}</p>
+
+    <form action="/users/{{ user.id }}/edit" method="get">
+      <button type="submit" class="btn btn-outline-secondary mt-5 px-4 py-1">Edit</button>
+    </form>
+  </div>
+  <hr>
+</div>
