@@ -21,12 +21,20 @@ module.exports = app => {
     }
     res.redirect('/signin')
   }
+  const authenticatedUser = (req, res, next) => {
+    if (req.user.id === Number(req.params.id)) return next()
+    return res.redirect(`/users/${Number(req.params.id)}`)
+  }
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
   app.post('/comments', authenticated, commentController.postComment)
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+
+  app.get('/users/:id', authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated, authenticatedUser, upload.single('image'), userController.putUser)
 
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('admin/restaurants'))
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
