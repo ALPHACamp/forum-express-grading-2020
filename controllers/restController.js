@@ -86,5 +86,23 @@ const restController = {
       })
     })
   },
+
+  getRestaurantData: (req, res) => {
+    Restaurant.findByPk(req.params.id, {
+      include: [Category]
+    })
+      .then(restaurant => {
+        return Comment.findAndCountAll({
+          where: { RestaurantId: restaurant.id },
+          raw: true,
+          nest: true
+        }).then(comments => {
+          return res.render('restaurantData', {
+            restaurant: restaurant.toJSON(),
+            count: comments.count
+          })
+        })
+      })
+  }
 }
 module.exports = restController
