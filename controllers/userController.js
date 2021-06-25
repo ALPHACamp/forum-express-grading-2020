@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Restaurant = db.Restaurant
+const Comment = db.Comment
 const fs = require('fs')
 
 const userController = {
@@ -47,9 +49,22 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    User.findOne({ where: { id: req.params.id } })
+    const id = req.params.id
+    return User.findByPk(id)
       .then(user => {
-        res.render('user', { user: user.toJSON() })
+        return Comment.findAndCountAll({
+          where: { UserId: id },
+          include: [{ model: Restaurant, attributes: ['id', 'image'] }],
+          raw: true,
+          nest: true
+        }).then(comments => {
+          console.log(comments.rows)
+          return res.render('user', {
+            user: user.toJSON(),
+            comments: comments.rows,
+            count: comments.count
+          })
+        })
       })
   },
 

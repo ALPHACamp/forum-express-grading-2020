@@ -12,12 +12,26 @@
   </div>
   {{/if}}
   <div class="col-md-8">
-    <p class="h4">{{user.name}}</p>
-    <p>{{user.email}}</p>
+    <p class="h2 mb-3">{{user.name}}</p>
+    <p class="mb-0 h6">{{user.email}}</p>
+    <p class="p-0 mt-1">{{ count }} 項已評論的餐廳</p>
 
     <form action="/users/{{ user.id }}/edit" method="get">
-      <button type="submit" class="btn btn-outline-secondary mt-5 px-4 py-1">Edit</button>
+      <button type="submit" class="btn btn-outline-secondary mt-4 px-4 py-1">Edit</button>
     </form>
   </div>
   <hr>
+</div>
+<br />
+<br />
+<p class="h4">{{ count }} 項已評論的餐廳</p>
+<div class="row">
+  {{#each comments}}
+  <a href="/restaurants/{{ this.Restaurant.id }}" class="mt-5">
+    <div class="col-md-2">
+      <img class="img-responsive center-block" src="{{ this.Restaurant.image }}"
+        style="width: 150px;height: 150px;object-fit: cover;margin-bottom: 25px;border-radius:30%;border: 5px solid rgba(0, 0, 0, 0.112);">
+    </div>
+  </a>
+  {{/each}}
 </div>
