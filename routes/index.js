@@ -55,6 +55,9 @@ module.exports = (app, passport) => {
   app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
 
+  // 前台瀏覽餐廳個別資料 
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
 
