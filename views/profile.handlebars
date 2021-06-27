@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-12 d-flex flex-row bg-white">
+    <div class="left-part">
+      <img src="{{profileUser.image}}" alt="profile image" class="border border-dark rounded-circle mr-5"
+        style="width: 18rem; height: 18rem;">
+    </div>
+    <div class="right-part pt-3 pb-3">
+      <h4>{{profileUser.name}}</h4>
+      <p>{{profileUser.email}}</p>
+      <p><strong>{{profileUser.Comments.length}} 已評論餐廳</strong></p>
+      {{#if isSelf}}
+      <a href='/users/{{profileUser.id}}/edit'>
+        <button type="button" class="btn btn-primary">edit</button>
+      </a>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+
+<div class="row mt-5">
+  <div class="col-12 bg-white">
+    <div class="card">
+      <div class="card-header bg-light">
+        <p><strong>{{profileUser.Comments.length}} 已評論餐廳</strong></p>
+      </div>
+      <div class="card-body d-flex">
+        {{#each profileUser.Comments}}
+        <a href="/restaurants/{{ this.Restaurant.id }}">
+          <div class="image-container mr-3">
+            <img src="{{ this.Restaurant.image }}" alt="restaurant image" height="75" width="75"
+              style="border-radius: 20%;">
+          </div>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
