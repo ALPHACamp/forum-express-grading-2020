@@ -5,6 +5,9 @@ const categoryController = require('../controllers/categoryController.js')
 const commentController = require('../controllers/commentController.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
+const helpers = require('../_helpers')
+
+
 
 module.exports = (app, passport) => {
 
@@ -48,6 +51,9 @@ module.exports = (app, passport) => {
 
 
   app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
+
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+  app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.putUsers)
   // categories CRUD
   app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 
@@ -67,8 +73,10 @@ module.exports = (app, passport) => {
 
   app.post('/comments', authenticated, commentController.postComment)
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
-
+  // 追蹤
   app.get('/users/top', authenticated, userController.getTopUser)
+  app.post('/following/:userId', authenticated, userController.addFollowing)
+  app.delete('/following/:userId', authenticated, userController.removeFollowing)
 
   // 我的最愛
   app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)

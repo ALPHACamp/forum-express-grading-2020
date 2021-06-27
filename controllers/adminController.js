@@ -3,7 +3,9 @@ const Restaurant = db.Restaurant
 const fs = require('fs')
 const Category = db.Category
 const imgur = require('imgur-node-api')
+const user = require('../models/user')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const User = db.User
 
 const adminController = {
   getRestaurants: (req, res) => {
@@ -136,14 +138,32 @@ const adminController = {
         })
     }
   },
-
-
   deleteRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id)
       .then((restaurant) => {
         restaurant.destroy()
           .then((restaurant) => {
             res.redirect('/admin/restaurants')
+          })
+      })
+  },
+  getUsers: (req, res) => {
+    User.findAll({ raw: true })
+      .then(users => {
+        console.log(users)
+        return res.render('admin/users', { users })
+      })
+  },
+  putUsers: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then((user) => {
+        user.update({ isAdmin: !user.isAdmin })
+          .then((user) => {
+            req.flash('success_messages', 'user was successfully to update')
+            res.redirect('/admin/users')
+          })
+          .catch(err => {
+            console.log(err)
           })
       })
   }
