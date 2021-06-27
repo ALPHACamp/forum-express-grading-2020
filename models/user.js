@@ -16,17 +16,17 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Favorite,
         foreignKey: 'UserId',
         as: 'FavoritedRestaurants'
-      }),
-        User.belongsToMany(User, {
-          hrough: models.Followship,
-          foreignKey: 'followingId',
-          as: 'Followers'
-        }),
-        User.belongsToMany(User, {
-          through: models.Followship,
-          foreignKey: 'followerId',
-          as: 'Followings'
-        })
+      })
+      User.belongsToMany(User, {
+        through: models.Followship,
+        foreignKey: 'followingId',
+        as: 'Followers'
+      })
+      User.belongsToMany(User, {
+        through: models.Followship,
+        foreignKey: 'followerId',
+        as: 'Followings'
+      })
 
     }
   };
