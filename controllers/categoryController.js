@@ -29,25 +29,13 @@ const categoryController = {
   },
 
   putCategory: (req, res) => {
-    const { name } = req.body
-    if (!name) {
-      req.flash('error_msg', 'Please enter category\'s name')
+    adminService.putCategory(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_msg', data['message'])
+        return res.redirect('/admin/categories')
+      }
+      req.flash('success_msg', data['message'])
       return res.redirect('/admin/categories')
-    }
-    return Category.findAll({
-      raw: true,
-      nest: true
-    }).then(categories => {
-      return Category.findByPk(req.params.id)
-        .then(category => {
-          category.update({
-            name
-          })
-        })
-        .then(restaurant => {
-          req.flash('success_msg', 'Category was successfully to update.')
-          return res.redirect('/admin/categories')
-        })
     })
   },
 

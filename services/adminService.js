@@ -115,6 +115,33 @@ const adminService = {
         })
       })
   },
+
+  putCategory: (req, res, callback) => {
+    const { name } = req.body
+    if (!name) {
+      callback({
+        status: 'error',
+        message: 'Please enter category\'s name'
+      })
+    }
+    return Category.findAll({
+      raw: true,
+      nest: true
+    }).then(categories => {
+      return Category.findByPk(req.params.id)
+        .then(category => {
+          category.update({
+            name
+          })
+        })
+        .then(restaurant => {
+          callback({
+            status: 'success',
+            message: 'Category was successfully to update.'
+          })
+        })
+    })
+  },
 }
 
 module.exports = adminService
