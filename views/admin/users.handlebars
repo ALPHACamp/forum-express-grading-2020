@@ -1,0 +1,37 @@
+<h1>餐廳後台</h1>
+
+<h4>
+  <a href='/admin/restaurants'>
+    Restaurants
+  </a>
+  <span>|</span>
+  <a href='/admin/users'>
+    users
+  </a>
+</h4>
+
+<br />
+<br />
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+      <td>{{this.email}}</td>
+      <td>{{#if this.isAdmin}}admin{{else}}user{{/if}}</td>
+      <td><a href="">{{#if this.isAdmin}}set as user{{else}}set as admin{{/if}}</a></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
