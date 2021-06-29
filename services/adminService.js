@@ -98,6 +98,23 @@ const adminService = {
         })
     }
   },
+
+  postCategory: (req, res, callback) => {
+    const { name } = req.body
+    if (!name) {
+      callback({
+        status: 'error',
+        message: 'Please enter category\'s name.'
+      })
+    }
+    return Category.create({ name })
+      .then(category => {
+        callback({
+          status: 'success',
+          message: 'Category was successfully created!'
+        })
+      })
+  },
 }
 
 module.exports = adminService
