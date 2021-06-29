@@ -1,4 +1,6 @@
 const db = require('../models')
+const adminService = require('../services/adminService')
+const adminController = require('./adminController')
 const Category = db.Category
 
 const categoryController = {
@@ -40,11 +42,10 @@ const categoryController = {
   },
 
   deleteCategory: (req, res) => {
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        category.destroy()
-        return res.redirect('/admin/categories')
-      })
+    adminService.deleteCategory(req, res, data => {
+      req.flash('success_msg', data['message'])
+      return res.redirect('/admin/categories')
+    })
   }
 }
 
