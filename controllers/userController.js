@@ -50,6 +50,12 @@ const userController = {
       .then((user) => {
         res.render('user')
       })
+  },
+  editUser: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then((user) => {
+        res.render('edit')
+      })
   }
 }
 
