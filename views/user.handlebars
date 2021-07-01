@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
-    <img class="userImg"
-      src="https://user-images.githubusercontent.com/82774991/124149854-9187b500-dac3-11eb-8364-0e5d8d826fc3.png"
+    <img class="userImg mb-4"
+      src="{{#if user.image}} {{user.image}} {{else}} https://user-images.githubusercontent.com/82774991/124159518-d6b0e480-dacd-11eb-9ea9-cb37aa8e2775.png {{/if}}"
       alt="user img" width="200px" height="200px">
     <div class="mt-2 p-5" style="display: inline-block;">
       <h1><b>{{user.name}}</b></h1>
