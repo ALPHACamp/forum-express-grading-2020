@@ -24,7 +24,7 @@ const session = require('express-session')
 const passport = require('passport')
 const flash = require('connect-flash')
 app.use(session({
-  secret: process.env.SESSION_SECRET,    
+  secret: "nanana",    
   resave: true, 
   saveUninitialized: true 
 }))
