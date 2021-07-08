@@ -5,12 +5,25 @@
       alt="user img" width="200px" height="200px">
     <div class="mt-2 p-5" style="display: inline-block;">
       <h1><b>{{user.name}}</b></h1>
+      <p>{{count}}<b>已評論餐廳</b></p>
       <p>
       <h4>{{user.email}}</h4>
       </p>
       <form action="/users/{{user.id}}/edit">
         <button class="btn btn-primary" type="submit">edit</button>
       </form>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="card" style=" width: 100%;">
+    <div class="card-header"><b>{{count}}已評論餐廳</b></div>
+    <div class="card-body">
+      {{#each user.Comments}}
+      <a href="/restaurants/{{this.RestaurantId}}">
+        <img class="card-img p-2" style="width: 100px;" src="{{this.Restaurant.image}}" alt="{{this.Restaurant.name}}">
+      </a>
+      {{/each}}
     </div>
   </div>
 </div>
