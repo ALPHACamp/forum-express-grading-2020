@@ -80,6 +80,17 @@ const restController = {
       .then(([restaurants, comments]) => {
         return res.render('feeds', { restaurants: restaurants, comments: comments })
       })
+  },
+  getDashboard: (req, res) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: [Category, {
+        model: Comment,
+        include: [User]
+      }]
+    })
+      .then(restaurant => {
+        return res.render('dashboard', { restaurant: restaurant.toJSON() })
+      })
   }
 }
 module.exports = restController
