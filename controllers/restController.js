@@ -58,9 +58,12 @@ const restController = {
         include: [User]
       }]
     }).then(restaurant => {
-      return res.render('restaurant', {
-        restaurant: restaurant.toJSON()
-      })
+      return restaurant.increment(['viewCounts'], { by: 1 })
+        .then(() => {
+          return res.render('restaurant', {
+            restaurant: restaurant.toJSON()
+          })
+        })
     })
   },
   getFeeds: (req, res) => {
