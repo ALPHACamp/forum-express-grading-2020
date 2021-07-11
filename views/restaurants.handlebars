@@ -35,9 +35,10 @@
         <p class="card-text">{{this.description}}</p>
         {{#if this.isFavorited }}
         <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
-            class="btn btn-danger">移除最愛</button></form>
+            class="btn btn-danger"><i class="fab fa-gratipay"></i></button></form>
         {{else}}
-        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button>
+        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary"><i
+              class="fab fa-gratipay"></i></button>
         </form>
         {{/if}}
       </div>

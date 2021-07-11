@@ -18,10 +18,10 @@
     <a class="btn btn-primary" href="/restaurants/{{restaurant.id}}/dashboard">Dashboard</a>
     {{#if isFavorited }}
     <form action="/favorite/{{restaurant.id}}?_method=DELETE" method="POST" style="display: contents;"><button
-        type="submit" class="btn btn-danger">移除最愛</button></form>
+        type="submit" class="btn btn-danger"><i class="fab fa-gratipay"></i></button></form>
     {{else}}
     <form action="/favorite/{{restaurant.id}}" method="POST" style="display: contents;"><button type="submit"
-        class="btn btn-primary">加到最愛</button></form>
+        class="btn btn-primary"><i class="fab fa-gratipay"></i></button></form>
     {{/if}}
   </div>
   <hr>
