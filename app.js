@@ -4,12 +4,11 @@ const app = express()
 if (process.env.NODE_ENV !== 'production') {require('dotenv').config() }
 const PORT = process.env.PORT || 3000
 const helpers = require('./_helpers.js')
-
-if (process.env.NODE_ENV === 'test'){
-  app.use((req, res, next) => {
-    req.user = helpers.getUser(req)
-    next()})
-}
+const getTestUser = function(req){
+  if (process.env.NODE_ENV === 'test'){
+    return helpers.getUser(req)
+  }else{ return req.user }
+  }
 
 
 app.engine('hbs', exphbs({ 
@@ -40,7 +39,7 @@ app.use(flash())
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.warning_messages = req.flash('warning_messages')
-  res.locals.currentuser =req.user
+  res.locals.currentuser =getTestUser(req)
   next()
 })
 

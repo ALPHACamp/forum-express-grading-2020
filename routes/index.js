@@ -25,11 +25,12 @@ module.exports = (app, passport) => {
         if (helpers.getUser(req).isAdmin) { return next() }
         return res.redirect('/')
       }
-    }  
-    if (req.isAuthenticated()) { 
+    }else{
+      if (req.isAuthenticated()) { 
       if (req.user.isAdmin) { return next() }
       return res.redirect('/')
-    }
+    }    
+    }  
     res.redirect('/signin')
   }
     
