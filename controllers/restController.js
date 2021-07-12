@@ -59,15 +59,18 @@ const restController = {
       include: [
         Category,
         { model: User, as: 'FavoritedUsers' },
+        { model: User, as: 'LikedUsers' },
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
-      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id)
       return restaurant.increment(['viewCounts'], { by: 1 })
         .then(() => {
           return res.render('restaurant', {
             restaurant: restaurant.toJSON(),
-            isFavorited: isFavorited
+            isFavorited: isFavorited,
+            isLiked: isLiked
           })
         })
     })
