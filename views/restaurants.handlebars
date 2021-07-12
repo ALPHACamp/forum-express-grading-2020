@@ -38,7 +38,7 @@
             class="btn btn-danger"><i class="fab fa-gratipay"></i></button></form>
         {{else}}
         <form action="/favorite/{{this.id}}" method="POST" style="display:inline;"><button type="submit"
-            class="btn btn-primary"><i class="fab fa-gratipay"></i></button>
+            class="btn btn-outline-danger"><i class="fab fa-gratipay"></i></button>
         </form>
         {{/if}}
         {{#if this.isLiked }}
