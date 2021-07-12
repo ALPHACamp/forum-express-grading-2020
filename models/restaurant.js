@@ -5,8 +5,12 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Restaurant extends Model {
 
-    static associate(models) {
-      Restaurant.belongsTo(models.Category, {foreignKey: { name: 'CategoryId' }})
+    static associate(models) { 
+      Restaurant.belongsTo(models.Category, {
+        foreignKey: 'CategoryId', 
+        onDelete: 'cascade', 
+        hooks:true 
+        })
       Restaurant.hasMany(models.Comment)
       Restaurant.belongsToMany(models.User, {
         through: models.Favorite,
