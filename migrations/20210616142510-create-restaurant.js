@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Restaurants');
+    await queryInterface.dropTable('Restaurants', {cascade:true});
   }
 };
