@@ -16,7 +16,9 @@
   {{#each users}}
   <div class="col-3">
     <a href="/users/{{this.id}}">
-      <img class="" src="{{this.image}}" width="140px" height="140px">
+      <img class=""
+        src="{{#if this.image}} {{this.image}} {{else}} https://user-images.githubusercontent.com/82774991/124159518-d6b0e480-dacd-11eb-9ea9-cb37aa8e2775.png {{/if}}"
+        width="140px" height="140px">
     </a>
     <h2>{{this.name}}</h2>
     <span class="badge badge-secondary">追蹤人數：{{this.FollowerCount}}</span>
