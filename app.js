@@ -10,7 +10,7 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.listen(port, () => {
-  db.sequelize.sync()
+  // db.sequelize.sync()
   console.log(`Example app listening on port ${port}!`)
 })
 
