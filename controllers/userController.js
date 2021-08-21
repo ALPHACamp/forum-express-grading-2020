@@ -28,6 +28,22 @@ const userController = {
         return res.redirect('/signin')
       })
     })
+  },
+
+  signInPage: (req, res) => {
+    res.render('signin')
+  },
+
+  signIn: (req, res) => {
+    // 用 Passport 的 middleware 來處理
+    req.flash('success_messages', '成功登入！')
+    res.redirect('/restaurants')
+  },
+
+  logout: (req, res) => {
+    req.flash('success_messages', '登出成功！')
+    req.logout() // Passport 提供的
+    res.redirect('/signin')
   }
 }
 
