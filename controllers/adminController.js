@@ -4,8 +4,8 @@ const Restaurant = db.Restaurant
 const adminController = {
   getRestaurants: (req, res) => {
     return Restaurant.findAll({
-      raw: true,
-      nest: true
+      raw: true, // restaurants 資料處理
+      nest: true // restaurants 資料處理
     }).then(restaurants => {
       return res.render('admin/restaurants', { restaurants })
     })
@@ -22,10 +22,17 @@ const adminController = {
       req.flash('error_messages', "name didn't exist")
       return res.redirect('back')
     }
-    return Restaurant.create({ name, address, opening_hours, description })
+    return Restaurant.create({ name, tel, address, opening_hours, description })
       .then(restaurant => {
         req.flash('success_messages', 'restaurant was successfully created')
         res.redirect('/admin/restaurants')
+      })
+  },
+
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        return res.render('admin/restaurant', { restaurant: restaurant.toJSON() }) // restaurant 資料處理
       })
   }
 }
