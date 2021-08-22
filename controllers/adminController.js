@@ -34,6 +34,30 @@ const adminController = {
       .then(restaurant => {
         return res.render('admin/restaurant', { restaurant: restaurant.toJSON() }) // restaurant 資料處理
       })
+  },
+
+  editRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        return res.render('admin/create', { restaurant: restaurant.toJSON() }) // restaurant 資料處理
+      })
+  },
+
+  putRestaurant: (req, res) => {
+    const { name, tel, address, opening_hours, description } = req.body
+
+    if (!name) {
+      req.flash('error_messages', "name didn't exist")
+      return res.redirect('back')
+    }
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.update({ name, tel, address, opening_hours, description })
+      })
+      .then(restaurant => {
+        req.flash('success_messages', 'restaurant was successfully to update')
+        res.redirect('/admin/restaurants')
+      })
   }
 }
 
