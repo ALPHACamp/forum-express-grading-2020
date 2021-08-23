@@ -1,21 +1,25 @@
 const restController = require('../controllers/restController.js')
 const adminController = require('../controllers/adminController.js')
 const userController = require('../controllers/userController.js')
+const helpers = require('../_helpers')
 
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' }) // 指定上傳資料夾: temp
 
 module.exports = (app, passport) => {
   const authenticate = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    // if (req.isAuthenticated())
+    if (helpers.ensureAuthenticated(req)) {
       return next()
     }
     res.redirect('/signin')
   }
 
   const authenticateAdmin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (req.user.isAdmin) { return next() }
+    // if (req.isAuthenticated())
+    if (helpers.ensureAuthenticated(req)) {
+      // if (req.user.isAdmin)
+      if (helpers.getUser(req).isAdmin) { return next() }
       return res.redirect('/')
     }
     res.redirect('/signin')
