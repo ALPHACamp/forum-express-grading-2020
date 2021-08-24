@@ -3,6 +3,7 @@ const handlebars = require('express-handlebars')
 const db = require('./models') // 引入資料庫
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('./config/passport')
 const app = express()
 const port = 3000
 
@@ -16,6 +17,8 @@ app.use(session({
   saveUninitialized: false
 }))
 app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
 
 // 把 req.flash 放到 res.locals 裡面
 app.use((req, res, next) => {
@@ -28,6 +31,6 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-require('./routes')(app)
+require('./routes')(app, passport)
 
 module.exports = app
