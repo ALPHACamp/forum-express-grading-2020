@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
-const helpers = require('./helpers')
+const helpers = require('./_helpers')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()

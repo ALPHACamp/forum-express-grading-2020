@@ -36,10 +36,13 @@ module.exports = (app, passport) => {
   app.get('/admin/restaurants/:id/edit', authenticateAdmin, adminController.editRestaurant)
   app.put('/admin/restaurants/:id', authenticateAdmin, upload.single('image'), adminController.putRestaurant)
   app.delete('/admin/restaurants/:id', authenticateAdmin, adminController.deleteRestaurant)
+  app.get('/admin/users', authenticateAdmin, adminController.getUsers)
+  app.put('/admin/users/:id/toggleAdmin', authenticateAdmin, adminController.toggleAdmin)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
 
   app.get('/signin', userController.signInPage)
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
+  app.get('/logout', userController.logout)
 }
