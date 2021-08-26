@@ -14,6 +14,9 @@ app.engine(
 )
 app.set('view engine', 'hbs')
 
+// Setting body-parser
+app.use(express.urlencoded({ extended: true }))
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
