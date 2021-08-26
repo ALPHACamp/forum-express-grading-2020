@@ -1,0 +1,44 @@
+<h1>餐廳後台</h1>
+<div class="mb-3 mt-3">
+  <a href="/admin/restaurants">Restaurants</a>｜<a href="/admin/users">Users</a>
+</div>
+
+<br />
+<br />
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+      <th scope="col">set as admin / user</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+      <td>{{this.email}}</td>
+      <td>
+        {{#if this.isAdmin}}
+          admin
+        {{else}}
+          user
+        {{/if}}
+      </td>
+      <td>
+        <form id="form-{{this.id}}" action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
+          {{#if this.isAdmin}}     
+            <a href="#" onclick="document.getElementById('form-{{this.id}}').submit();">set as user</a>            
+          {{else}}
+            <a href="#" onclick="document.getElementById('form-{{this.id}}').submit();">set as admin </a>
+          {{/if}}
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
