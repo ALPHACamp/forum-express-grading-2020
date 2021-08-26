@@ -8,6 +8,10 @@ const adminController = {
         return res.render('admin/restaurants', { restaurants })
       })
   },
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, { raw: true })
+      .then(restaurant => res.render('admin/restaurant', { restaurant }))
+  },
 
   createRestaurant: (req, res) => res.render('admin/create'),
   postRestaurant: (req, res) => {
