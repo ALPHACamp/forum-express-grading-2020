@@ -2,6 +2,7 @@ const express = require('express')
 const exphdbs = require('express-handlebars')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('./config/passport')
 const db = require('./models')
 const app = express()
 
@@ -33,6 +34,10 @@ app.use(
   })
 )
 
+// Setting passport
+app.use(passport.initialize())
+app.use(passport.session())
+
 // Setting connect-flash
 app.use(flash())
 
@@ -48,6 +53,6 @@ app.listen(PORT, () => {
 })
 
 // Introduce routes and pass in app, so that routes can use the app object to specify routes
-require('./routes')(app)
+require('./routes')(app, passport)
 
 module.exports = app
