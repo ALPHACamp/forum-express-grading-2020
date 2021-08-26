@@ -1,5 +1,6 @@
 const restController = require('../controllers/restController.js')
 const adminController = require('../controllers/adminController.js')
+const userController = require('../controllers/userController.js')
 
 module.exports = (app) => {
   // If the user visits the homepage, it will be directed to the /restaurants page
@@ -15,4 +16,8 @@ module.exports = (app) => {
 
   // '/admin/restaurants' are handed over to adminController.getRestaurants
   app.get('/admin/restaurants', adminController.getRestaurants)
+
+  app.get('/signup', userController.signUpPage)
+
+  app.post('/signup', userController.signUp)
 }
