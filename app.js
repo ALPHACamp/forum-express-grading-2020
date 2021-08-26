@@ -17,6 +17,7 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
+// Introduce routes and pass in app, so that routes can use the app object to specify routes
 require('./routes')(app)
 
 module.exports = app
