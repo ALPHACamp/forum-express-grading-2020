@@ -30,6 +30,31 @@ const adminController = {
         req.flash('success_messages', 'restaurant was successfully created')
         res.redirect('/admin/restaurants')
       })
+  },
+  editRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, { raw: true })
+      .then(restaurant => res.render('admin/create', { restaurant }))
+  },
+  putRestaurant: (req, res) => {
+    if (!req.body.name) {
+      req.flash('error_messages', "name didn't exist")
+      return res.redirect('back')
+    }
+    const { name, tel, address, opening_hours, description } = req.body
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.update({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description
+        })
+          .then((restaurant) => {
+            req.flash('success_messages', 'restaurant was successfully to update')
+            res.redirect('/admin/restaurants')
+          })
+      })
   }
 }
 
