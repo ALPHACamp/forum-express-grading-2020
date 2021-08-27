@@ -2,6 +2,9 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 
+const multer = require('multer')
+const upload = multer({ dest: 'temp/' })
+
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
     if (req.isAuthenticated()) return next()
@@ -26,8 +29,8 @@ module.exports = (app, passport) => {
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
-  app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
-  app.put('/admin/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
+  app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
+  app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
   app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
 
   // 註冊登入登出
