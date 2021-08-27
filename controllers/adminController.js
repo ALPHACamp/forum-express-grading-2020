@@ -7,7 +7,7 @@ const adminController = {
       return res.render('admin/restaurants', { res: restaurants })
     })
   },
-  createRestaurants: (req, res) => {
+  createRestaurant: (req, res) => {
     return res.render('admin/create')
   }
 }
