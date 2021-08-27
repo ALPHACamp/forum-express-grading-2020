@@ -6,6 +6,9 @@ const adminController = {
     return Restaurant.findAll({ raw: true }).then((restaurants) => {
       return res.render('admin/restaurants', { res: restaurants })
     })
+  },
+  createRestaurants: (req, res) => {
+    return res.render('admin/create')
   }
 }
 
