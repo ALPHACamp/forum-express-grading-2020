@@ -4,6 +4,7 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport')
 const methodOverride = require('method-override')
+const helpers = require('./_helpers')
 const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
@@ -31,7 +32,7 @@ app.use('/upload', express.static(__dirname + '/upload'))
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
-  res.locals.user = req.user
+  res.locals.user = helpers.getUser(req) // 取代 req.user
   next()
 })
 
