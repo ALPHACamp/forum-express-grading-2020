@@ -1,4 +1,4 @@
-let restController = {
+const restController = {
   getRestaurants: (req, res) => {
     return res.render('restaurants')
   }
