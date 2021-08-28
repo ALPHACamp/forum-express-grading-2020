@@ -50,6 +50,9 @@ app.use((req, res, next) => {
   next()
 })
 
+// setting static files
+app.use('/upload', express.static(__dirname + '/upload'))
+
 // Setting middleware: method-override
 app.use(methodOverride('_method'))
 
