@@ -5,6 +5,7 @@ const flash = require('connect-flash')
 const passport = require('./config/passport')
 const db = require('./models')
 const app = express()
+const methodOverride = require('method-override')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -48,6 +49,9 @@ app.use((req, res, next) => {
   res.locals.user = req.user
   next()
 })
+
+// Setting middleware: method-override
+app.use(methodOverride('_method'))
 
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`)
