@@ -1,5 +1,6 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
+const User = db.User
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -123,6 +124,39 @@ const adminController = {
         res.redirect('/admin/restaurants')
       })
     })
+  },
+
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true, nest: true })
+      .then((users) => {
+        return res.render('admin/users', { users })
+      })
+      .catch((error) => console.log(error))
+  },
+  toggleAdmin: async (req, res) => {
+    const id = req.params.id
+    let { count } = await User.findAndCountAll({
+      where: { isAdmin: 1 }
+    })
+
+    return User.findByPk(id)
+      .then((user) => {
+        user.isAdmin = user.isAdmin ? false : true
+        count = user.isAdmin ? count + 1 : count - 1
+
+        if (!count) {
+          req.flash('error_messages', 'At least one admin is required')
+          return res.redirect('back')
+        }
+
+        return user.update({
+          isAdmin: user.isAdmin
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', 'User permissions have been updated')
+        res.redirect('/admin/users')
+      })
   }
 }
 
