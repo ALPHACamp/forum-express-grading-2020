@@ -1,6 +1,14 @@
 const db = require('../models/index')
 const Restaurant = db.Restaurant
 const User = db.User
+const mysql = require('mysql2')
+
+const userSql = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  database: 'forum',
+  password: 'password'
+})
 
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -114,18 +122,57 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
-    return User.findAll({ raw: true })
-      .then(users => res.render('admin/users', { users }))
+    // sql搜尋
+    userSql.query(
+      'SELECT `id`, `name`, `email`, `isAdmin` FROM `users`',
+      (err, users) => {
+        if (err) return console.log('err: ', err)
+        res.render('admin/users', { users })
+      }
+    )
+    // sequelize搜尋
+    // return User.findAll({ raw: true })
+    //   .then(users => res.render('admin/users', { users }))
   },
   toggleAdmin: (req, res) => {
-    return User.findByPk(req.params.id)
-      .then(user => {
-        user.update({ isAdmin: !user.isAdmin })
-          .then(() => {
-            req.flash('success_messages', 'user was successfully to update')
-            return res.redirect('/admin/users')
-          })
-      })
+    const id = req.params.id
+    // 試用sql語法搜尋
+    // 增加判斷若admin只剩一位，釋出警告
+    userSql.query(
+      'SELECT `isAdmin`, `id` FROM `users`',
+      (err, results) => {
+        if (err) throw err
+        results.forEach(result => {
+          if (result.id === Number(id)) result.isAdmin = result.isAdmin === 1 ? 0 : 1
+        }) // 這裡沒辦法用result.isAdmin = !user.isAdmin 是因為它傳過來的isAdmin檔案已經是number?
+        const adminArr = results.filter(result => {
+          if (result.isAdmin) return true
+        })
+        if (adminArr.length === 0) {
+          req.flash('error_messages', 'just only one admin ! you cant do that !')
+          return res.redirect('/admin/users')
+        }
+        if (adminArr.length > 0) {
+          const updateSql = 'UPDATE users SET isAdmin = NOT isAdmin WHERE id = ?'
+          // ?防止SQL injection
+          userSql.query(updateSql, id,
+            (err, results) => {
+              if (err) throw err
+              req.flash('success_messages', 'user was successfully to update')
+              return res.redirect('/admin/users')
+            })
+        }
+      }
+    )
+    // sequelize搜尋
+    // return User.findByPk(req.params.id)
+    //   .then(user => {
+    //     user.update({ isAdmin: !user.isAdmin })
+    //       .then(() => {
+    //         req.flash('success_messages', 'user was successfully to update')
+    //         return res.redirect('/admin/users')
+    //       })
+    //   })
   }
 }
 
