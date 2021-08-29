@@ -2,13 +2,16 @@ const db = require('../models/index')
 const Restaurant = db.Restaurant
 const User = db.User
 const mysql = require('mysql2')
+let userSql = process.env.NODE_ENV === 'development'
 
-const userSql = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'forum',
-  password: 'password'
-})
+if (userSql) {
+  userSql = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'forum',
+    password: 'password'
+  })
+}
 
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -122,7 +125,7 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === ('test' || 'production')) {
     // sequelize搜尋
       return User.findAll({ raw: true })
         .then(users => res.render('admin/users', { users }))
@@ -138,7 +141,7 @@ const adminController = {
   },
   toggleAdmin: (req, res) => {
     const id = req.params.id
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === ('test' || 'production')) {
       // sequelize搜尋
       return User.findByPk(req.params.id)
         .then(user => {
