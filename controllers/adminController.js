@@ -125,11 +125,12 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
-    if (process.env.NODE_ENV === ('test' || 'production')) {
+    if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production') {
     // sequelize搜尋
       return User.findAll({ raw: true })
         .then(users => res.render('admin/users', { users }))
     }
+
     // sql搜尋
     userSql.query(
       'SELECT `id`, `name`, `email`, `isAdmin` FROM `users`',
@@ -141,7 +142,7 @@ const adminController = {
   },
   toggleAdmin: (req, res) => {
     const id = req.params.id
-    if (process.env.NODE_ENV === ('test' || 'production')) {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
       // sequelize搜尋
       return User.findByPk(req.params.id)
         .then(user => {
