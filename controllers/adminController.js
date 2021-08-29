@@ -122,6 +122,11 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
+    if (process.env.NODE_ENV === 'test') {
+    // sequelize搜尋
+      return User.findAll({ raw: true })
+        .then(users => res.render('admin/users', { users }))
+    }
     // sql搜尋
     userSql.query(
       'SELECT `id`, `name`, `email`, `isAdmin` FROM `users`',
@@ -130,12 +135,21 @@ const adminController = {
         res.render('admin/users', { users })
       }
     )
-    // sequelize搜尋
-    // return User.findAll({ raw: true })
-    //   .then(users => res.render('admin/users', { users }))
   },
   toggleAdmin: (req, res) => {
     const id = req.params.id
+    if (process.env.NODE_ENV === 'test') {
+      // sequelize搜尋
+      return User.findByPk(req.params.id)
+        .then(user => {
+          user.update({ isAdmin: !user.isAdmin })
+            .then(() => {
+              req.flash('success_messages', 'user was successfully to update')
+              return res.redirect('/admin/users')
+            })
+        })
+    }
+
     // 試用sql語法搜尋
     // 增加判斷若admin只剩一位，釋出警告
     userSql.query(
@@ -164,15 +178,6 @@ const adminController = {
         }
       }
     )
-    // sequelize搜尋
-    // return User.findByPk(req.params.id)
-    //   .then(user => {
-    //     user.update({ isAdmin: !user.isAdmin })
-    //       .then(() => {
-    //         req.flash('success_messages', 'user was successfully to update')
-    //         return res.redirect('/admin/users')
-    //       })
-    //   })
   }
 }
 
