@@ -2,14 +2,21 @@ const db = require('../models/index')
 const Restaurant = db.Restaurant
 const User = db.User
 const mysql = require('mysql2')
-let userSql = process.env.NODE_ENV === 'development'
+let userSql = process.env.NODE_ENV
 
-if (userSql) {
+if (userSql === 'development') {
   userSql = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     database: 'forum',
     password: 'password'
+  })
+} else if (userSql === 'production') {
+  userSql = mysql.createConnection({
+    host: 'us-cdbr-east-04.cleardb.com',
+    user: 'be02a1b756cd61',
+    database: 'heroku_35f66ed46263e72',
+    password: '348b0305'
   })
 }
 
@@ -125,7 +132,7 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
-    if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'test') {
     // sequelize搜尋
       return User.findAll({ raw: true })
         .then(users => res.render('admin/users', { users }))
@@ -142,7 +149,7 @@ const adminController = {
   },
   toggleAdmin: (req, res) => {
     const id = req.params.id
-    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'test') {
       // sequelize搜尋
       return User.findByPk(req.params.id)
         .then(user => {
