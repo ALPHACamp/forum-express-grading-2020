@@ -69,11 +69,14 @@ const adminController = {
     })
   },
   editRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { raw: true }).then(
-      (restaurant) => {
-        return res.render('admin/create', { restaurant: restaurant })
-      }
-    )
+    Category.findAll({ raw: true, nest: true }).then((categories) => {
+      return Restaurant.findByPk(req.params.id).then((restaurant) => {
+        return res.render('admin/create', {
+          categories: categories,
+          restaurant: restaurant.toJSON()
+        })
+      })
+    })
   },
   putRestaurant: (req, res) => {
     if (!req.body.name) {
