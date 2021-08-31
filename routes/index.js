@@ -1,6 +1,7 @@
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
+const categoryController = require('../controllers/categoryController')
 
 const helpers = require('../_helpers')
 const multer = require('multer')
@@ -36,6 +37,9 @@ module.exports = (app, passport) => {
   // 在 /admin/users 的路由
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+
+  // 在 /admin/categories 的路由
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 
   // 註冊登入登出
   app.get('/signup', userController.signUpPage)
