@@ -13,7 +13,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 const port = process.env.PORT
 
-app.engine('handlebars', handlebars({ defaultLayout: 'main' }))
+app.engine('handlebars', handlebars({
+  defaultLayout: 'main',
+  helpers: require('./config/handlebars-helpers')
+}))
 app.set('view engine', 'handlebars')
 
 app.use(express.urlencoded({ extended: true }))
