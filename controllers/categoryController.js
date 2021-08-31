@@ -36,6 +36,13 @@ const categoryController = {
         category.update(req.body)
           .then(() => res.redirect('/admin/categories'))
       })
+  },
+  deleteCategory: (req, res) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        category.destroy()
+          .then(() => res.redirect('/admin/categories'))
+      })
   }
 }
 
