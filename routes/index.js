@@ -40,7 +40,9 @@ module.exports = (app, passport) => {
 
   // 在 /admin/categories 的路由
   app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
+  app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
   app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
+  app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
 
   // 註冊登入登出
   app.get('/signup', userController.signUpPage)
