@@ -2,6 +2,7 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const categoryController = require('../controllers/categoryController')
+const commentController = require('../controllers/commentController.js')
 
 const helpers = require('../_helpers')
 const multer = require('multer')
@@ -24,6 +25,9 @@ module.exports = (app, passport) => {
   // 前台路由
   app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+
+  // 前台comments路由
+  app.post('/comments', authenticated, commentController.postComment)
 
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/users'))
   // 在 /admin/restaurants 的路由
