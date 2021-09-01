@@ -1,6 +1,8 @@
 const db = require('../models/index')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const Comment = db.Comment
+const User = db.User
 
 const pageLimit = 10
 
@@ -38,7 +40,7 @@ const restController = {
           raw: true,
           nest: true
         })
-          .then(categories => res.render('restaurants', { 
+          .then(categories => res.render('restaurants', {
             restaurants: data,
             categories,
             categoryId,
@@ -50,7 +52,14 @@ const restController = {
       })
   },
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: Category })
+    return Restaurant.findByPk(req.params.id,
+      {
+        include:
+        [
+          Category,
+          { model: Comment, include: [User] }
+        ]
+      })
       .then(restaurant => res.render('restaurant', { restaurant: restaurant.toJSON() }))
   }
 }
