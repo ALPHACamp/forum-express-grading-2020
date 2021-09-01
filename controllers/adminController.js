@@ -198,9 +198,7 @@ const adminController = {
         results.forEach(result => {
           if (result.id === Number(id)) result.isAdmin = result.isAdmin === 1 ? 0 : 1
         }) // 這裡沒辦法用result.isAdmin = !user.isAdmin 是因為它傳過來的isAdmin檔案已經是number?
-        const adminArr = results.filter(result => {
-          if (result.isAdmin) return true
-        })
+        const adminArr = results.filter(result => result.isAdmin)
         if (adminArr.length === 0) {
           req.flash('error_messages', 'just only one admin ! you cant do that !')
           return res.redirect('/admin/users')
