@@ -21,8 +21,9 @@ module.exports = (app, passport) => {
     return res.redirect('/signin')
   }
 
-  // 在 /restaurants 底下則交給 restController.getRestaurants 來處理
+  // 前台路由
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/users'))
   // 在 /admin/restaurants 的路由
