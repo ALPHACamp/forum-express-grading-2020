@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "root",
-    "password": "password",
+    "password": "Benny860424",
     "database": "forum",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "password",
+    "password": "Benny860424",
     "database": "forum_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "logging": false
   },
   "production": {
-    "use_env_variable": "CLEARDB_SILVER_URL"
+    "use_env_variable": "CLEARDB_DATABASE_URL"
   },
   "travis": {
     "username": "travis",
