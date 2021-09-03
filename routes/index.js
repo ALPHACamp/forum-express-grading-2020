@@ -29,6 +29,8 @@ module.exports = (app, passport) => {
   // '/restaurants' are handed over to restController.get Restaurants
   app.get('/restaurants', authenticated, restController.getRestaurants)
 
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+
   // Connect to the '/admin' page ,it will be directed to the /admin/restaurants
   app.get('/admin', authenticatedAdmin, (req, res) =>
     res.redirect('/admin/restaurants')
