@@ -30,6 +30,11 @@ module.exports = (app, passport) => {
   app.post('/comments', authenticated, commentController.postComment)
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
+  // 前台users路由
+  app.get('/users/:id', authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/users'))
   // 在 /admin/restaurants 的路由
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
