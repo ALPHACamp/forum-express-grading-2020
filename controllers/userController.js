@@ -114,7 +114,7 @@ const userController = {
       RestaurantId: req.params.restaurantId
     })
       .then(() => {
-        return res.redirect('/restaurants')
+        return res.redirect('back')
       })
   },
   removeFavorite: (req, res) => {
@@ -123,7 +123,7 @@ const userController = {
         return favorite.destroy()
       })
       .then(() => {
-        return res.redirect('/restaurants')
+        return res.redirect('back')
       })
   }
 }
