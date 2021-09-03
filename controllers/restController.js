@@ -108,8 +108,7 @@ const restController = {
         commentCounter = comment.count
         return res.render('dashboard', { commentCounter, restaurant: restaurant.toJSON() })
       })
-    
-  }
+  },
 }
 
 module.exports = restController

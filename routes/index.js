@@ -44,6 +44,10 @@ module.exports = (app, passport) => {
   app.get('/users/:id/edit', authenticated, userController.editUser)
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
+  // favorite
+  app.post('/favorite/:id', authenticated, userController.addFavorite)
+  app.delete('/favorite/:id', authenticated, userController.removeFavorite)
+
   // admin index page
   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
