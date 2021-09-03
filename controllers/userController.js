@@ -72,7 +72,7 @@ const userController = {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         if (err) console.log('Error: ', err)
-        return User.findByPk(req.user.id)
+        return User.findByPk(req.params.id)
           .then(user => {
             user.update({
               name,
@@ -85,7 +85,7 @@ const userController = {
           })
       })
     } else {
-      return User.findByPk(req.user.id)
+      return User.findByPk(req.params.id)
         .then(user => {
           return user.update({
             name
