@@ -111,14 +111,14 @@ const userController = {
   addFavorite: (req, res) => {
     return Favorite.create({
       UserId: req.user.id,
-      RestaurantId: req.params.id
+      RestaurantId: req.params.restaurantId
     })
       .then(() => {
         return res.redirect('/restaurants')
       })
   },
   removeFavorite: (req, res) => {
-    return Favorite.findOne({ where: { RestaurantId: req.params.id } })
+    return Favorite.findOne({ where: { RestaurantId: req.params.restaurantId } })
       .then(favorite => {
         return favorite.destroy()
       })

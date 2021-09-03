@@ -45,8 +45,8 @@ module.exports = (app, passport) => {
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
   // favorite
-  app.post('/favorite/:id', authenticated, userController.addFavorite)
-  app.delete('/favorite/:id', authenticated, userController.removeFavorite)
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
   // admin index page
   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
