@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association4 here
+      User.hasMany(models.Comment)
     }
   }
   User.init(
