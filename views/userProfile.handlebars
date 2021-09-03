@@ -1,0 +1,26 @@
+<div class = 'row mt-5'>
+  <div class = 'col-12 col-md-6'>
+    <img class="img-responsive center-block" src="{{userProfile.image}}" style="width: 250px;margin-bottom: 25px;">
+  </div>
+  <div class = 'col-12 col-md-6'>
+    <h2>暱稱: {{userProfile.name}}</h2>
+    <p>Email: {{userProfile.email}}</p>
+    {{#ifCond userProfile.id user.id}}
+    <a class="btn btn-primary" href="/users/{{user.id}}/edit">Edit</a>
+    {{/ifCond}}
+  </div>
+</div>
+<br/>
+<br/>
+<div class = 'row'>
+  <div class = "col-12">
+    <h3>已有{{userProfile.Comments.length}}個評論</h3>
+  </div>
+  <div class = "col-12 d-flex flex-wrap">
+    {{#each userProfile.Comments}}
+    <a href="/restaurants/{{this.Restaurant.id}}">
+      <img class="card-img-top p-2" src="{{this.Restaurant.image}}" alt="Card image cap" width="150px" height="150px">
+    </a>
+    {{/each}}
+  </div>
+</div>
