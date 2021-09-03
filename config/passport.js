@@ -30,8 +30,9 @@ passport.serializeUser((user, cb) => {
 // 4. 反序列化
 passport.deserializeUser((id, cb) => {
   User.findByPk(id, {
-    include: [
-      { model: Restaurant, as: 'FavoritedRestaurants' }
+    include: [ // 讓req.user包含Restaurant資料庫的favorite&like外鍵資料
+      { model: Restaurant, as: 'FavoritedRestaurants' },
+      { model: Restaurant, as: 'LikedRestaurants'}
     ]
   }).then(user => {
     user = user.toJSON()
