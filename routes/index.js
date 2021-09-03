@@ -34,6 +34,12 @@ module.exports = (app, passport) => {
 
   app.post('/comments', authenticated, commentController.postComment)
 
+  app.delete(
+    '/comments/:id',
+    authenticatedAdmin,
+    commentController.deleteComment
+  )
+
   // Connect to the '/admin' page ,it will be directed to the /admin/restaurants
   app.get('/admin', authenticatedAdmin, (req, res) =>
     res.redirect('/admin/restaurants')
