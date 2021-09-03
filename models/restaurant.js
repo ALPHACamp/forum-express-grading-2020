@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Restaurant.belongsTo(models.Category)
       Restaurant.hasMany(models.Comment)
+      Restaurant.belongsToMany(models.User, {
+        through: models.Favorite,
+        ForeignKey: 'RestaurantId',
+        as: 'FavoritedUsers'
+      })
     }
   };
   Restaurant.init({
@@ -21,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     opening_hours: DataTypes.STRING,
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
-    CategoryId: DataTypes.INTEGER
+    CategoryId: DataTypes.INTEGER,
+    views: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Restaurant',

@@ -1,3 +1,4 @@
+//const { DESCRIBE } = require('sequelize/types/lib/query-types')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -63,9 +64,52 @@ const restController = {
       include: [Category, { model: Comment, include:[User] }] 
     })
       .then(restaurant => {
+        restaurant.increment({
+          views: +1
+        })
         return res.render('restaurant', { restaurant: restaurant.toJSON() })
       })
   },
+
+  getFeeds: (req, res) => {
+    return Promise.all([ // 接受的參數是陣列
+      Restaurant.findAll({
+        limit: 10,
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: [Category]
+      }),
+      Comment.findAll({
+        limit: 10,
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: [Restaurant, User]
+      })
+    ])
+      .then(([ restaurants, comments ]) => {
+        return res.render('feeds', { restaurants, comments })
+      })
+  }, 
+  getCounts: (req, res) => {
+    let commentCounter = ''
+    return Promise.all([
+      Restaurant.findByPk(req.params.id, {
+        include: [Category]
+      }),
+      Comment.findAndCountAll({
+        raw: true,
+        nest: true,
+        where: { restaurantId: Number(req.params.id) },
+      })
+    ])
+      .then(([restaurant, comment]) => {
+        commentCounter = comment.count
+        return res.render('dashboard', { commentCounter, restaurant: restaurant.toJSON() })
+      })
+    
+  }
 }
 
 module.exports = restController

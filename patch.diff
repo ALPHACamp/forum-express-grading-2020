@@ -1,0 +1,504 @@
+From 234d55ce78cb25d195e65e499c6d9acce88e1e75 Mon Sep 17 00:00:00 2001
+From: joeyWuTRKTR <godatascial@yahoo.com>
+Date: Wed, 1 Sep 2021 00:13:11 +0800
+Subject: [PATCH] feat: add profile partial template & router
+
+---
+ controllers/userController.js |  8 ++++++++
+ routes/index.js               |  3 +++
+ views/profile.handlebars      | 10 ++++++++++
+ 3 files changed, 21 insertions(+)
+ create mode 100644 views/profile.handlebars
+
+diff --git a/controllers/userController.js b/controllers/userController.js
+index a8cca77..56ac825 100644
+--- a/controllers/userController.js
++++ b/controllers/userController.js
+@@ -48,6 +48,14 @@ const userController = {
+     req.flash('success_msg', '成功登出!')
+     req.logout()
+     return res.redirect('/signin')
++  }, 
++
++  // profile
++  getUser: (req, res) => {
++    return User.findByPk(req.params.id)
++      .then(user => {
++        return res.render('profile', { user: user.toJSON() } )
++      })
+   }
+ }
+ 
+diff --git a/routes/index.js b/routes/index.js
+index 158deab..86adb1a 100644
+--- a/routes/index.js
++++ b/routes/index.js
+@@ -35,6 +35,9 @@ module.exports = (app, passport) => {
+   // user post comment
+   app.post('/comments', authenticated, commentController.postComment)
+ 
++  //profile
++  app.get('/users/:id', authenticated, userController.getUser)
++
+   // admin index page
+   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
+   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
+diff --git a/views/profile.handlebars b/views/profile.handlebars
+new file mode 100644
+index 0000000..0939d63
+--- /dev/null
++++ b/views/profile.handlebars
+@@ -0,0 +1,10 @@
++<div class="row">
++  <div class="col-4">
++    <img src="" alt="">
++  </div>
++  <div class="col-8">
++    <h3>{{user.name}}</h3>
++    <h5>{{user.email}}</h5>
++    <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
++  </div>
++</div>
+\ No newline at end of file
+-- 
+2.32.0.windows.1
+
+From c0514b320e27d3b65f234e6e09ef9545adae696b Mon Sep 17 00:00:00 2001
+From: joeyWuTRKTR <godatascial@yahoo.com>
+Date: Wed, 1 Sep 2021 00:22:44 +0800
+Subject: [PATCH] feat: add profileEdit partial template & router
+
+---
+ controllers/userController.js | 10 +++++++++-
+ routes/index.js               |  3 ++-
+ views/profileEdit.handlebars  | 13 +++++++++++++
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+ create mode 100644 views/profileEdit.handlebars
+
+diff --git a/controllers/userController.js b/controllers/userController.js
+index 56ac825..25de672 100644
+--- a/controllers/userController.js
++++ b/controllers/userController.js
+@@ -50,12 +50,20 @@ const userController = {
+     return res.redirect('/signin')
+   }, 
+ 
+-  // profile
++  // profile page
+   getUser: (req, res) => {
+     return User.findByPk(req.params.id)
+       .then(user => {
+         return res.render('profile', { user: user.toJSON() } )
+       })
++  },
++
++  // profile edit page
++  editUser: (req, res) => {
++    return User.findByPk(req.params.id)
++      .then(user => {
++        return res.render('profileEdit', { user: user.toJSON() })
++      })
+   }
+ }
+ 
+diff --git a/routes/index.js b/routes/index.js
+index 86adb1a..67ef129 100644
+--- a/routes/index.js
++++ b/routes/index.js
+@@ -35,8 +35,9 @@ module.exports = (app, passport) => {
+   // user post comment
+   app.post('/comments', authenticated, commentController.postComment)
+ 
+-  //profile
++  // profile
+   app.get('/users/:id', authenticated, userController.getUser)
++  app.get('/users/:id/edit', authenticated, userController.editUser)
+ 
+   // admin index page
+   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
+diff --git a/views/profileEdit.handlebars b/views/profileEdit.handlebars
+new file mode 100644
+index 0000000..d919e53
+--- /dev/null
++++ b/views/profileEdit.handlebars
+@@ -0,0 +1,13 @@
++<form action="/users/{{user.id}}/edit?_method=PUT" method="POST">
++  <div class="form-group">
++    <label>Name</label>
++    <input type="text" class="form-control" value="{{user.name}}">
++  </div>
++  
++  <div class="form-group">
++    <label for="image">Image</label>
++    <input type="file" class="form-control-file" id="image" name="image">
++  </div>
++
++  <button type="submit" class="btn btn-primary">Submit</button>
++</form>
+\ No newline at end of file
+-- 
+2.32.0.windows.1
+
+From d308072d98e691f6920df73625650c72392cac7f Mon Sep 17 00:00:00 2001
+From: joeyWuTRKTR <godatascial@yahoo.com>
+Date: Wed, 1 Sep 2021 01:36:41 +0800
+Subject: [PATCH] feat: add profile update feature
+
+---
+ controllers/userController.js | 13 +++++++++++++
+ routes/index.js               |  1 +
+ views/profileEdit.handlebars  |  4 ++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/controllers/userController.js b/controllers/userController.js
+index 25de672..2c46250 100644
+--- a/controllers/userController.js
++++ b/controllers/userController.js
+@@ -64,6 +64,19 @@ const userController = {
+       .then(user => {
+         return res.render('profileEdit', { user: user.toJSON() })
+       })
++  }, 
++
++  // profile update page
++  putUser: (req, res) => {
++    return User.findByPk(req.params.id)
++      .then(user => {
++        user.update({
++          name: req.body.name
++        })
++          .then(() => {
++            return res.redirect(`/users/${req.params.id}`)
++          })
++      })
+   }
+ }
+ 
+diff --git a/routes/index.js b/routes/index.js
+index 67ef129..219f8ae 100644
+--- a/routes/index.js
++++ b/routes/index.js
+@@ -38,6 +38,7 @@ module.exports = (app, passport) => {
+   // profile
+   app.get('/users/:id', authenticated, userController.getUser)
+   app.get('/users/:id/edit', authenticated, userController.editUser)
++  app.put('/users/:id', authenticated, userController.putUser)
+ 
+   // admin index page
+   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
+diff --git a/views/profileEdit.handlebars b/views/profileEdit.handlebars
+index d919e53..b1d46b5 100644
+--- a/views/profileEdit.handlebars
++++ b/views/profileEdit.handlebars
+@@ -1,7 +1,7 @@
+-<form action="/users/{{user.id}}/edit?_method=PUT" method="POST">
++<form action="/users/{{user.id}}?_method=PUT" method="POST">
+   <div class="form-group">
+     <label>Name</label>
+-    <input type="text" class="form-control" value="{{user.name}}">
++    <input type="text" class="form-control" name="name" value="{{user.name}}">
+   </div>
+   
+   <div class="form-group">
+-- 
+2.32.0.windows.1
+
+From 57a6ee58a13c8bc8038ba19f0b10c0be8f8cc13b Mon Sep 17 00:00:00 2001
+From: joeyWuTRKTR <godatascial@yahoo.com>
+Date: Wed, 1 Sep 2021 23:20:45 +0800
+Subject: [PATCH] feat: add imgur image uploader
+
+---
+ controllers/userController.js             | 55 ++++++++++++++++++++
+ routes/index.js                           |  5 ++
+ seeders/20210826042620-users-seed-file.js |  9 ++--
+ tests/{A17.test.js => A19.test.js}        | 61 ++++++++++++++++++-----
+ views/profile.handlebars                  | 10 ++++
+ views/profileEdit.handlebars              | 13 +++++
+ 6 files changed, 137 insertions(+), 16 deletions(-)
+ rename tests/{A17.test.js => A19.test.js} (55%)
+ create mode 100644 views/profile.handlebars
+ create mode 100644 views/profileEdit.handlebars
+
+diff --git a/controllers/userController.js b/controllers/userController.js
+index a8cca77..3a13461 100644
+--- a/controllers/userController.js
++++ b/controllers/userController.js
+@@ -1,6 +1,9 @@
+ const bcrypt = require('bcryptjs')
+ const db = require('../models')
+ const User = db.User
++const imgur = require('imgur-node-api')
++const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
++const helpers = require('../_helpers')
+ 
+ const userController = {
+   // 渲染 signup 畫面
+@@ -48,6 +51,58 @@ const userController = {
+     req.flash('success_msg', '成功登出!')
+     req.logout()
+     return res.redirect('/signin')
++  }, 
++
++  // profile page
++  getUser: (req, res) => {
++    return User.findByPk(req.params.id)
++      .then(user => {
++        return res.render('profile', { user: user.toJSON() } )
++      })
++  },
++
++  // profile edit page
++  editUser: (req, res) => {
++    return User.findByPk(req.params.id)
++      .then(user => {
++        return res.render('profileEdit', { user: user.toJSON() })
++      })
++  }, 
++
++  // profile update page
++  putUser: (req, res) => {
++    if (!req.body.name) {
++      req.flash('error_messages', '使用者名稱為必填資訊！')
++      return res.redirect('back')
++    }
++    const { file } = req
++    if (file) {
++      imgur.setClientID(IMGUR_CLIENT_ID)
++      imgur.upload(file.path, (err, img) => {
++        if (err) console.log(`Error: ${err}`)
++        return User.findByPk(req.params.id).then(user => {
++          user.update({
++            name: req.body.name,
++            image: file ? img.data.link : user.image
++          }).then(() => {
++            req.flash('success_messages', '已成功修改使用者資料')
++            res.redirect(`/users/${req.params.id}`)
++          })
++        })
++      })
++    } else {
++      return User.findByPk(req.params.id).then(user => {
++        user.update({
++          name: req.body.name,
++          image: user.image
++        })
++          .then(() => {
++            req.flash('success_messages', '已成功修改使用者資料')
++            res.redirect(`/users/${req.params.id}`)
++          })
++          .catch(err => console.error(err))
++      })
++    }
+   }
+ }
+ 
+diff --git a/routes/index.js b/routes/index.js
+index 158deab..d13a8de 100644
+--- a/routes/index.js
++++ b/routes/index.js
+@@ -35,6 +35,11 @@ module.exports = (app, passport) => {
+   // user post comment
+   app.post('/comments', authenticated, commentController.postComment)
+ 
++  // profile
++  app.get('/users/:id', authenticated, userController.getUser)
++  app.get('/users/:id/edit', authenticated, userController.editUser)
++  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
++
+   // admin index page
+   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
+   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
+diff --git a/seeders/20210826042620-users-seed-file.js b/seeders/20210826042620-users-seed-file.js
+index f63bef4..866ad5f 100644
+--- a/seeders/20210826042620-users-seed-file.js
++++ b/seeders/20210826042620-users-seed-file.js
+@@ -9,21 +9,24 @@ module.exports = {
+       isAdmin: true,
+       name: 'root',
+       createdAt: new Date(),
+-      updatedAt: new Date()
++      updatedAt: new Date(),
++      image: `https://loremflickr.com/320/240/boy/?random=${Math.random() * 100}`
+     }, {
+       email: 'User1@example.com',
+       password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
+       isAdmin: false,
+       name: 'User1',
+       createdAt: new Date(),
+-      updatedAt: new Date()
++      updatedAt: new Date(),
++      image: `https://loremflickr.com/320/240/boy/?random=${Math.random() * 100}`
+     }, {
+       email:'User2@example.com' ,
+       password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
+       isAdmin: false,
+       name: 'User2',
+       createdAt: new Date(),
+-      updatedAt: new Date()
++      updatedAt: new Date(),
++      image: `https://loremflickr.com/320/240/boy/?random=${Math.random() * 100}`
+     }], {})
+   },
+ 
+diff --git a/tests/A17.test.js b/tests/A19.test.js
+similarity index 55%
+rename from tests/A17.test.js
+rename to tests/A19.test.js
+index dd05739..f84401c 100644
+--- a/tests/A17.test.js
++++ b/tests/A19.test.js
+@@ -8,23 +8,23 @@ const routes = require('../routes/index')
+ const db = require('../models')
+ const helpers = require('../_helpers');
+ 
+-describe('# A17: 使用者權限管理', function() {
++describe('# A19: 建立 User Profile', function() {
+     
+-  context('# [顯示使用者清單]', () => {
++  context('# [瀏覽 Profile]', () => {
+     before(async() => {
+       this.ensureAuthenticated = sinon.stub(
+         helpers, 'ensureAuthenticated'
+       ).returns(true);
+       this.getUser = sinon.stub(
+         helpers, 'getUser'
+-      ).returns({id: 1, isAdmin: true});
++      ).returns({id: 1, Followings: []});
+ 
+       await db.User.create({name: 'User1'})
+     })
+ 
+-    it(" GET /admin/users ", (done) => {
++    it(" GET /users/:id ", (done) => {
+         request(app)
+-          .get('/admin/users')
++          .get('/users/1')
+           .end(function(err, res) {
+             res.text.should.include('User1')
+             done()
+@@ -34,35 +34,34 @@ describe('# A17: 使用者權限管理', function() {
+     after(async () => {
+       this.ensureAuthenticated.restore();
+       this.getUser.restore();
++
+       await db.Comment.destroy({where: {},truncate: true})
+       await db.Restaurant.destroy({where: {},truncate: true})
+       await db.sequelize.truncate()
+     })
+-
+   })
+ 
+-  context('# [修改使用者權限]', () => {
++  context('# [瀏覽編輯 Profile 頁面]', () => {
+     before(async() => {
+       this.ensureAuthenticated = sinon.stub(
+         helpers, 'ensureAuthenticated'
+       ).returns(true);
+       this.getUser = sinon.stub(
+         helpers, 'getUser'
+-      ).returns({id: 1, isAdmin: true});
++      ).returns({id: 1});
+ 
+-      await db.User.create({name: 'User1', isAdmin: false})
++      await db.User.create({name: 'User1'})
+     })
+ 
+-    it(" PUT /admin/users/:id/toggleAdmin ", (done) => {
++    it(" GET /users/:id/edit ", (done) => {
+         db.User.findByPk(1).then(user => {
+           user.isAdmin.should.equal(false);
+           request(app)
+-            .put('/admin/users/1/toggleAdmin')
+-            .type("form")
++            .get('/users/1/edit')
+             .end(function(err, res) {
++              res.text.should.include('form')
+               db.User.findByPk(1).then(user => {
+                 user.name.should.equal('User1');
+-                user.isAdmin.should.equal(true);
+                 return done();
+               })
+           });
+@@ -78,4 +77,40 @@ describe('# A17: 使用者權限管理', function() {
+     })
+ 
+   })
++
++  context('# [編輯 Profile]', () => {
++    before(async() => {
++      this.ensureAuthenticated = sinon.stub(
++        helpers, 'ensureAuthenticated'
++      ).returns(true);
++      this.getUser = sinon.stub(
++        helpers, 'getUser'
++      ).returns({id: 1});
++
++      await db.User.create({name: 'User1'})
++    })
++
++    it(" PUT /users/:id ", (done) => {
++      request(app)
++        .put('/users/1')
++        .type("form")
++        .send({name: 'User1User1'})
++        .end(function(err, res) {
++          db.User.findByPk(1).then(user => {
++            user.name.should.equal('User1User1');
++            return done();
++          })
++      });
++    });
++
++    after(async () => {
++      this.ensureAuthenticated.restore();
++      this.getUser.restore();
++      await db.Comment.destroy({where: {},truncate: true})
++      await db.Restaurant.destroy({where: {},truncate: true})
++      await db.sequelize.truncate()
++    })
++
++  })
++
+ })
+\ No newline at end of file
+diff --git a/views/profile.handlebars b/views/profile.handlebars
+new file mode 100644
+index 0000000..0939d63
+--- /dev/null
++++ b/views/profile.handlebars
+@@ -0,0 +1,10 @@
++<div class="row">
++  <div class="col-4">
++    <img src="" alt="">
++  </div>
++  <div class="col-8">
++    <h3>{{user.name}}</h3>
++    <h5>{{user.email}}</h5>
++    <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
++  </div>
++</div>
+\ No newline at end of file
+diff --git a/views/profileEdit.handlebars b/views/profileEdit.handlebars
+new file mode 100644
+index 0000000..b1d46b5
+--- /dev/null
++++ b/views/profileEdit.handlebars
+@@ -0,0 +1,13 @@
++<form action="/users/{{user.id}}?_method=PUT" method="POST">
++  <div class="form-group">
++    <label>Name</label>
++    <input type="text" class="form-control" name="name" value="{{user.name}}">
++  </div>
++  
++  <div class="form-group">
++    <label for="image">Image</label>
++    <input type="file" class="form-control-file" id="image" name="image">
++  </div>
++
++  <button type="submit" class="btn btn-primary">Submit</button>
++</form>
+\ No newline at end of file
+-- 
+2.32.0.windows.1
+

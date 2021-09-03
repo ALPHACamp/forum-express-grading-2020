@@ -53,7 +53,9 @@ const userController = {
     return res.redirect('/signin')
   }, 
 
+
   // profile page
+
   getUser: (req, res) => {
     return User.findByPk(req.params.id)
       .then(user => {
@@ -103,6 +105,7 @@ const userController = {
           .catch(err => console.error(err))
       })
     }
+
   }
 }
 
