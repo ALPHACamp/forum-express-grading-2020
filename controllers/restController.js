@@ -53,14 +53,11 @@ const restController = {
   },
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id,
-      {
-        include:
-        [
-          Category,
-          { model: Comment, include: [User] }
-        ]
+      { include: [Category, { model: Comment, include: [User] }] })
+      .then(restaurant => {
+        restaurant.increment('viewCounts')
+        res.render('restaurant', { restaurant: restaurant.toJSON() })
       })
-      .then(restaurant => res.render('restaurant', { restaurant: restaurant.toJSON() }))
   },
 
   getFeeds: (req, res) => {
@@ -88,13 +85,7 @@ const restController = {
 
   getDashboard: (req, res) => {
     return Restaurant.findByPk(req.params.id,
-      {
-        include:
-          [
-            Category,
-            Comment
-          ]
-      })
+      { include: [Category, Comment] })
       .then(restaurant => {
         res.render('dashboard', { restaurant: restaurant.toJSON() })
       })
