@@ -6,6 +6,7 @@ const Comment = db.Comment
 const User = db.User
 
 const pageLimit = 10
+const topUserLimit = 10
 
 const restController = {
   getRestaurants: (req, res) => {
@@ -114,6 +115,21 @@ const restController = {
         return res.render('dashboard', { commentCounter, restaurant: restaurant.toJSON() })
       })
   },
+  getTopUsers: (req, res) => {
+    return User.findAll({
+      include: [{ model: User, as: 'Followers' }]
+    })
+      .then(users => {
+        users = users.map(user => ({
+            ...user.dataValues,
+            FollowerCount: user.followers.length,
+            isFollowed: req.user.followings.map(d => d.id).includes(user.id)
+          }) 
+        )
+        users = users.sort((a, b) => { b.FollowerCount - a.FollowerCount })
+        return res.render('topUsers', { users })
+      }) 
+  }
 }
 
 module.exports = restController

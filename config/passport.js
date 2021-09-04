@@ -33,8 +33,8 @@ passport.deserializeUser((id, cb) => {
     include: [ // 讓req.user包含Restaurant資料庫的favorite&like外鍵資料
       { model: Restaurant, as: 'FavoritedRestaurants' },
       { model: Restaurant, as: 'LikedRestaurants'},
-      { model: User, as: 'Followers'},
-      { model: User, as: 'Followings' }
+      { model: User, as: 'followers'},
+      { model: User, as: 'followings' }
     ]
   }).then(user => {
     user = user.toJSON()

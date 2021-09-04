@@ -40,6 +40,9 @@ module.exports = (app, passport) => {
   // user post comment
   app.post('/comments', authenticated, commentController.postComment)
 
+  // top 10 users
+  app.get('/users/top', authenticated, restController.getTopUsers)
+
   // profile read & edit
   app.get('/users/:id', authenticated, userController.getUser)
   app.get('/users/:id/edit', authenticated, userController.editUser)
