@@ -24,6 +24,7 @@ module.exports = (app, passport) => {
 
   // 前台路由
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/feeds', authenticated, restController.getFeeds)
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
   // 前台comments路由
