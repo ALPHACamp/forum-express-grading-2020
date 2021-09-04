@@ -1,0 +1,32 @@
+<div class="card mb-3 container">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img class="img-responsive center-block " {{#if user.image}} src="{{user.image}}" {{else}}
+        src="https://icons-for-free.com/download-icon-avatar+human+man+profile+icon-1320085876716628234_512.png" {{/if}}
+        style="width: 300px; height:300px; margin: 25px;">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{user.name}}</h5>
+        <p class="card-text"><small>{{user.email}}</small></p>
+        <p class="card-text"><small><strong>{{commentNumber}}</strong> 已評論餐廳</small></p>
+        {{#ifCond loginUserID user.id}}
+        <a class="btn btn-primary" href="/users/{{user.id}}/edit" role="button">Edit</a>
+        {{/ifCond}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    {{ commentNumber }} 已評論餐廳
+  </div>
+  <div class="card-body">
+    {{#each restaurants}}
+    <a href="/restaurants/{{this.id}}">
+      <img src="{{this.image}}" class="m-1 img-thumbnail" style="width: 70px; height: 70px">
+      {{/each}}
+    </a>
+  </div>
+</div>
