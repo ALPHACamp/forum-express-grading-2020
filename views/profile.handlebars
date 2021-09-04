@@ -4,22 +4,68 @@
     <div class="p-3">
       <h4>{{userFind.name}}</h4>
       <p>{{userFind.email}}</p>
-      <p>{{count}} 已評論餐廳</p>
+      <p><strong>{{commentCount}}</strong> 已評論餐廳</p>
+      <p><strong>{{favoriteCount}}</strong> 收藏的餐廳</p>
+      <p><strong>{{followingCount}}</strong> followings (追蹤者)</p>
+      <p><strong>{{followerCount}}</strong> followers (追隨者)</p>
       {{#ifCond user.id userFind.id}}
       <a href="/users/{{user.id}}/edit" class="btn btn-primary">edit</a>
       {{/ifCond}}
     </div>
   </div>
 </div>
-<div class="card mt-5">
-  <div class="card-header">
-    {{count}} 已評論餐廳
+<div class="container">
+  <div class="row">
+    <div class="card mt-5 col-4 p-0 mr-3">
+      <div class="card-header">
+        {{followingCount}} followings (追蹤者)
+      </div>
+      <div class="card-body">
+        {{#each followings}}
+        <a href="/users/{{this.dataValues.id}}" style="display: inline-block;">
+          <img src="{{this.dataValues.image}}" class="m-2" style="width: 50px; height: 50px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="card mt-5 col p-0">
+      <div class="card-header">
+        {{commentCount}} 已評論餐廳
+      </div>
+      <div class="card-body">
+        {{#each comments}}
+        <a href="/restaurants/{{this.restaurantId}}" style="display: inline-block;">
+          <img src="{{this.restaurantImage}}" class="m-2" style="width: 50px; height: 50px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    {{#each comments}}
-    <a href="/restaurants/{{this.restaurantId}}" style="display: inline-block;">
-      <img src="{{this.restaurantImage}}" class="m-2" style="width: 50px; height: 50px;">
-    </a>
-    {{/each}}
+  <div class="row">
+    <div class="card mt-5 col-4 p-0 mr-3">
+      <div class="card-header">
+        {{followerCount}} followers (追隨者)
+      </div>
+      <div class="card-body">
+        {{#each followers}}
+        <a href="/users/{{this.dataValues.id}}" style="display: inline-block;">
+          <img src="{{this.dataValues.image}}" class="m-2" style="width: 50px; height: 50px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>    
+    <div class="card mt-5 col p-0">
+      <div class="card-header">
+        {{favoriteCount}} 收藏的餐廳
+      </div>
+      <div class="card-body">
+        {{#each favorites}}
+        <a href="/restaurants/{{this.dataValues.id}}" style="display: inline-block;">
+          <img src="{{this.dataValues.image}}" class="m-2" style="width: 50px; height: 50px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
 </div>
+

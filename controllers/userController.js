@@ -56,22 +56,36 @@ const userController = {
   getUser: (req, res) => {
     const userId = req.params.id
     const user = helpers.getUser(req)
-    User.findByPk(userId)
+    User.findByPk(userId, {
+      include: [
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followings' },
+        { model: User, as: 'Followers' }
+      ]
+    })
       .then(userFind => {
-        Comment.findAndCountAll({
+        Comment.findAll({
           raw: true,
           nest: true,
           include: Restaurant,
           where: { userId }
         })
           .then(result => {
-            const data = result.rows.map(comment => ({
+            const data = result.map(comment => ({
               ...comment.dataValues,
               restaurantImage: comment.Restaurant.image,
               restaurantId: comment.Restaurant.id
             }))
-            const count = result.count
-            res.render('profile', { userFind: userFind.toJSON(), user, count, comments: data })
+            const set = new Set()
+            const comments = data.filter(item => !set.has(item.id) ? set.add(item.id) : false)
+            const commentCount = comments.length
+            const favorites = userFind.FavoritedRestaurants
+            const favoriteCount = favorites.length
+            const followings = userFind.Followings
+            const followingCount = followings.length
+            const followers = userFind.Followers
+            const followerCount = followers.length
+            res.render('profile', { userFind: userFind.toJSON(), user, commentCount, comments, favoriteCount, followingCount, followerCount, followings, followers, favorites })
           })
       })
   },
