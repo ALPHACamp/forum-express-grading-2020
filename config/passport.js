@@ -34,10 +34,11 @@ passport.deserializeUser((id, cb) => {
       { model: Restaurant, as: 'FavoritedRestaurants' },
       { model: Restaurant, as: 'LikedRestaurants'},
       { model: User, as: 'followers'},
-      { model: User, as: 'followings' }
+      { model: User, as: 'followings'}
     ]
   }).then(user => {
     user = user.toJSON()
+    console.log(user)
     return cb(null, user)
   })
 })

@@ -117,7 +117,7 @@ const restController = {
   },
   getTopUsers: (req, res) => {
     return User.findAll({
-      include: [{ model: User, as: 'Followers' }]
+      include: [{ model: User, as: 'followers' }]
     })
       .then(users => {
         users = users.map(user => ({
