@@ -1,9 +1,12 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Restaurant = db.Restaurant
+const Comment = db.Comment
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const helper = require('../_helpers')
+const { getRestaurants } = require('./restController')
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
@@ -51,7 +54,7 @@ const userController = {
     req.logout()
     res.redirect('/signin')
   },
-  getUser: (req, res) => {
+  getUser: async (req, res) => {
     const loginUserID = helper.getUser(req).id
 
     if (Number(req.params.id) !== loginUserID) {
@@ -59,11 +62,37 @@ const userController = {
       return res.redirect(`/users/${loginUserID}`)
     }
 
-    return User.findByPk(req.params.id, { raw: true, nest: true })
-      .then((user) => {
-        return res.render('profile', { user: user, loginUserID: loginUserID })
-      })
-      .catch((error) => console.log(error))
+    const comments = await Comment.findAndCountAll({
+      include: Restaurant,
+      where: { UserId: req.params.id }
+    })
+
+    const commentData = comments.rows.map((result) => ({
+      ...result.dataValues
+    }))
+    const commentNumber = comments.count
+    const restaurantIdQuery = []
+
+    commentData.forEach((restaurant) => {
+      restaurantIdQuery.push(restaurant.RestaurantId)
+    })
+
+    return Restaurant.findAll({
+      raw: true,
+      nest: true,
+      where: { id: restaurantIdQuery }
+    }).then((restaurants) => {
+      User.findByPk(req.params.id, { raw: true, nest: true })
+        .then((user) => {
+          return res.render('profile', {
+            user: user,
+            loginUserID: loginUserID,
+            restaurants: restaurants,
+            commentNumber: commentNumber
+          })
+        })
+        .catch((error) => console.log(error))
+    })
   },
   editUser: (req, res) => {
     return User.findByPk(req.params.id, { raw: true, nest: true })
