@@ -2,24 +2,6 @@ const db = require('../models/index')
 const Restaurant = db.Restaurant
 const User = db.User
 const Category = db.Category
-const mysql = require('mysql2')
-let userSql = process.env.NODE_ENV
-
-if (userSql === 'development') {
-  userSql = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'forum',
-    password: 'password'
-  })
-} else if (userSql === 'production') {
-  userSql = mysql.createConnection({
-    host: 'us-cdbr-east-04.cleardb.com',
-    user: 'be02a1b756cd61',
-    database: 'heroku_35f66ed46263e72',
-    password: '348b0305'
-  })
-}
 
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -160,61 +142,37 @@ const adminController = {
 
   // users-controller
   getUsers: (req, res) => {
-    if (process.env.NODE_ENV === 'test') {
     // sequelize搜尋
-      return User.findAll({ raw: true })
-        .then(users => res.render('admin/users', { users }))
-    }
-
-    // sql搜尋
-    userSql.query(
-      'SELECT `id`, `name`, `email`, `isAdmin` FROM `users`',
-      (err, users) => {
-        if (err) return console.log('err: ', err)
-        res.render('admin/users', { users })
-      }
-    )
+    return User.findAll({ raw: true })
+      .then(users => res.render('admin/users', { users }))
   },
+
   toggleAdmin: (req, res) => {
     const id = req.params.id
-    if (process.env.NODE_ENV === 'test') {
-      // sequelize搜尋
-      return User.findByPk(req.params.id)
-        .then(user => {
-          user.update({ isAdmin: !user.isAdmin })
-            .then(() => {
-              req.flash('success_messages', 'user was successfully to update')
-              return res.redirect('/admin/users')
-            })
-        })
-    }
-
-    // 試用sql語法搜尋
-    // 增加判斷若admin只剩一位，釋出警告
-    userSql.query(
-      'SELECT `isAdmin`, `id` FROM `users`',
-      (err, results) => {
-        if (err) throw err
-        results.forEach(result => {
+    return Promise.all([
+      User.findAll({
+        raw: true,
+        nest: true
+      }),
+      User.findByPk(id)
+    ])
+      .then(([users, user]) => {
+        users.forEach(result => {
           if (result.id === Number(id)) result.isAdmin = result.isAdmin === 1 ? 0 : 1
-        }) // 這裡沒辦法用result.isAdmin = !user.isAdmin 是因為它傳過來的isAdmin檔案已經是number?
-        const adminArr = results.filter(result => result.isAdmin)
+        })
+        const adminArr = users.filter(result => result.isAdmin)
         if (adminArr.length === 0) {
           req.flash('error_messages', 'just only one admin ! you cant do that !')
           return res.redirect('/admin/users')
         }
         if (adminArr.length > 0) {
-          const updateSql = 'UPDATE users SET isAdmin = NOT isAdmin WHERE id = ?'
-          // ?防止SQL injection
-          userSql.query(updateSql, id,
-            (err, results) => {
-              if (err) throw err
+          user.update({ isAdmin: !user.isAdmin })
+            .then(() => {
               req.flash('success_messages', 'user was successfully to update')
               return res.redirect('/admin/users')
             })
         }
-      }
-    )
+      })
   }
 }
 
