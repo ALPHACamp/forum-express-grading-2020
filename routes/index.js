@@ -32,10 +32,13 @@ module.exports = (app, passport) => {
 
   // Feeds
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
+  // Top restaurant
+  app.get('/restaurants/top', authenticated, restController.getTopRestaurants)
   // restaurant
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   // restaurant count
   app.get('/restaurants/:id/dashboard', authenticated, restController.getCounts)
+
 
   // user post comment
   app.post('/comments', authenticated, commentController.postComment)

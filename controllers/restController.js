@@ -4,9 +4,11 @@ const Restaurant = db.Restaurant
 const Category = db.Category
 const Comment = db.Comment
 const User = db.User
+const Favorite = db.Favorite
+const sequelize = require('sequelize');
 
 const pageLimit = 10
-const topUserLimit = 10
+const topRestaurantLimit = 10
 
 const restController = {
   getRestaurants: (req, res) => {
@@ -71,8 +73,6 @@ const restController = {
         })
         const isFavorited = restaurant.FavoritedUsers.some(user => user.id === req.user.id)
         const isLiked = restaurant.LikedUsers.some(user => user.id === req.user.id)
-
-        // restaurant.isFavorited = req.user.FavoritedRestaurants
         return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited, isLiked })
       })
   },
@@ -129,6 +129,22 @@ const restController = {
         users = users.sort((a, b) => { b.FollowerCount - a.FollowerCount })
         return res.render('topUsers', { users })
       }) 
+  },
+  getTopRestaurants: (req, res) => {
+    return Restaurant.findAll({
+      include: [{ model: User, as: 'FavoritedUsers'}]
+    })
+      .then(restaurants => {
+        restaurants = restaurants.map(item => ({
+          ...item.dataValues,
+          description: item.dataValues.description.substring(0, 20),
+          voted: item.dataValues.FavoritedUsers.length,
+          isFavorited: req.user.FavoritedRestaurants.map(restaurant => restaurant.id).includes(item.id)
+          })
+        )
+        restaurants = restaurants.sort((a, b) => b.voted - a.voted).slice(0, topRestaurantLimit)
+        return res.render('topRestaurants', { restaurants } )
+      })
   }
 }
 
