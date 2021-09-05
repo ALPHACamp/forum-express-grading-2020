@@ -4,6 +4,7 @@ const db = require('../models/index')
 const User = db.User
 const Restaurant = db.Restaurant
 const Comment = db.Comment
+const Favorite = db.Favorite
 
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -99,6 +100,32 @@ const userController = {
               return res.redirect(`/users/${user.id}`)
             })
         })
+    }
+  },
+
+  addFavorite: (req, res) => {
+    return Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+      .then((restaurant) => {
+        return res.redirect('back')
+      })
+  },
+
+  removeFavorite: async (req, res) => {
+    // 練習使用async await
+    try {
+      const favorite = await Favorite.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      })
+      await favorite.destroy()
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
     }
   }
 }

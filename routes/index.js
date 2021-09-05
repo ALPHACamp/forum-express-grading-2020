@@ -37,6 +37,10 @@ module.exports = (app, passport) => {
   app.get('/users/:id/edit', authenticated, userController.editUser)
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
+  // 前台favorite路由
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/users'))
   // 在 /admin/restaurants 的路由
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
