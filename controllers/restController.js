@@ -7,50 +7,52 @@ const User = db.User
 const pageLimit = 10
 
 const restController = {
-  getRestaurants: (req, res) => {
-    let offset = 0
-    const whereQuery = {}
-    let categoryId = ''
-    if (req.query.page) {
-      offset = (req.query.page - 1) * pageLimit
-    }
-    if (req.query.categoryId) {
-      categoryId = Number(req.query.categoryId)
-      whereQuery.CategoryId = categoryId
-    }
-    Restaurant.findAndCountAll({
-      include: Category,
-      where: whereQuery,
-      offset,
-      limit: pageLimit
-    })
-      .then(result => {
-        // data for pagination
-        const page = Number(req.query.page) || 1
-        const pages = Math.ceil(result.count / pageLimit)
-        const totalPage = Array.from({ length: pages }).map((item, index) => index + 1)
-        const prev = page - 1 < 1 ? 1 : page - 1
-        const next = page + 1 > pages ? pages : page + 1
-        const data = result.rows.map(restaurant => ({
-          ...restaurant.dataValues,
-          description: restaurant.description.substring(0, 50),
-          categoryName: restaurant.Category.name,
-          isFavorited: req.user.FavoritedRestaurants.map(data => data.id).includes(restaurant.id) // if include will true!
-        }))
-        Category.findAll({
-          raw: true,
-          nest: true
-        })
-          .then(categories => res.render('restaurants', {
-            restaurants: data,
-            categories,
-            categoryId,
-            page,
-            totalPage,
-            prev,
-            next
-          }))
+
+  getRestaurants: async (req, res) => {
+    try {
+      let offset = 0
+      const whereQuery = {}
+      let categoryId = ''
+      if (req.query.page) {
+        offset = (req.query.page - 1) * pageLimit
+      }
+      if (req.query.categoryId) {
+        categoryId = Number(req.query.categoryId)
+        whereQuery.CategoryId = categoryId
+      }
+      const results = await Restaurant.findAndCountAll({
+        include: Category,
+        where: whereQuery,
+        offset,
+        limit: pageLimit
       })
+      const page = Number(req.query.page) || 1
+      const pages = Math.ceil(results.count / pageLimit)
+      const totalPage = Array.from({ length: pages }).map((item, index) => index + 1)
+      const prev = page - 1 < 1 ? 1 : page - 1
+      const next = page + 1 > pages ? pages : page + 1
+      const data = results.rows.map(restaurant => ({
+        ...restaurant.dataValues,
+        description: restaurant.description.substring(0, 50),
+        categoryName: restaurant.Category.name,
+        isFavorited: req.user.FavoritedRestaurants.map(data => data.id).includes(restaurant.id) // if include will true!
+      }))
+      const categories = await Category.findAll({
+        raw: true,
+        nest: true
+      })
+      return res.render('restaurants', {
+        restaurants: data,
+        categories,
+        categoryId,
+        page,
+        totalPage,
+        prev,
+        next
+      })
+    } catch (err) {
+      console.warn(err)
+    }
   },
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id,

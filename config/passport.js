@@ -36,8 +36,6 @@ passport.deserializeUser((id, cb) => {
   })
     .then(user => {
       user = user.toJSON()
-      console.log('deserializeUser: ', user)
-      console.log('deserializeUser Favorite: ', user.FavoritedRestaurants[0].Favorite)
       return cb(null, user)
     })
     .catch(err => cb(err, null))
