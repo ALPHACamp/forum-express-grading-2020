@@ -32,6 +32,9 @@ module.exports = (app, passport) => {
   app.post('/comments', authenticated, commentController.postComment)
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
+  // 前台top路由 放在/users/:id前面
+  app.get('/users/top', authenticated, userController.getTopUser)
+
   // 前台users路由
   app.get('/users/:id', authenticated, userController.getUser)
   app.get('/users/:id/edit', authenticated, userController.editUser)
