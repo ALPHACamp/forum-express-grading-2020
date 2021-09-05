@@ -48,6 +48,10 @@ module.exports = (app, passport) => {
   app.post('/like/:restaurantId', authenticated, userController.addLike)
   app.delete('/like/:restaurantId', authenticated, userController.removeLike)
 
+  // 前台following路由
+  app.post('/following/:userId', authenticated, userController.addFollowing)
+  app.delete('/following/:userId', authenticated, userController.removeFollowing)
+
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/users'))
   // 在 /admin/restaurants 的路由
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
