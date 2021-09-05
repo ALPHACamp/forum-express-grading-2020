@@ -5,6 +5,7 @@ const User = db.User
 const Restaurant = db.Restaurant
 const Comment = db.Comment
 const Favorite = db.Favorite
+const Like = db.Like
 
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -123,6 +124,33 @@ const userController = {
         }
       })
       await favorite.destroy()
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
+
+  addLike: async (req, res) => {
+    try {
+      await Like.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      })
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
+
+  removeLike: async (req, res) => {
+    try {
+      const like = await Like.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      })
+      await like.destroy()
       return res.redirect('back')
     } catch (err) {
       console.warn(err)
