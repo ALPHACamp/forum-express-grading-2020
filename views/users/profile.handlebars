@@ -1,0 +1,41 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="p-4">
+          <div class="d-flex flex-row">
+            <div class=""><img src="{{user.image}}" alt="user"
+                class="rounded-circle" width="200" /></div>
+            <div class="pl-4">
+              <h3>{{user.name}}</h3>
+              <h4>{{#ifCond user.isAdmin true}}管理員{{/ifCond}}</h4>
+              <h4>{{user.email}}</h4>
+              <p>{{comment.length}} 已評論餐廳</p>
+              <a class="btn btn-success btn-rounded text-white text-uppercase font-14 mt-3" href="/users/{{user.id}}/edit"><i class="fa fa-edit"></i> Edit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+  <br />
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <h5 class="card-header">{{comment.length}} 已評論餐廳</h5>
+          <div class="p-4">
+            <div class="d-flex flex-row">
+              {{#each comment}}
+              <a href="../restaurants/{{this.Restaurant.id}}">
+              <img src="{{this.Restaurant.image}}" alt="user" width="80" height="80"class="mr-3"/></a>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+</div>
