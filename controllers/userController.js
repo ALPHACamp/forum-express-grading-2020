@@ -3,6 +3,7 @@ const db = require('../models')
 const User = db.User
 const Favorite = db.Favorite
 const Like = db.Like
+const Followship = db.Followship
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const helpers = require('../_helpers')
@@ -143,6 +144,24 @@ const userController = {
       })
       .then(() => {
         return res.redirect('back')
+      })
+  },
+  addFollowing: (req, res) => {
+    return Followship.create({
+      followingId: req.params.id,
+      followerId: req.user.id
+    })
+      .then(() => {
+        return res.redirect('/users/top')
+      })
+  },
+  removeFollowing: (req, res) => {
+    return Followship.findOne({ where: { followingId: req.params.id, followerId: req.user.id } })
+      .then(followship => {
+        followship.destroy()
+      })
+      .then(() => {
+        return res.redirect('/users/top')
       })
   }
 }
