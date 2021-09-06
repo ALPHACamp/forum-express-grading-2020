@@ -55,6 +55,43 @@ const userController = {
     return User.findByPk(req.params.id).then(user => {
       return res.render('profileedit', { user: user.toJSON() })
     })
+  },
+  putRestaurant: (req, res) => {
+    if (!req.body.name) {
+      req.flash('error_messages', "name didn't exist")
+      return res.redirect('back')
+    }
+
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (_, img) => {
+        return User.findByPk(req.params.id)
+          .then((user) => {
+            user.update({
+              name: req.body.name,
+              image: file ? img.data.link : user.image
+            })
+              .then(() => {
+                req.flash('success_messages', 'user was successfully to update')
+                res.redirect('/profile')
+              })
+          })
+      })
+    }
+    else {
+      return User.findByPk(req.params.id)
+        .then((user) => {
+          user.update({
+            name: req.body.name,
+            image: user.image
+          })
+            .then((restaurant) => {
+              req.flash('success_messages', 'user was successfully to update')
+              res.redirect('/profile')
+            })
+        })
+    }
   }
 }
 
