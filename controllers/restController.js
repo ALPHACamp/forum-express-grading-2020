@@ -1,8 +1,10 @@
+const sequelize = require('sequelize')
 const db = require('../models/index')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const Comment = db.Comment
 const User = db.User
+const Favorite = db.Favorite
 
 const pageLimit = 10
 
@@ -55,8 +57,8 @@ const restController = {
       console.warn(err)
     }
   },
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id,
+  getRestaurant: async (req, res) => {
+    const restaurant = await Restaurant.findByPk(req.params.id,
       {
         include: [
           Category,
@@ -64,16 +66,14 @@ const restController = {
           { model: User, as: 'LikedUsers' },
           { model: Comment, include: [User] }]
       })
-      .then(restaurant => {
-        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
-        const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
-        restaurant.increment('viewCounts')
-        res.render('restaurant', {
-          restaurant: restaurant.toJSON(),
-          isFavorited,
-          isLiked
-        })
-      })
+    const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
+    const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
+    restaurant.increment('viewCounts')
+    return res.render('restaurant', {
+      restaurant: restaurant.toJSON(),
+      isFavorited,
+      isLiked
+    })
   },
 
   getFeeds: (req, res) => {
@@ -105,6 +105,27 @@ const restController = {
       .then(restaurant => {
         res.render('dashboard', { restaurant: restaurant.toJSON() })
       })
+  },
+
+  getTopRestaurant: async (req, res) => {
+    try {
+      const countFavorite = sequelize.fn('COUNT', sequelize.col('UserId'))
+      const topFavorites = await Favorite.findAll({
+        raw: true,
+        nest: true,
+        group: ['RestaurantId'],
+        attributes: [[countFavorite, 'countFavorite']],
+        include: [Restaurant],
+        order: [[sequelize.literal('countFavorite'), 'DESC']],
+        limit: 10
+      })
+      topFavorites.forEach(topFavorite => {
+        topFavorite.isFavorited = req.user.FavoritedRestaurants.map(data => data.id).includes(topFavorite.Restaurant.id)
+      })
+      return res.render('topRestaurants', { topFavorites })
+    } catch (err) {
+      console.warn(err)
+    }
   }
 }
 
