@@ -1,5 +1,6 @@
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
@@ -56,16 +57,18 @@ const userController = {
       return res.render('profileedit', { user: user.toJSON() })
     })
   },
-  putRestaurant: (req, res) => {
+  putUser: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', "name didn't exist")
       return res.redirect('back')
     }
 
     const { file } = req
+    console.log(file)
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
-      imgur.upload(file.path, (_, img) => {
+      imgur.upload(file.path, (err, img) => {
+        console.log(img.data.link)
         return User.findByPk(req.params.id)
           .then((user) => {
             user.update({
@@ -74,8 +77,9 @@ const userController = {
             })
               .then(() => {
                 req.flash('success_messages', 'user was successfully to update')
-                res.redirect('/profile')
+                res.redirect('/users/' + req.params.id)
               })
+              .catch(console.log(err))
           })
       })
     }
@@ -88,7 +92,7 @@ const userController = {
           })
             .then((restaurant) => {
               req.flash('success_messages', 'user was successfully to update')
-              res.redirect('/profile')
+              res.redirect('/users/' + req.params.id)
             })
         })
     }
