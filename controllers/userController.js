@@ -4,6 +4,7 @@ const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const helpers = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -53,6 +54,11 @@ const userController = {
     })
   },
   editUser: (req, res) => {
+    console.log(helpers.getUser(req))
+    if (String(helpers.getUser(req).id) !== String(req.params.id)) {
+      req.flash('error_messages', '無法編輯其他使用者的資料')
+      return res.redirect(`/users/${req.user.id}`)
+    }
     return User.findByPk(req.params.id).then(user => {
       return res.render('profileedit', { user: user.toJSON() })
     })
@@ -64,11 +70,9 @@ const userController = {
     }
 
     const { file } = req
-    console.log(file)
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
-        console.log(img.data.link)
         return User.findByPk(req.params.id)
           .then((user) => {
             user.update({
@@ -94,6 +98,7 @@ const userController = {
               req.flash('success_messages', 'user was successfully to update')
               res.redirect('/users/' + req.params.id)
             })
+            .catch(console.log('err'))
         })
     }
   }
