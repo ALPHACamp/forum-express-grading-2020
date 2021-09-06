@@ -1,6 +1,17 @@
-node_modules/ 
+# OS X
+.DS_Store*
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# npm
+node_modules
 temp/
 upload/
-
-.DS_Store
+*.log
+*.gz
 .env
