@@ -1,19 +1,13 @@
 const db = require('../models/index')
 const Category = db.Category
 
+const categoryService = require('../services/categoryService.js')
+
 const categoryController = {
   getCategories: (req, res) => {
-    return Category.findAll({
-      raw: true,
-      nest: true
+    categoryService.getCategories(req, res, (data) => {
+      return res.render('admin/categories', data)
     })
-      .then(categories => {
-        if (req.params.id) {
-          return Category.findByPk(req.params.id)
-            .then(category => res.render('admin/categories', { categories, category: category.toJSON() }))
-        } // 上面因有非同步，不是得用else去包裝就是上面要寫return
-        return res.render('admin/categories', { categories })
-      })
   },
   postCategory: (req, res) => {
     if (!req.body.name) {
