@@ -4,12 +4,12 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('Restaurants', 'CategoryId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: false
     })
     // 維護舊資料
     await queryInterface.bulkUpdate('Restaurants',
       {
-        CategoryId: 1, // 預設為 1, 假設 Categories 有 id 1 的資料
+        CategoryId: 1 // 預設為 1, 假設 Categories 有 id 1 的資料
       }
     )
 

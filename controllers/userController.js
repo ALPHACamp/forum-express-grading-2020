@@ -54,7 +54,6 @@ const userController = {
     })
   },
   editUser: (req, res) => {
-    console.log(helpers.getUser(req))
     if (String(helpers.getUser(req).id) !== String(req.params.id)) {
       req.flash('error_messages', '無法編輯其他使用者的資料')
       return res.redirect(`/users/${req.user.id}`)
