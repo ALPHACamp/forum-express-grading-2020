@@ -27,6 +27,43 @@ const adminService = {
       })
   },
 
+  postRestaurant: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: "name didn't exist" })
+    }
+
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        if (err) console.log('Error: ', err)
+        return Restaurant.create({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: file ? img.data.link : null,
+          CategoryId: req.body.categoryId
+        }).then((restaurant) => {
+          callback({ status: 'success', message: 'restaurant was successfully created' })
+        })
+      })
+    } else {
+      return Restaurant.create({
+        name: req.body.name,
+        tel: req.body.tel,
+        address: req.body.address,
+        opening_hours: req.body.opening_hours,
+        description: req.body.description,
+        image: null,
+        CategoryId: req.body.categoryId
+      }).then((restaurant) => {
+        callback({ status: 'success', message: 'restaurant was successfully created' })
+      })
+    }
+  },
+
   deleteRestaurant: async (req, res, callback) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id)
