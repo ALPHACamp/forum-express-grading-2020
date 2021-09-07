@@ -1,6 +1,7 @@
 node_modules/ 
 temp/
 upload/
+test-code/
 
 .DS_Store
 .env
