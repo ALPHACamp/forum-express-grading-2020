@@ -56,18 +56,17 @@ const restController = {
       include: [
         Category,
         { model: User, as: 'FavoritedUsers' },
-        { model: Comment, include: [User] },
-        { model: User, as: 'LikedUsers' }
+        { model: User, as: 'LikedUsers' },
+        { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
-      console.log(req.user.id)
       restaurant.increment('viewCounts', { by: 1 })
       return res.render('restaurant', {
         restaurant: restaurant.toJSON(),
-        isFavorited: isFavorited,
-        isLiked
+        isFavorited: isFavorited, // 將資料傳到前端
+        isLiked: isLiked
       })
     })
   },

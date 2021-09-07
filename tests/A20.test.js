@@ -19,9 +19,6 @@ describe('# A20: 餐廳資訊整理：Dashboard', function () {
         helpers, 'getUser'
       ).returns({ id: 1, Followings: [] });
 
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Category.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
       await db.User.create({ name: 'User1' })
       await db.Category.create({
         name: 'name'
@@ -48,9 +45,11 @@ describe('# A20: 餐廳資訊整理：Dashboard', function () {
     after(async () => {
       this.ensureAuthenticated.restore();
       this.getUser.restore();
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Category.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true });
+      await db.Category.destroy({ where: {}, truncate: true, force: true, })
+      await db.Restaurant.destroy({ where: {}, truncate: true, force: true, })
+      await db.User.destroy({ where: {}, truncate: true, force: true, })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', null, { raw: true });
     })
 
   })
@@ -64,9 +63,6 @@ describe('# A20: 餐廳資訊整理：Dashboard', function () {
         helpers, 'getUser'
       ).returns({ id: 1, Followings: [] });
 
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Category.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
       await db.User.create({ name: 'User1' })
       await db.Category.create({
         name: 'name'
@@ -94,9 +90,11 @@ describe('# A20: 餐廳資訊整理：Dashboard', function () {
     after(async () => {
       this.ensureAuthenticated.restore();
       this.getUser.restore();
-      await db.User.destroy({ where: {}, truncate: true })
-      await db.Category.destroy({ where: {}, truncate: true })
-      await db.Restaurant.destroy({ where: {}, truncate: true })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true });
+      await db.Category.destroy({ where: {}, truncate: true, force: true, })
+      await db.Restaurant.destroy({ where: {}, truncate: true, force: true, })
+      await db.User.destroy({ where: {}, truncate: true, force: true, })
+      await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', null, { raw: true });
     })
 
   })
