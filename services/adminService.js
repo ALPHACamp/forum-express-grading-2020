@@ -25,6 +25,16 @@ const adminService = {
       .then(restaurant => {
         callback({ restaurant: restaurant.toJSON() })
       })
+  },
+
+  deleteRestaurant: async (req, res, callback) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      await restaurant.destroy()
+      callback({ status: 'success', message: '' })
+    } catch (err) {
+      console.warn(err)
+    }
   }
 }
 
