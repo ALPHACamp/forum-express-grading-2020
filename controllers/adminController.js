@@ -11,15 +11,13 @@ const Comment = db.Comment
 // 引入處理檔案的模組
 const fs = require('fs')
 
+const adminService = require('../services/adminService.js')
+
 const adminController = {
   getRestaurants: (req, res) => {
     // 自動導到views文件夾，找到admin文件的restaurants.handlebars
-    Restaurant.findAll({ 
-      raw: true, 
-      nest: true ,
-      include: [Category]
-    }).then(restaurants => {
-      return res.render('admin/restaurants', { restaurants })
+    adminService.getRestaurants(req, res, (data) => {
+      return res.render('admin/restaurants', data)
     })
   },
 
