@@ -114,3 +114,5 @@ router.delete('/admin/categories/:id', authenticatedAdmin, categoryController.de
 
 //admin comment delete
 router.delete('/comments/:id', authenticatedAdmin, adminController.deleteComment)
+
+module.exports = router
