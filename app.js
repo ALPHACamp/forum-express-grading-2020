@@ -10,6 +10,9 @@ const passport = require('./config/passport')
 const methodOverride = require('method-override')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 app.engine('handlebars', handlebars({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
