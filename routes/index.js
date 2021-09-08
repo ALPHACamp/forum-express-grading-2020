@@ -50,10 +50,14 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     adminController.createRestaurant
   )
-
   app.post(
     '/admin/restaurants',
     authenticatedAdmin,
     adminController.postRestaurant
+  )
+  app.get(
+    '/admin/restaurants/:id',
+    authenticatedAdmin,
+    adminController.getRestaurant
   )
 }
