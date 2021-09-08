@@ -45,6 +45,6 @@ app.listen(port, () => {
 })
 
 // 把express() & passport 回傳給routes
-require('./routes')(app, passport)
+require('./routes')(app)
 
 module.exports = app
