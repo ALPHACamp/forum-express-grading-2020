@@ -3,7 +3,7 @@ const Category = db.Category
 
 const categoryService = {
   getCategories: (req, res, callback) => {
-    return Category.findAll().then(categories => {
+    return Category.findAll({ raw: true }).then(categories => {
       if (req.params.id) {
         Category.findByPk(req.params.id)
           .then(category => {

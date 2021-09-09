@@ -4,7 +4,9 @@ const categoryService = require('../services/categoryService.js')
 
 const categoryController = {
   getCategories: (req, res) => {
-    categoryService
+    categoryService.getCategories(req, res, (data) => {
+      return res.render('admin/categories', data)
+    })
   },
 
   postCategory: (req, res) => {
