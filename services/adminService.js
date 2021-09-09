@@ -65,6 +65,53 @@ const adminService = {
     })
   },
 
+  putRestaurant: (req, res, callback) => {
+    const id = req.params.id
+    const { name, tel, address, opening_hours, description } = req.body
+    if (!name) {
+      callback({ status: 'error', message: 'Please input correct name!' })
+    }
+
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        if (err) {
+          console.log('upload fail: %o', err);
+          res.send('');
+          return;
+        }
+        return Restaurant.findByPk(req.params.id)
+          .then((restaurant) => {
+            restaurant.update({
+              name: req.body.name,
+              tel: req.body.tel,
+              address: req.body.address,
+              opening_hours: req.body.opening_hours,
+              description: req.body.description,
+              image: file ? img.data.link : restaurant.image,
+              CategoryId: req.body.categoryId
+            })
+              .then((restaurant) => {
+                callback({ status: 'success', message: 'The restaurant is successfully edited!' })
+              })
+          })
+      })
+    } else {
+      return Restaurant.findByPk(id)
+        .then(restaurant => {
+          restaurant.update({
+            name, tel, address, opening_hours, description, CategoryId: req.body.categoryId
+          })
+        })
+        .then(restaurant => {
+          callback({ status: 'success', message: 'The restaurant is successfully edited!' })
+          // req.flash('success_msg', '餐廳資訊已成功修改!')
+          // res.redirect('/admin/restaurants')
+        })
+    }
+  },
+
   deleteRestaurant: (req, res, callback) => {
     return Restaurant.findByPk(req.params.id)
       .then(restaurant => {
