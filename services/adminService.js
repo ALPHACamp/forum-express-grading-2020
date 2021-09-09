@@ -13,7 +13,7 @@ const adminService = {
   getRestaurant: (req, res, callback) => {
     return Restaurant.findByPk(req.params.id)
       .then(restaurant => {
-        callback({ restaurant })
+        callback({ restaurant: restaurant })
       })
   }
 }
