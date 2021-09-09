@@ -10,21 +10,13 @@ const categoryController = {
   },
 
   postCategory: (req, res) => {
-    if (!req.body.name) {
-      req.flash('warning_msg', '分類名稱不存在')
-      return res.redirect('back')
-    }
-    Category.findOne({ where: { name: req.body.name } }).then(category => {
-      if (category) {
-        req.flash('warning_msg', '此分類已存在!')
+    categoryService.postCategory(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('warning_msg', data['message'])
         return res.redirect('back')
       }
-      Category.create({
-        name: req.body.name,
-      })
-        .then(() => {
-          return res.redirect('categories')
-        })
+      req.flash('success_msg', data['message'])
+      return res.redirect('/admin/categories')
     })
   },
 
