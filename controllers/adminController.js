@@ -27,45 +27,6 @@ const adminController = {
     })
   },
 
-  // postRestaurant: (req, res) => {
-  //   const { name, tel, address, opening_hours, description } = req.body
-
-  //   if (!name) {
-  //     req.flash('warning_messages', "不存在空白的餐廳名稱!")
-  //     return res.redirect('back')
-  //   }
-
-  //   const { file } = req 
-  //   if (file) {
-  //     imgur.setClientID(IMGUR_CLIENT_ID)
-  //     imgur.upload(file.path, (err, img) => {
-  //       if (err) {
-  //         console.log('upload fail: %o', err);
-  //         res.send('');
-  //         return;
-  //       }
-  //       return Restaurant.create({
-  //         name: req.body.name,
-  //         tel: req.body.tel,
-  //         address: req.body.address,
-  //         opening_hours: req.body.opening_hours,
-  //         description: req.body.description,
-  //         image: file ? img.data.link : null,
-  //         CategoryId: req.body.categoryId
-  //       }).then((restaurant) => {
-  //         req.flash('success_msg', 'restaurant was successfully created')
-  //         return res.redirect('/admin/restaurants')
-  //       }).catch(err => console.log(err))
-  //     })
-  //   } else {
-  //     return Restaurant.create({ name, tel, address, opening_hours, description, image: null, CategoryId: req.body.categoryId })
-  //       .then(() => {
-  //         req.flash('success_msg', '成功新增餐廳!')
-  //         res.redirect('/admin/restaurants')
-  //       })
-  //   }
-  // },
-
   postRestaurant: (req, res) => {
     adminService.postRestaurant(req, res, (data) => {
       if (data['status'] === 'error') {
@@ -84,11 +45,8 @@ const adminController = {
   },
 
   editRestaurant: (req, res) => {
-    const id = req.params.id
-    return Restaurant.findByPk(id, { raw: true }).then(restaurant => {
-      Category.findAll({ raw: true, nest: true }).then(categories => {
-        return res.render('admin/create', { categories, restaurant })
-      })
+    adminService.editRestaurant(req, res, (data) => {
+      return res.render('admin/create', data)
     })
   },
 

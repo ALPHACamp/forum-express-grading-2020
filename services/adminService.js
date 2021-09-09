@@ -9,7 +9,7 @@ const adminService = {
   getRestaurants: (req, res, callback) => {
     return Restaurant.findAll({ raw: true, nest: true, include: [Category] })
       .then(restaurants => {
-        callback({ restaurants: restaurants })
+        callback({ status: 'success', message: '', restaurants: restaurants })
       })
   },
 
@@ -54,6 +54,15 @@ const adminService = {
           callback({ status: 'success', message: 'Restaurant is successfully created!' })
         })
     }
+  },
+
+  editRestaurant: (req, res, callback) => {
+    const id = req.params.id
+    return Restaurant.findByPk(id, { raw: true }).then(restaurant => {
+      Category.findAll({ raw: true, nest: true }).then(categories => {
+        callback({ categories, restaurant })
+      })
+    })
   },
 
   deleteRestaurant: (req, res, callback) => {
