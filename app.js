@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport')
+
 const methodOverride = require('method-override')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
@@ -14,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.engine('handlebars', handlebars({defaultLayout: 'main', helpers: require('./tools/handlebar-helper.js') }))
 app.set('view engine', 'handlebars')
 
 app.use(bodyParser.urlencoded({extended: true}))
