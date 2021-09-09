@@ -21,20 +21,19 @@ const categoryController = {
   },
 
   editCategory: (req, res) => {
-    return Category.findByPk(req.params.id).then(category => {
-      category.update({
-        name: req.body.name
-      })
-        .then(() => {
-          return res.redirect('/admin/categories')
-        })
+    categoryService.editCategory(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('warning_msg', data['message'])
+        return res.redirect('back')
+      }
+      req.flash('success_msg', data['message'])
+      return res.redirect('/admin/categories')
     })
   },
 
   deleteCategory: (req, res) => {
     return Category.findByPk(req.params.id)
       .then(category => {
-        console.log(category)
         category.destroy()
       })
       .then(() => {

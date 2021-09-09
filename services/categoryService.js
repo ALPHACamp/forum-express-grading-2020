@@ -29,6 +29,21 @@ const categoryService = {
         })
     }
   },
+  editCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      callback({ status: 'error', message: 'Name isn\'t exist!' })
+    } else {
+      return Category.findByPk(req.params.id).then(category => {
+        category.update({
+          name: req.body.name
+        })
+          .then(() => {
+            callback({ status: 'success', message: 'Edited successfully!' })
+            // return res.redirect('/admin/categories')
+          })
+      })
+    }
+  },
 }
 
 module.exports = categoryService
