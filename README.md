@@ -9,6 +9,7 @@
 ### Initialize
 ```
 git remote add upstream https://github.com/ALPHACamp/forum-express-grading.git  # 建立上游連線
+<<<<<<< HEAD
 =======
 ## 初始化
 ### Initialize
@@ -17,6 +18,9 @@ git clone https://github.com/your_github_name/forum-express-2020
 cd forum-express
 git remote add upstream https://github.com/ALPHACamp/forum-express-2020.git  # 建立上游連線
 >>>>>>> origin/A17-test
+=======
+
+>>>>>>> A17
 npm install
 ```
 
@@ -27,6 +31,7 @@ npm install
 create database forum;
 create database forum_test;
 ```
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 ### 切換環境
@@ -57,6 +62,8 @@ git commit -m "...."
 
 =======
 
+=======
+>>>>>>> A17
 ### 切換環境
 
 ```
