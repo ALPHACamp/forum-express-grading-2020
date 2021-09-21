@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000
 app.use('/upload', express.static(__dirname + '/upload'))
 
 // Handlebars
-app.engine('handlebars', handlebars({ defaultLayout: 'main' }))
+app.engine('handlebars', handlebars({ defaultLayout: 'main', helpers: require('./config/handlebars-helpers') }))
 app.set('view engine', 'handlebars')
 // bodyParser
 app.use(bodyParser.urlencoded({ extended: true }))
