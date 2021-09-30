@@ -1,8 +1,12 @@
+const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
 const Favorite = db.Favorite
 const Like = db.Like
+const helpers = require('../_helpers')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const userController = {
   signUpPage: (req, res) => {
@@ -93,6 +97,63 @@ const userController = {
         return res.redirect('back')
       })
     })
+  },
+
+  getUser: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then((user) => {
+        return res.render('profile', { user: user.toJSON() })
+      })
+      .catch((error) => console.log(error))
+  },
+
+  editUser: (req, res) => {
+    const id = Number(req.params.id)
+    const userId = helpers.getUser(req).id
+    if (userId !== id) {
+      req.flash('error_message', '只能編輯自己的Profile')
+      return res.redirect(`/users/${userId}/edit`)
+    }
+    return User.findByPk(req.params.id).then((user) => {
+      return res.render('editProfile', { user: user.toJSON() })
+    })
+  },
+
+  putUser: (req, res) => {
+    const id = req.params.id
+    const { name, file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(id)
+          .then((user) => {
+            user.update({
+              name,
+              image: file ? img.data.link : user.image,
+            })
+          })
+          .then(() => {
+            req.flash('success_message', '使用者資料已更新')
+            res.redirect(`/users/${id}`)
+          })
+          .catch((error) => console.log(error))
+      })
+    } else {
+      return User.findByPk(id)
+        .then((user) => {
+          user.update({
+            name,
+          })
+        })
+        .then((user) => {
+          req.flash(
+            'success_messages',
+            'user profile was successfully to update'
+          )
+          res.redirect(`/users/${id}`)
+        })
+        .catch((error) => console.log(error))
+    }
   },
 }
 

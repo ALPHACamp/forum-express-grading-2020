@@ -5,6 +5,7 @@ const userController = require('../controllers/userController.js')
 const categoryController = require('../controllers/categoryController.js')
 const commentController = require('../controllers/commentController.js')
 const multer = require('multer')
+const user = require('../models/user')
 const upload = multer({ dest: 'temp/' })
 
 function router(app, passport) {
@@ -82,6 +83,9 @@ function router(app, passport) {
     authenticatedAdmin,
     adminController.toggleAdmin
   )
+  app.get('/users/:id', authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated,upload.single('image'),userController.putUser)
 
   //新增刪除最愛
   app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
