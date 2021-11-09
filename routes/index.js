@@ -21,12 +21,14 @@ module.exports = (app, passport) => {
     }
     res.redirect('/signin')
   }
-
+  //首頁路由
   //如果使用者訪問首頁，就導向 /restaurants 的頁面
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
 
   //在 /restaurants 底下則交給 restController.getRestaurants 來處理
   app.get('/restaurants', authenticated, restController.getRestaurants)
+
+  //後台頁面路由
   // 連到 /admin 頁面就轉到 /admin/restaurantss
   app.get('/admin', authenticatedAdmin, (req, res) =>
     res.redirect('/admin/restaurants')
@@ -38,39 +40,48 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     adminController.getRestaurants
   )
+  //CREATE
   app.get(
     '/admin/restaurants/create',
     authenticatedAdmin,
     adminController.createRestaurant
   )
+
   app.post(
     '/admin/restaurants',
     authenticatedAdmin,
     upload.single('image'),
     adminController.postRestaurant
   )
+  //READ
   app.get(
     '/admin/restaurants/:id',
     authenticatedAdmin,
     adminController.getRestaurant
   )
+
+  //UPDATE
   app.get(
     '/admin/restaurants/:id/edit',
     authenticatedAdmin,
     adminController.editRestaurant
   )
+
   app.put(
     '/admin/restaurants/:id',
     authenticatedAdmin,
     upload.single('image'),
     adminController.putRestaurant
   )
+
+  //DELETE
   app.delete(
     '/admin/restaurants/:id',
     authenticatedAdmin,
     adminController.deleteRestaurant
   )
 
+  //登入＆登出＆註冊頁面路由
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
   app.get('/signin', userController.signInPage)
@@ -83,4 +94,12 @@ module.exports = (app, passport) => {
     userController.signIn
   )
   app.get('/logout', userController.logout)
+
+  // 管理者和使用者管理
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+  app.put(
+    '/admin/users/:id/toggleAdmin',
+    authenticatedAdmin,
+    adminController.toggleAdmin
+  )
 }

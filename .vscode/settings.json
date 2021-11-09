@@ -4,6 +4,7 @@
     "offcanvas",
     "resave",
     "restaurantss",
+    "sequelize",
     "signin",
     "signup"
   ]
